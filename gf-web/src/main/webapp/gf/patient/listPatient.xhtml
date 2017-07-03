@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+
+    <ui:define name="content">
+
+        <h:form id="form">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1 align="center">Liste des Patients</h1>
+                        <p:dataTable var="p" value="#{patientBean.allPatient}" selectionMode="single" reflow="true"
+                                     selection="#{patientBean.patient}" rowKey="#{p.id}" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Mes patients
+                            </f:facet>
+                            <p:column headerText="Id" sortBy="#{p.id}">
+                                <h:outputText value="#{p.id}" />
+                            </p:column>
+                            <p:column headerText="Nom" sortBy="#{p.nomPatient}">
+                                <h:outputText value="#{p.nomPatient}" />
+                            </p:column>
+
+                            <p:column headerText="Prenom" sortBy="#{p.prenomPatient}">
+                                <h:outputText value="#{p.prenomPatient}" />
+                            </p:column>
+
+                            <p:column headerText="Sexe" sortBy="#{p.sexe}">
+                                <h:outputText value="#{p.sexe}" />
+                            </p:column>
+
+                            <p:column headerText="Age" sortBy="#{p.age}">
+                                <h:outputText value="#{p.age}">
+
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Profession" sortBy="#{p.profession}">
+                                <h:outputText value="#{p.profession}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>        
+
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+
+    <ui:define name="content">
+
+
+        <h:form id="rdvform">
+            <p:growl/>
+
+            <div class="ui-g">
+
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <center>   <h1>Mes Consultation</h1> </center>
+                        <p:dataTable id="constable" value="#{consBean.allConsultation}" reflow="true"
+                                     var="cons" rowKey="#{cons.id}" styleClass="dt_search"
+                                     paginator="true" rows="20" widgetVar="dt_cons"
+                                     scrollable="true" scrollHeight="300" selection="#{consBean.consultation}"
+                                     emptyMessage="Aucune donnée trouvée">
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Rechercher Consultation:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('dt_cons').filter()" style="width:150px" placeholder="Seach"/>
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                            <p:column headerText="Nom intervenant" sortBy="#{cons.intervenant.nomIntervenant}"
+                                      filterMatchMode="contains" filterBy="#{cons.intervenant.nomIntervenant}">
+                                <h:outputText value="#{cons.intervenant.nomIntervenant}" />
+                            </p:column>
+                            <p:column headerText="Nom du Patient" sortBy="#{cons.patient.nomPatient}"
+                                      filterMatchMode="contains" filterBy="#{cons.patient.nomPatient}">
+                                <h:outputText value="#{cons.patient.nomPatient}" />
+                            </p:column>
+                            <p:column headerText="Prenom du Patient" sortBy="#{cons.patient.prenomPatient}"
+                                      filterMatchMode="contains" filterBy="#{cons.patient.prenomPatient}">
+                                <h:outputText value="#{cons.patient.prenomPatient}" />
+                            </p:column>
+                            <p:column headerText="Service " sortBy="#{cons.intervenant.services.nomService}"
+                                      >
+                                <h:outputText value="#{cons.intervenant.services.nomService}" />
+                            </p:column>
+
+
+                            <p:column headerText="date Consultation" >
+                                <h:outputText value="">
+                                    <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton oncomplete="PF('carDialog').show()" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{cons}" target="#{consBean.consultation}" />
+                                </p:commandButton>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:commandButton process="@this" update=":conulform"  icon="ui-icon-seach" value="Nouveau" oncomplete="PF('consnew').show()"/>
+                                <p:commandButton process="@this" update=":conulform"  icon="ui-icon-seach" value="Update" oncomplete="PF('carDialog').show()"/>
+
+                            </f:facet>
+                        </p:dataTable>
+
+                    </div> 
+
+                </div>
+            </div>
+        </h:form>
+
+
+        <h:form id="conulform">
+            <p:dialog header="Nouveau Consultation" widgetVar="consnew" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="idser1" style="text-align:center;">
+                    <p:panelGrid  columns="2" rendered="#{not empty rdvbean.rdv}" columnClasses="label,value">
+                        <f:facet name="header">
+                            Consultation
+                        </f:facet>
+                        <h:outputText value="Intervenant"/>
+
+                        <p:selectOneMenu id="intser" style="margin-bottom:10px;" value="#{consBean.consultation.intervenant}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItems value="#{consBean.allIntervenant}" var="intser" itemLabel="#{intser.nomIntervenant}" itemValue="#{intser}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText  value="Patient: *" />
+                        <p:selectOneMenu id="patad" style="margin-bottom:10px;" value="#{consBean.consultation.patient}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItems value="#{consBean.allPatient}" var="pat" itemLabel="#{pat.nomPatient}" itemValue="#{pat}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText  value="Pathologie: *" />
+                        <p:selectOneMenu id="pato" style="margin-bottom:10px;" value="#{consBean.consultation.pathologie}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItems value="#{consBean.allPathologie}" var="pato" itemLabel="#{pato.nomPathologie}" itemValue="#{pato}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Traitement" />
+                        <h:inputText value="#{consBean.consultation.traitement}" />
+
+                      
+                    </p:panelGrid>
+                </p:outputPanel>
+                <p:commandButton   update=":conulform" value="Enregistrer" actionListener="#{consBean.addConsultation()}" onclick="PF('rdnew').hide()" />
+            </p:dialog>
+        </h:form>
+
+
+
+    </ui:define>
+
+</ui:composition>

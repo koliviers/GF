@@ -1,0 +1,313 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+
+    <ui:define name="content">
+        <h:form id="patform">
+            <p:growl id="growl" sticky="true" showDetail="true"/>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <center> <h1>Nouveau Patient</h1> </center>
+
+                            <p:wizard flowListener="#{userWizard.onFlowProcess}">
+
+                                <p:tab id="personelle" title="Etat civil">
+                                    <p:panel style="height: 500px">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                                            <p:outputLabel for="nompat" value="Nom patient"/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="nompat" value="#{patientBean.patient.nomPatient}"/>
+                                                <label>Nom du patient</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="prepat" value="prenom "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="prepat" value="#{patientBean.patient.prenomPatient}"/>
+                                                <label>Prenom</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="prof" value="Profession "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="prof" value="#{patientBean.patient.profession}"/>
+                                                <label>Profession</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="age" value="Age "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="age" value="#{patientBean.patient.age}"/>
+                                                <label>Age</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="contact" value="Contact "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="contact" value="#{patientBean.patient.contact}"/>
+                                                <label>Contact</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="adr" value="Adresse "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="adr" value="#{patientBean.patient.adresse}"/>
+                                                <label>Adresse</label>
+                                            </h:panelGroup>
+
+
+                                            <p:outputLabel for="sexe" value="Sexe" />
+                                            <p:selectOneRadio  id="sexe" layout="responsive" style="border: 2px" columns="3" value="#{patientBean.patient.sexe}" styleClass="form-group">
+                                                <f:selectItem itemLabel="Feminin" itemValue="F" />
+                                                <f:selectItem itemLabel="Masculin" itemValue="M" />
+                                            </p:selectOneRadio>
+
+
+                                            <p:outputLabel for="stm" value="Civilité" />
+                                            <p:selectOneRadio  id="stm" layout="responsive" columns="3" value="#{patientBean.patient.civilite}" styleClass="form-group">
+                                                <f:selectItem itemLabel="Marié" itemValue="marié" />
+                                                <f:selectItem itemLabel="Celibataire" itemValue="Celibataire" />
+                                                <f:selectItem itemLabel="Divorcé(e)" itemValue="Divorcé(e)" />
+                                                <f:selectItem itemLabel="Veuf" itemValue="Veuf" />
+                                                <f:selectItem itemLabel="Fiancée" itemValue="Fiancé(e)" />
+                                            </p:selectOneRadio>
+
+
+                                        </p:panelGrid>
+
+                                    </p:panel>
+
+                                </p:tab>
+
+                                <p:tab id="constante" title="Constante">
+
+                                    <p:panel style="height: 400px">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel for="mtaille" value="Taille:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="mtaille" value="#{patientBean.patient.taille}"/>
+                                                <label>Taille</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="ttaille" value="Tour de taille:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="ttaille" value="#{patientBean.patient.tourtaille}" />
+                                                <label>Tour de taille</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="mpoids" value="Poids:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="mpoids" value="#{patientBean.patient.poid}"/>
+                                                <label>Poids</label>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="tension" value="Tension Alterielle:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="tension" value="#{patientBean.patient.tension}" />
+                                                <label>Tension alterielle</label>
+                                            </h:panelGroup>
+
+
+                                            <p:outputLabel for="spt" value="Sport effectué" />
+                                            <p:selectOneRadio  id="spt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{patientBean.patient.sport}">
+                                                <f:selectItem itemLabel="Intense(7/7j)" itemValue="normal"  />
+                                                <f:selectItem itemLabel="Moderé(5/7j)" itemValue="Aucun" />   
+                                                <f:selectItem itemLabel="Faible (3/7j" itemValue="Aucun" /> 
+                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
+
+                                            </p:selectOneRadio>
+
+                                        </p:panelGrid>
+
+                                    </p:panel>
+
+                                </p:tab>
+
+                                <p:tab id="ant" title="Antecedant">
+
+                                    <p:panel style="height: 300px">
+
+
+                                        <p:panelGrid columns="2">
+
+                                            <p:outputLabel  value="Antecedant familiale"/>
+
+                                            <p:selectOneMenu id="pathlist" style="margin-bottom:10px;" value="#{patientBean.patient.pathologie}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" filter="true" filterMatchMode="contain">
+                                                <p:ajax process="@this"/>
+                                                <f:selectItem itemLabel="Select One" itemValue="" />
+                                                <f:selectItems value="#{patientBean.allPathologie}" var="rpat" itemLabel="#{rpat.nomPathologie}" itemValue="#{rpat}"/>
+                                            </p:selectOneMenu>
+
+
+                                            <p:outputLabel for="chir" value="Antecedant Personelle"/>
+
+                                            <p:panelGrid columns="2">
+
+                                                <p:outputLabel for="chir" value="Antecedant Personelle Chirugicaux"/>
+                                                <p:inputTextarea id="chir" value="#{patientBean.patient.antChirugicaux}"/>
+                                                <p:outputLabel for="med" value="Antecedant Personelle Medicaux"/>
+                                                <p:inputTextarea id="med" value="#{patientBean.patient.antMedicaux}"/>
+
+                                            </p:panelGrid>
+
+                                        </p:panelGrid>  
+                                    </p:panel>
+
+
+
+                                </p:tab>
+
+
+                                <p:tab id="halimentaire" title="Habitude allimentaire">
+                                    <p:panel style="height: 500px">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel for="frt" value="Fruit / Legume Consommée" />
+                                            <p:selectOneRadio  id="frt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{patientBean.patient.fruit}">
+                                                <f:selectItem itemLabel="Normal(5/j)" itemValue="normal"  />
+                                                <f:selectItem itemLabel="Moyen (3/j)" itemValue="Moyen" />
+                                                <f:selectItem itemLabel="faible (1/j)" itemValue="faible" />
+                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
+                                            </p:selectOneRadio>
+
+
+
+                                        </p:panelGrid>
+
+
+                                        <div class="ui-g-12">
+
+                                            <p:dataTable value="#{patientBean.allConsommation}" var="ro"
+                                                         selection="#{patientBean.allTypeConsommations}"  rowKey="#{ro.id}" widgetVar="dt_roles" styleClass="dt_roles">
+                                                <f:facet name="header">Consommation du patient</f:facet>
+                                                <p:ajax event="rowSelectCheckbox" process="@this"/>
+                                                <p:ajax event="rowUnselectCheckbox" process="@this"/>
+                                                <p:column selectionMode="multiple" style="text-align: center;width: 30px;"/>
+
+                                                <p:column headerText="Libellé de la consommation" filterable="true" filterBy="#{ro.label}" filterMatchMode="contains">
+                                                    <h:outputText value="#{ro.label}"/>
+                                                </p:column>
+
+                                                <p:column headerText="Libellé type" filterable="true" filterBy="#{ro.type_consommation.label}" filterMatchMode="contains">
+                                                    <h:outputText value="#{ro.type_consommation.label}"/>
+                                                </p:column>
+
+                                                <p:column headerText="Libellé description" filterable="true" filterBy="#{ro.type_consommation.description}" filterMatchMode="contains">
+                                                    <h:outputText value="#{ro.type_consommation.description}"/>
+                                                </p:column>
+                                            </p:dataTable>
+
+                                        </div>
+
+                                    </p:panel>
+
+
+
+                                </p:tab>
+
+
+
+
+                                <p:tab id="detail" title="Detail">
+
+                                    <div class="ui-g-12">
+                                        <p:panel style="height: 500px">
+
+                                            <h:panelGrid id="confirmation" columns="3" columnClasses="grid,grid,grid">
+
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Nom patient: " />
+                                                    <h:outputText value="#{patientBean.patient.nomPatient}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Prenom: " />
+                                                    <h:outputText value="#{patientBean.patient.prenomPatient}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Age: " />
+                                                    <h:outputText value="#{patientBean.patient.age}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Profession: " />
+                                                    <h:outputText value="#{patientBean.patient.profession}" styleClass="outputLabel"/>
+                                                </h:panelGrid>
+
+
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Antecedant: " />
+                                                    <h:outputText value="#{patientBean.patient.pathologie.nomPathologie}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value=" antecedant chirugicaux: " />
+                                                    <h:outputText value="#{patientBean.patient.antChirugicaux}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Antecedant Medical: " />
+                                                    <h:outputText value="#{patientBean.patient.antMedicaux}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Tension: " />
+                                                    <h:outputText value="#{patientBean.patient.tension}" styleClass="outputLabel"/>
+                                                </h:panelGrid>
+
+
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Taille: " />
+                                                    <h:outputText value="#{patientBean.patient.taille}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value=" Tour de taille: " />
+                                                    <h:outputText value="#{patientBean.patient.tourtaille}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Poids: " />
+                                                    <h:outputText value="#{patientBean.patient.poid}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Masse corporelle: " />
+                                                    <h:outputText value="0" styleClass="outputLabel"/>
+                                                </h:panelGrid>
+
+                                            </h:panelGrid>
+
+
+
+                                        </p:panel>
+
+                                    </div>
+
+                                    <p:commandButton value="Confirmation" actionListener="#{patientBean.addPatient()}" update="growl" process="@this"/>
+
+
+                                </p:tab>
+
+
+
+
+
+
+
+                            </p:wizard>
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+        </h:form>
+
+
+
+    </ui:define>
+
+</ui:composition>
