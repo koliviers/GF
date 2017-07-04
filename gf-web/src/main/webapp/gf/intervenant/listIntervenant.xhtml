@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+
+    <ui:define name="content">
+        <h:form id="itsform">
+            <p:growl/>
+            <div class="ui-g-12">
+
+                <div class="card card-w-title">
+                    <center>   <h1>Liste des Intervenants</h1> </center>
+                    <p:dataTable id="intable" value="#{interbean.allIntervenant}" reflow="true"
+                                 var="int" rowKey="#{int.id}" styleClass="dt_search"
+                                 paginator="true" rows="20" widgetVar="dt_rdv"
+                                 scrollable="true" scrollHeight="300" selection="#{interbean.intervenanselect}"
+                                 emptyMessage="Aucune donnée trouvée">
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="Rechercher Intervenant:" />
+                                <p:inputText id="globalFilter" onkeyup="PF('dt_rdv').filter()" style="width:150px" placeholder="Seach"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                        <p:column headerText="Nom intervenant" sortBy="#{int.nomIntervenant}"
+                                  filterMatchMode="contains" filterBy="#{int.nomIntervenant}">
+                            <h:outputText value="#{int.nomIntervenant}" />
+                        </p:column>
+                        <p:column headerText="Prenom intervenant" sortBy="#{int.prenomIntervenant}"
+                                  filterMatchMode="contains" filterBy="#{int.prenomIntervenant}">
+                            <h:outputText value="#{int.prenomIntervenant}" />
+                        </p:column>
+                        <p:column headerText="Contact intervenant" sortBy="#{int.contact}"
+                                  filterMatchMode="contains" filterBy="#{int.contact}">
+                            <h:outputText value="#{int.contact}" />
+                        </p:column>
+
+                        <p:column headerText="Service intervenant" sortBy="#{int.services.nomService}"
+                                  filterMatchMode="contains" filterBy="#{int.services.nomService}">
+                            <h:outputText value="#{int.services.nomService}" />
+                        </p:column>
+
+                        <p:column headerText="Type intervenant" sortBy="#{int.type_intervenant.libelletype}"
+                                  filterMatchMode="contains" filterBy="#{int.type_intervenant.libelletype}">
+                            <h:outputText value="#{int.type_intervenant.libelletype}" />
+                        </p:column>
+
+                        <p:column headerText="active" sortBy="#{int.active}"
+                                  filterMatchMode="contains" filterBy="#{int.active}">
+                            <h:outputText value="#{int.active}" />
+                        </p:column>
+
+
+                        <f:facet name="footer">
+                            <p:commandButton process="intable" update=":misform"  icon="ui-icon-seach" value="Edit" oncomplete="PF('dlg').show()"/>
+
+                        </f:facet>
+                    </p:dataTable>
+
+                </div> 
+
+            </div>
+
+
+        </h:form>
+        <h:form id="misform">
+
+            <p:dialog header="Intervenant" widgetVar="dlg" resizable="false" draggable="false" responsive="true" hideEffect="scale">
+                <div class="ui-g form-group" style="margin-bottom: 16px;">
+                    <p:outputPanel id="mypan">
+
+                        <p:panelGrid  columns="1" styleClass="ui-panelgrid-blank form-group" rendered="#{not empty interbean.intervenanselect}">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText value="#{interbean.intervenanselect.nomIntervenant} " />
+                                <label>Nom intervenant</label>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText value="#{interbean.intervenanselect.prenomIntervenant} " />
+                                <label>Prenom intervenant</label>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText value="#{interbean.intervenanselect.contact} " />
+                                <label>Contact intervenant</label>
+                            </h:panelGroup>
+
+                            <p:selectOneMenu id="intser" style="margin-bottom:10px;" value="#{interbean.intervenanselect.services}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                                <f:selectItem itemLabel="Select One" itemValue="" />
+                                <f:selectItems value="#{interbean.allService}" var="intser" itemLabel="#{intser.nomService}" itemValue="#{intser}"/>
+                            </p:selectOneMenu>
+
+
+                            <p:inputSwitch value="#{interbean.intervenanselect.active}" onLabel="true" offLabel="false" />
+
+                        </p:panelGrid>
+
+                    </p:outputPanel>
+
+                </div>
+
+                <f:facet name="footer">
+
+                    <p:commandButton id="btnupadte" value="Valider" actionListener="#{interbean.updateIntervenant()}" update="itsform"/>
+                </f:facet>  
+            </p:dialog>  
+
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
