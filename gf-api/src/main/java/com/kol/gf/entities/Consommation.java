@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,18 +29,13 @@ public class Consommation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    
     @Column(name = "label")
     private String label;
 
-    @ManyToOne
-    @JoinColumn(name = "type_consommation")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_consommation",nullable = false)
     private TypeConsommation type_consommation;
 
-    
-    
-    
-    
     public Consommation() {
     }
 

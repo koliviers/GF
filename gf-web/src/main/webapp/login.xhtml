@@ -18,34 +18,67 @@
     </h:head>
 
     <h:body styleClass="login-body">
-        <div class="card login-panel ui-fluid">
-            <div class="ui-g">
-                <div class="ui-g-12">
-                    <p:graphicImage name="images/logo-ultima.svg" library="ultima-layout" />
-                </div>
-                <div class="ui-g-12">
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:inputText />
-                        <label>Username</label>
-                    </h:panelGroup>
-                </div>
-                <div class="ui-g-12">
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:password />
-                        <label>Password</label>
-                    </h:panelGroup>
-                </div>
-                <div class="ui-g-12">
-                    <p:button outcome="/dashboard" value="Sign In" icon="ui-icon-person" />
-                    <p:button outcome="/dashboard" value="Forgot Password" icon="ui-icon-help" styleClass="secondary"/>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+
+            <div class="card login-panel ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:graphicImage name="images/logo-ultima.svg" library="ultima-layout" />
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText value="#{connexionManagedBean.userConnexion.login}"/>
+                            <label>Utilisateur</label>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password value="#{connexionManagedBean.userConnexion.motDePasse}"/>
+                            <label>Mot de passe</label>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <center><p:commandButton value="Connexion" icon="ui-icon-person" action="#{connexionManagedBean.connexionUser()}" update=":form:growl"/></center>    
+                    </div>
                 </div>
             </div>
-        </div>
-        
+
+        </h:form>
+
+        <p:dialog header="Enregistrement de mot de passe" widgetVar="dlg2" modal="true" resizable="false" draggable="false" responsive="true" hideEffect="scale">
+            <h:form id="form2">
+                
+                <div class="ui-g form-group" style="margin-bottom: 16px;">
+                    <div class="ui-g">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password value="#{connexionManagedBean.newMdp}"/>
+                            <label>Mot de passe</label>
+                        </h:panelGroup>
+                    </div>
+
+                    <div class="ui-g">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password value="#{connexionManagedBean.comfMdp}"/>
+                            <label>Confirmer le mot de passe</label>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+                    <center> <p:commandButton value="Valider" action="#{connexionManagedBean.modifMdp()}" style="width:auto" icon="ui-icon-person" update=":form:growl"/> </center>    
+                </div>
+
+            </h:form>
+        </p:dialog>
+
+
         <div class="login-footer">PrimeFaces Ultima</div>
-        
+
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
         <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+
+
     </h:body>
 
 </html>

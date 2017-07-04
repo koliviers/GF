@@ -30,7 +30,7 @@ public class ConsultationServiceBean extends GenericServiceBean<Consultation, Lo
 
     @Override
     public Long getId(Consultation e) {
-        return e.getId();
+        return null;
     }
 
 }

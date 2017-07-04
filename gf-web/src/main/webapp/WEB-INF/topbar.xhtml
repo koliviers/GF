@@ -24,7 +24,7 @@
                     <li class="profile-item">
                         <a href="#">                            
                             <div class="profile-image"></div>
-                            <span class="topbar-item-name">Jane Williams</span>
+                            <span class="topbar-item-name">#{connexionManagedBean.userLogin}</span>
                         </a>
                         
                         <ul class="ultima-menu animated">
@@ -37,20 +37,20 @@
                             <li role="menuitem">
                                 <a href="#">
                                     <i class="material-icons">&#xE32A;</i>
-                                    <span>Privacy</span>
+                                    <span>Privacy1</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a href="#">
                                     <i class="material-icons">&#xE8B9;</i>
-                                    <span>Settings</span>
+                                    <span>Settings1</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#">
+                                <a href="#" onclick="PF('logoutWV').show();" class="ripplelink">
                                     <i class="material-icons">&#xE8AC;</i>
                                     <span>Logout</span>
-                                </a>
+                                 </a>
                             </li>
                         </ul>
                     </li>

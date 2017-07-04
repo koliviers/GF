@@ -54,24 +54,9 @@ public class Intervenant implements Serializable {
     @OneToMany(mappedBy = "intervenant")
     private List<RendezVous> listRdv;
 
-    
-    
     public Intervenant() {
-       
+        this.active=true;
     }
-
-    public Intervenant(Long id, String nomIntervenant, String prenomIntervenant, Long contact, boolean active, Services services, TypeIntervenant type_intervenant, List<Consultation> listeConsultation, List<RendezVous> listRdv) {
-        this.id = id;
-        this.nomIntervenant = nomIntervenant;
-        this.prenomIntervenant = prenomIntervenant;
-        this.contact = contact;
-        this.active = active;
-        this.services = services;
-        this.type_intervenant = type_intervenant;
-        this.listeConsultation = listeConsultation;
-        this.listRdv = listRdv;
-    }
-    
 
     /**
      * @return the id

@@ -4,16 +4,20 @@
     <jta-data-source>jdbc/gf</jta-data-source>
     <class>com.kol.gf.entities.Consommation</class>
     <class>com.kol.gf.entities.Consultation</class>
-    <class>com.kol.gf.entities.Habitude_Halimentaire</class>
+    <class>com.kol.gf.entities.Habitude_alimentaire</class>
     <class>com.kol.gf.entities.Intervenant</class>
     <class>com.kol.gf.entities.Pathologie</class>
     <class>com.kol.gf.entities.Patient</class>
     <class>com.kol.gf.entities.RendezVous</class>
     <class>com.kol.gf.entities.Services</class>
     <class>com.kol.gf.entities.TypeConsommation</class>
+    <class>com.kol.gf.entities.TypeHabitude</class>
     <class>com.kol.gf.entities.TypeIntervenant</class>
-    <class>com.mpg.api.entities.Assistant</class>
-    <class>com.mpg.api.entities.Services</class>
+    <class>com.miki.webapp.miki.securite.entities.Droit</class>
+    <class>com.miki.webapp.miki.securite.entities.Posseder</class>
+    <class>com.miki.webapp.miki.securite.entities.Poste</class>
+    <class>com.miki.webapp.miki.securite.entities.Profil</class>
+    <class>com.miki.webapp.miki.securite.entities.Utilisateur</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

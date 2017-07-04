@@ -8,7 +8,9 @@ package com.kol.gf.entities;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,22 +25,22 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "consultation")
 public class Consultation implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    
+    @EmbeddedId
+    private Patient_ConsultationId id;
+    
     @Column (name = "traitement")
     private String traitement;
     
     @Column(name = "detailConsultation")
     private String detailConsultation;
     
-    @ManyToOne
-    @JoinColumn(name = "patient")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient",nullable = false, insertable = false, updatable = false)
     private Patient patient;
     
-    @ManyToOne
-    @JoinColumn(name = "intervenant")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "intervenant",nullable = false, insertable = false, updatable = false)
     private Intervenant intervenant;
     
     @ManyToOne
@@ -48,17 +50,26 @@ public class Consultation implements Serializable{
     public Consultation() {
     }
 
+    public Consultation(Patient_ConsultationId id, String traitement, String detailConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
+        this.id = id;
+        this.traitement = traitement;
+        this.detailConsultation = detailConsultation;
+        this.patient = patient;
+        this.intervenant = intervenant;
+        this.pathologie = pathologie;
+    }
+
     /**
      * @return the id
      */
-    public Long getId() {
+    public Patient_ConsultationId getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Long id) {
+    public void setId(Patient_ConsultationId id) {
         this.id = id;
     }
 
@@ -135,7 +146,7 @@ public class Consultation implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 17 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -161,9 +172,12 @@ public class Consultation implements Serializable{
     public String toString() {
         return "Consultation{" + "id=" + id + ", traitement=" + traitement + ", detailConsultation=" + detailConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", pathologie=" + pathologie + '}';
     }
-    
-    
-    
+
+    /**
+     * @return the id
+     */
     
 
+    
+    
 }

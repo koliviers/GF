@@ -7,12 +7,11 @@ package com.kol.gf.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -22,60 +21,60 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "habitude_alimentaire")
-public class Habitude_Halimentaire implements Serializable {
-
+public class Habitude_alimentaire implements Serializable{
+    
     @EmbeddedId
-    private Habitude_AlimentaireId id;
-
+    private Habitude_alimentaireId id;
+    
+    @Column(name = "quantite", nullable = false)
+    private Integer quantite;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_patient",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_Patient", nullable = false,insertable = false,updatable = false)
     private Patient patient;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_consommation",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_Consommation", nullable = false, insertable = false, updatable = false)
     private Consommation consommation;
 
-    public Habitude_Halimentaire() {
+    public Habitude_alimentaire() {
     }
 
-    /**
-     * @return the id
-     */
-    public Habitude_AlimentaireId getId() {
+    public Habitude_alimentaire(Habitude_alimentaireId id, Integer quantite, Patient patient, Consommation consommation) {
+        this.id = id;
+        this.quantite = quantite;
+        this.patient = patient;
+        this.consommation = consommation;
+    }
+
+    public Habitude_alimentaireId getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Habitude_AlimentaireId id) {
+    public void setId(Habitude_alimentaireId id) {
         this.id = id;
     }
 
-    /**
-     * @return the patient
-     */
+    public Integer getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(Integer quantite) {
+        this.quantite = quantite;
+    }
+
     public Patient getPatient() {
         return patient;
     }
 
-    /**
-     * @param patient the patient to set
-     */
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    /**
-     * @return the consommation
-     */
     public Consommation getConsommation() {
         return consommation;
     }
 
-    /**
-     * @param consommation the consommation to set
-     */
     public void setConsommation(Consommation consommation) {
         this.consommation = consommation;
     }
@@ -83,7 +82,7 @@ public class Habitude_Halimentaire implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -98,7 +97,7 @@ public class Habitude_Halimentaire implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Habitude_Halimentaire other = (Habitude_Halimentaire) obj;
+        final Habitude_alimentaire other = (Habitude_alimentaire) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -107,11 +106,9 @@ public class Habitude_Halimentaire implements Serializable {
 
     @Override
     public String toString() {
-        return "Habitude_Halimentaire{" + "id=" + id + ", patient=" + patient + ", consommation=" + consommation + '}';
+        return "Habitude_alimentaire{" + "id=" + id + ", quantite=" + quantite + ", patient=" + patient + ", consommation=" + consommation + '}';
     }
     
     
     
-    
-
 }

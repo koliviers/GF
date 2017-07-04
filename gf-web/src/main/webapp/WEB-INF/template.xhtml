@@ -22,28 +22,44 @@
     </h:head>
 
     <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
-        
+
         <div class="layout-wrapper #{guestPreferences.menuLayout}">
             <ui:include src="./topbar.xhtml" />
             <ui:include src="./menu.xhtml" />
-            
+
+            <h:form>
+                <p:growl id="message" showDetail="true" />
+
+                <p:dialog header="Confirmation" widgetVar="logoutWV" modal="true" height="100" responsive="true">
+                    <h:outputText value="Voulez vous éffectuer une deconnexion ?" />
+                    <f:facet name="footer">
+                        <center>
+                            <p:commandButton value="Oui" action="#{logoutManagedBean.deconnexionUser()}" styleClass="ui-confirmdialog-yes GreenButton" icon="ui-icon-check" />
+                            <p:spacer/>
+                            <p:commandButton value="Non" type="button" onclick="PF('logoutWV').hide();" styleClass="ui-confirmdialog-no RedButton" icon="ui-icon-close" />
+                        </center>
+                    </f:facet>
+                </p:dialog> 
+
+            </h:form>
+
             <div class="layout-main">
                 <ui:insert name="content"/>
-                
+
                 <ui:include src="./footer.xhtml" />
             </div>
         </div>
-        
-        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
-           <f:facet name="start">
-               <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
-           </f:facet>
 
-           <f:facet name="complete">
-               <h:outputText value="" />
-           </f:facet>
-       </p:ajaxStatus>
-        
+        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+            <f:facet name="start">
+                <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+            </f:facet>
+
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
+
 
         <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
         <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
