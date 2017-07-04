@@ -14,7 +14,7 @@
                         <div class="profile">
                             <div class="profile-image"></div>
                             <a id="profile-options" href="#">
-                                <span class="profile-name">Jane Williams</span>
+                                <span class="profile-name"><h:outputText value="#{connexionManagedBean.userLogin}"/></span>
                                 <i class="material-icons">&#xE313;</i>
                             </a>
                         </div>
@@ -39,12 +39,14 @@
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
+                                <a href="#" onclick="PF('logoutWV').show();" class="ripplelink">
                                     <i class="material-icons">&#xE8AC;</i>
                                     <span>Logout</span>
                                 </a>
                             </li>
                         </ul>
+
+                       
                     </ui:fragment>
 
                     <pu:menu widgetVar="me">

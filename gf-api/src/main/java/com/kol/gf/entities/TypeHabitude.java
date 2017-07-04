@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -22,25 +23,27 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "typeHabitude")
-public class TypeHabitude implements Serializable{
-    
-    
+public class TypeHabitude implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private long id;
-    @Column(name = "label")
+
+    @Column(name = "label", nullable = false)
     private String label;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_habitude",nullable = false)
+    @JoinColumns({
+        @JoinColumn(name = "id_Patient", referencedColumnName = "id_Patient")
+        ,
+        @JoinColumn(name = "id_Consommation", referencedColumnName = "id_Consommation")})
     private Habitude_alimentaire habitude;
 
     public TypeHabitude() {
     }
 
-    public TypeHabitude(long id, String label, Habitude_alimentaire habitude) {
-        this.id = id;
+    public TypeHabitude(String label, Habitude_alimentaire habitude) {
         this.label = label;
         this.habitude = habitude;
     }
@@ -116,11 +119,5 @@ public class TypeHabitude implements Serializable{
     public String toString() {
         return "TypeHabitude{" + "id=" + id + ", label=" + label + ", habitude=" + habitude + '}';
     }
-    
-    
-    
-    
-    
-    
-    
+
 }
