@@ -32,11 +32,15 @@ public class TypeIntervenant implements Serializable {
     @Column(name = "libelltype")
     private String libelletype;
 
-    @OneToMany(mappedBy = "type_intervenant")
-    private List<Intervenant> listIntervenant;
-
+   
     public TypeIntervenant() {
     }
+
+    public TypeIntervenant(String libelletype) {
+        this.libelletype = libelletype;
+    }
+    
+    
 
     /**
      * @return the id
@@ -66,19 +70,7 @@ public class TypeIntervenant implements Serializable {
         this.libelletype = libelletype;
     }
 
-    /**
-     * @return the listIntervenant
-     */
-    public List<Intervenant> getListIntervenant() {
-        return listIntervenant;
-    }
-
-    /**
-     * @param listIntervenant the listIntervenant to set
-     */
-    public void setListIntervenant(List<Intervenant> listIntervenant) {
-        this.listIntervenant = listIntervenant;
-    }
+    
 
     @Override
     public int hashCode() {
@@ -107,10 +99,8 @@ public class TypeIntervenant implements Serializable {
 
     @Override
     public String toString() {
-        return "TypeIntervenant{" + "id=" + id + ", libelletype=" + libelletype + ", listIntervenant=" + listIntervenant + '}';
+        return "TypeIntervenant{" + "id=" + id + ", libelletype=" + libelletype + '}';
     }
-    
-    
-    
 
+   
 }

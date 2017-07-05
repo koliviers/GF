@@ -26,7 +26,7 @@ public class Habitude_alimentaire implements Serializable{
     @EmbeddedId
     private Habitude_alimentaireId id;
     
-    @Column(name = "quantite", nullable = false)
+    @Column(name = "quantite", nullable = true)
     private Integer quantite;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,6 +36,10 @@ public class Habitude_alimentaire implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_Consommation", nullable = false, insertable = false, updatable = false)
     private Consommation consommation;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_type_habitude", nullable = false, insertable = false, updatable = false)
+    private TypeHabitude type_habitude;
 
     public Habitude_alimentaire() {
     }
@@ -78,6 +82,16 @@ public class Habitude_alimentaire implements Serializable{
     public void setConsommation(Consommation consommation) {
         this.consommation = consommation;
     }
+
+    public TypeHabitude getType_habitude() {
+        return type_habitude;
+    }
+
+    public void setType_habitude(TypeHabitude type_habitude) {
+        this.type_habitude = type_habitude;
+    }
+    
+    
 
     @Override
     public int hashCode() {

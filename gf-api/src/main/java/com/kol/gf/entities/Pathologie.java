@@ -40,6 +40,14 @@ public class Pathologie implements Serializable{
     public Pathologie() {
     }
 
+    public Pathologie(String nomPathologie, List<Patient> listpatient, List<Consultation> listconsultation) {
+        this.nomPathologie = nomPathologie;
+        this.listpatient = listpatient;
+        this.listconsultation = listconsultation;
+    }
+    
+    
+
     /**
      * @return the id
      */

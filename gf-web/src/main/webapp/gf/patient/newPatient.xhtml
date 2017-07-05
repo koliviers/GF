@@ -165,6 +165,7 @@
 
 
                                 <p:tab id="halimentaire" title="Habitude allimentaire">
+                                    
                                     <p:panel style="height: 500px">
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
@@ -177,30 +178,57 @@
                                                 <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
                                             </p:selectOneRadio>
 
-
+                                            <p:outputLabel for="typcsl" value="Type consommation" />
+                                            <p:selectOneMenu  id="typcsl" value="#{patientBean.typecons}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tpc" value="#{patientBean.allTypeConsommations}" itemValue="#{tpc}" itemLabel="#{tpc.label}"/>  
+                                                <p:ajax update="@form:cns,@form:typhb" />
+                                            </p:selectOneMenu>
+                                            
+                                            <p:outputLabel for="cns" value="Consommation" />
+                                            <p:selectOneMenu  id="cns" value="#{patientBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une consommation" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="cs" value="#{patientBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
+                                            </p:selectOneMenu>
+                                            
+                                            <p:outputLabel for="typhb" value="Type habitude" />
+                                            <p:selectOneMenu  id="typhb" value="#{patientBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner un type habitude" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tph" value="#{patientBean.listeTypeHabitude}" itemValue="#{tph}" itemLabel="#{tph.label}"/>                              
+                                            </p:selectOneMenu>
 
                                         </p:panelGrid>
+                                        
+                                        <center>
+                                            <p:commandButton value="Ajouter" action="#{patientBean.ajouterHabitudeAlimentaire()}" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
+                                        </center>
 
 
                                         <div class="ui-g-12">
-
-                                            <p:dataTable value="#{patientBean.allConsommation}" var="ro"
-                                                         selection="#{patientBean.allTypeConsommations}"  rowKey="#{ro.id}" widgetVar="dt_roles" styleClass="dt_roles">
-                                                <f:facet name="header">Consommation du patient</f:facet>
-                                                <p:ajax event="rowSelectCheckbox" process="@this"/>
-                                                <p:ajax event="rowUnselectCheckbox" process="@this"/>
-                                                <p:column selectionMode="multiple" style="text-align: center;width: 30px;"/>
-
-                                                <p:column headerText="Libellé de la consommation" filterable="true" filterBy="#{ro.label}" filterMatchMode="contains">
-                                                    <h:outputText value="#{ro.label}"/>
+                                            
+                                            <p:dataTable value="#{patientBean.tamponHabitudeAlimentaire.entrySet()}" var="htal" id="tamponId" >
+                                                <p:column headerText="Type consommation" >
+                                                    <h:outputText value="#{htal.key}">
+                                                        <f:converter converterId="typeConsommationConverterId"/>
+                                                    </h:outputText>
                                                 </p:column>
 
-                                                <p:column headerText="Libellé type" filterable="true" filterBy="#{ro.type_consommation.label}" filterMatchMode="contains">
-                                                    <h:outputText value="#{ro.type_consommation.label}"/>
+                                                <p:column headerText="Consommation" >
+                                                    <h:outputText value="#{htal.key}">
+                                                        <f:converter converterId="consommationConverterId"/>
+                                                    </h:outputText>
                                                 </p:column>
 
-                                                <p:column headerText="Libellé description" filterable="true" filterBy="#{ro.type_consommation.description}" filterMatchMode="contains">
-                                                    <h:outputText value="#{ro.type_consommation.description}"/>
+                                                <p:column headerText="Type habitude" >
+                                                    <h:outputText value="#{patientBean.tamponHabitudeAlimentaire[htal.key]}">
+                                                        <f:converter converterId="typeHabitudeConverterId"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                
+                                                <p:column headerText="Action" >
+                                                    <center>
+                                                        <p:commandButton  value="Supprimer" action="#{patientBean.supprimerHabitudeAlimentaire(htal.key)}" update="@form:tamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    </center>
                                                 </p:column>
                                             </p:dataTable>
 

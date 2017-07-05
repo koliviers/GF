@@ -16,14 +16,18 @@ import javax.persistence.Embeddable;
 public class Habitude_alimentaireId implements Serializable{
     private long id_Patient;
     private long id_Consommation;
+    private long id_type_habitude;
 
     public Habitude_alimentaireId() {
     }
 
-    public Habitude_alimentaireId(long id_Patient, long id_Consommation) {
+    public Habitude_alimentaireId(long id_Patient, long id_Consommation, long id_type_habitude) {
         this.id_Patient = id_Patient;
         this.id_Consommation = id_Consommation;
+        this.id_type_habitude = id_type_habitude;
     }
+
+    
 
     public long getId_Patient() {
         return id_Patient;
@@ -41,11 +45,22 @@ public class Habitude_alimentaireId implements Serializable{
         this.id_Consommation = id_Consommation;
     }
 
+    public long getId_type_habitude() {
+        return id_type_habitude;
+    }
+
+    public void setId_type_habitude(long id_type_habitude) {
+        this.id_type_habitude = id_type_habitude;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 71 * hash + (int) (this.id_Patient ^ (this.id_Patient >>> 32));
-        hash = 71 * hash + (int) (this.id_Consommation ^ (this.id_Consommation >>> 32));
+        hash = 37 * hash + (int) (this.id_Patient ^ (this.id_Patient >>> 32));
+        hash = 37 * hash + (int) (this.id_Consommation ^ (this.id_Consommation >>> 32));
+        hash = 37 * hash + (int) (this.id_type_habitude ^ (this.id_type_habitude >>> 32));
         return hash;
     }
 
@@ -67,13 +82,20 @@ public class Habitude_alimentaireId implements Serializable{
         if (this.id_Consommation != other.id_Consommation) {
             return false;
         }
+        if (this.id_type_habitude != other.id_type_habitude) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Habitude_alimentaireId{" + "id_Patient=" + id_Patient + ", id_Consommation=" + id_Consommation + '}';
+        return "Habitude_alimentaireId{" + "id_Patient=" + id_Patient + ", id_Consommation=" + id_Consommation + ", id_type_habitude=" + id_type_habitude + '}';
     }
+    
+    
+
+    
     
     
 }

@@ -39,6 +39,13 @@ public class Consommation implements Serializable {
     public Consommation() {
     }
 
+    public Consommation(String label, TypeConsommation type_consommation) {
+        this.label = label;
+        this.type_consommation = type_consommation;
+    }
+    
+    
+
     /**
      * @return the id
      */

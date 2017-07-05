@@ -34,19 +34,18 @@ public class TypeHabitude implements Serializable {
     private String label;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-        @JoinColumn(name = "id_Patient", referencedColumnName = "id_Patient")
-        ,
-        @JoinColumn(name = "id_Consommation", referencedColumnName = "id_Consommation")})
-        private Habitude_alimentaire habitude;
+    @JoinColumn(name = "id_type_conso", nullable = true)
+    private TypeConsommation type_consommation;
 
     public TypeHabitude() {
     }
 
-    public TypeHabitude(String label, Habitude_alimentaire habitude) {
+    public TypeHabitude(String label, TypeConsommation type_consommation) {
         this.label = label;
-        this.habitude = habitude;
+        this.type_consommation = type_consommation;
     }
+
+    
 
     /**
      * @return the id
@@ -76,19 +75,15 @@ public class TypeHabitude implements Serializable {
         this.label = label;
     }
 
-    /**
-     * @return the habitude
-     */
-    public Habitude_alimentaire getHabitude() {
-        return habitude;
+    public TypeConsommation getType_consommation() {
+        return type_consommation;
     }
 
-    /**
-     * @param habitude the habitude to set
-     */
-    public void setHabitude(Habitude_alimentaire habitude) {
-        this.habitude = habitude;
+    public void setType_consommation(TypeConsommation type_consommation) {
+        this.type_consommation = type_consommation;
     }
+
+    
 
     @Override
     public int hashCode() {
@@ -117,7 +112,9 @@ public class TypeHabitude implements Serializable {
 
     @Override
     public String toString() {
-        return "TypeHabitude{" + "id=" + id + ", label=" + label + ", habitude=" + habitude + '}';
+        return "TypeHabitude{" + "id=" + id + ", label=" + label + ", type_consommation=" + type_consommation + '}';
     }
+
+   
 
 }

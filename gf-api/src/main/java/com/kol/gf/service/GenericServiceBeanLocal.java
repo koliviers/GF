@@ -167,6 +167,7 @@ public interface GenericServiceBeanLocal<E extends Serializable, ID> {
     boolean exists(ID id);
     
    
+    public <E> List<E> getBy(String sortProperty, E sortValue);
 
   
 }

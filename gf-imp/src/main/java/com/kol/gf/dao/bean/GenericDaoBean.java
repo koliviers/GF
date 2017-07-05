@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -139,6 +140,21 @@ public abstract class GenericDaoBean<E extends Serializable, ID> implements Gene
 
         return this.getOne(id) != null;
 
+    }
+    
+     @Override
+    public <E> List<E> getBy(String sortProperty, E sortValue) {
+        try {
+            String jpql = "SELECT t FROM " + entityClass.getSimpleName()
+                    + " t WHERE t." + sortProperty + " =:d "
+                    + " ORDER BY t." + sortProperty + " ASC";
+            Query query = em.createQuery(jpql);
+            query.setParameter("d", sortValue);
+            return query.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 
 }

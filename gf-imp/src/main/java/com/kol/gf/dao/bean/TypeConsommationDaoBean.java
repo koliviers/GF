@@ -6,6 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.TypeConsommation;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -13,14 +14,11 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeConsommationDaoBean extends GenericDaoBean<TypeConsommation, Long> implements TypeConsommationDaoBeanLocal{
+public class TypeConsommationDaoBean extends BaseDaoBeanImpl<TypeConsommation, Long> implements TypeConsommationDaoBeanLocal{
     
     
     public TypeConsommationDaoBean(){
         super(TypeConsommation.class);
     }
-    public TypeConsommationDaoBean(Class<TypeConsommation> entiClass)
-    {
-        this.entityClass=entiClass;
-    }
+    
 }

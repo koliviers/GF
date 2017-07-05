@@ -9,6 +9,8 @@ import com.kol.gf.dao.bean.GenericDAOBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.service.TypeConsommationServiceBeanLocal;
+import com.miki.webapp.core.Dao.BaseDaoBean;
+import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -17,19 +19,16 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeConsommationServiceBean extends GenericServiceBean<TypeConsommation, Long> implements TypeConsommationServiceBeanLocal {
+public class TypeConsommationServiceBean extends BaseServiceBeanImpl<TypeConsommation, Long> implements TypeConsommationServiceBeanLocal {
 
     @EJB
     private TypeConsommationDaoBeanLocal dao;
 
-    @Override
-    protected GenericDAOBeanLocal<TypeConsommation, Long> getDAO() {
-        return this.dao;
-    }
+    
 
     @Override
-    public Long getId(TypeConsommation e) {
-        return e.getId();
+    protected BaseDaoBean<TypeConsommation, Long> getDao() {
+        return dao;
     }
 
 }

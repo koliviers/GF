@@ -6,6 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Consommation;
+import com.miki.webapp.core.Dao.BaseDaoBean;
 import javax.ejb.Local;
 
 /**
@@ -13,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface ConsommationDaoBeanLocal extends GenericDAOBeanLocal<Consommation, Long>{
+public interface ConsommationDaoBeanLocal extends BaseDaoBean<Consommation, Long>{
     
 }

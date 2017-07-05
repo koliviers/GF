@@ -9,6 +9,8 @@ import com.kol.gf.dao.bean.GenericDAOBeanLocal;
 import com.kol.gf.dao.bean.TypeHabitudeDaoBeanLocal;
 import com.kol.gf.entities.TypeHabitude;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
+import com.miki.webapp.core.Dao.BaseDaoBean;
+import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -17,19 +19,16 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeHabitudeServiceBean extends GenericServiceBean<TypeHabitude, Long> implements TypeHabitudeServiceBeanLocal {
+public class TypeHabitudeServiceBean extends BaseServiceBeanImpl<TypeHabitude, Long> implements TypeHabitudeServiceBeanLocal {
 
     @EJB
     private TypeHabitudeDaoBeanLocal dao;
 
-    @Override
-    protected GenericDAOBeanLocal<TypeHabitude, Long> getDAO() {
-        return this.dao;
-    }
+    
 
     @Override
-    public Long getId(TypeHabitude e) {
-        return e.getId();
+    protected BaseDaoBean<TypeHabitude, Long> getDao() {
+        return dao;
     }
 
 }

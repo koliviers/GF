@@ -158,4 +158,11 @@ public abstract class GenericServiceBean<E extends Serializable, ID> implements 
         return this.getDAO().getOne(id) != null;
     }
 
+    @Override
+    public <E> List<E> getBy(String sortProperty, E sortValue) {
+         return this.getDAO().getBy(sortProperty, sortValue);
+    }
+    
+    
+
 }

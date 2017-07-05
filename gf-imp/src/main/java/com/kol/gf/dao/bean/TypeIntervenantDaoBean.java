@@ -6,6 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.TypeIntervenant;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -13,14 +14,12 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeIntervenantDaoBean extends GenericDaoBean<TypeIntervenant, Long> implements TypeIntervenantDaoBeanLocal{
+public class TypeIntervenantDaoBean extends BaseDaoBeanImpl<TypeIntervenant, Long> implements TypeIntervenantDaoBeanLocal{
 
     public TypeIntervenantDaoBean() {
         super(TypeIntervenant.class);
     }
 
-    public TypeIntervenantDaoBean(Class<TypeIntervenant> entiClass){
-        this.entityClass=entiClass;
-    }
+    
     
 }

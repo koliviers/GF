@@ -32,11 +32,17 @@ public class TypeConsommation implements Serializable{
     @Column (name = "description")
     private String description;
    
-    @OneToMany(mappedBy = "type_consommation")
-    private List<Consommation> listconsommation;
+   
 
     public TypeConsommation() {
     }
+
+    public TypeConsommation(String label, String description) {
+        this.label = label;
+        this.description = description;
+    }
+    
+    
 
     /**
      * @return the id
@@ -80,19 +86,7 @@ public class TypeConsommation implements Serializable{
         this.description = description;
     }
 
-    /**
-     * @return the listconsommation
-     */
-    public List<Consommation> getListconsommation() {
-        return listconsommation;
-    }
-
-    /**
-     * @param listconsommation the listconsommation to set
-     */
-    public void setListconsommation(List<Consommation> listconsommation) {
-        this.listconsommation = listconsommation;
-    }
+    
 
     @Override
     public int hashCode() {
@@ -121,11 +115,10 @@ public class TypeConsommation implements Serializable{
 
     @Override
     public String toString() {
-        return "TypeConsomation{" + "id=" + id + ", label=" + label + ", description=" + description + ", listconsommation=" + listconsommation + '}';
+        return "TypeConsommation{" + "id=" + id + ", label=" + label + ", description=" + description + '}';
     }
-    
-    
-    
+
+   
     
     
     

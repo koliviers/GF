@@ -36,11 +36,17 @@ public class Services implements Serializable {
     private String code;
     @Column(name = "nomService")
     private String nomService;
-    @OneToMany(mappedBy = "services")
-    private List<Intervenant> listIntervenant;
+    
 
     public Services() {
     }
+
+    public Services(String code, String nomService) {
+        this.code = code;
+        this.nomService = nomService;
+    }
+    
+    
 
     /**
      * @return the id
@@ -84,20 +90,7 @@ public class Services implements Serializable {
         this.nomService = nomService;
     }
 
-    /**
-     * @return the listIntervenant
-     */
-    public List<Intervenant> getListIntervenant() {
-        return listIntervenant;
-    }
-
-    /**
-     * @param listIntervenant the listIntervenant to set
-     */
-    public void setListIntervenant(List<Intervenant> listIntervenant) {
-        this.listIntervenant = listIntervenant;
-    }
-
+   
     @Override
     public int hashCode() {
         int hash = 3;
@@ -125,8 +118,9 @@ public class Services implements Serializable {
 
     @Override
     public String toString() {
-        return "Services{" + "id=" + id + ", code=" + code + ", nomService=" + nomService + ", listIntervenant=" + listIntervenant + '}';
+        return "Services{" + "id=" + id + ", code=" + code + ", nomService=" + nomService + '}';
     }
+
     
     
 

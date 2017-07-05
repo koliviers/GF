@@ -87,19 +87,33 @@ public class Patient implements Serializable {
     @JoinColumn(name = "pathologie",nullable = false)
     private Pathologie pathologie;
 
-     
-    @OneToMany(mappedBy = "patient")
-    private List<Consultation> listConsultation;
-    
-    
-    @OneToMany(mappedBy = "patient")
-    private List<RendezVous> listRdv;
-
-    
-
     public Patient() {
     }
 
+    public Patient(String nomPatient, String prenomPatient, int age, char sexe, long contact, String civilite, String profession, String adresse, double taille, double poid, double tourtaille, double tension, String sport, String fruit, String antMedicaux, String antChirugicaux, Pathologie pathologie) {
+        this.nomPatient = nomPatient;
+        this.prenomPatient = prenomPatient;
+        this.age = age;
+        this.sexe = sexe;
+        this.contact = contact;
+        this.civilite = civilite;
+        this.profession = profession;
+        this.adresse = adresse;
+        this.taille = taille;
+        this.poid = poid;
+        this.tourtaille = tourtaille;
+        this.tension = tension;
+        this.sport = sport;
+        this.fruit = fruit;
+        this.antMedicaux = antMedicaux;
+        this.antChirugicaux = antChirugicaux;
+        this.pathologie = pathologie;
+    }
+
+    
+
+    
+    
     /**
      * @return the id
      */
@@ -356,33 +370,7 @@ public class Patient implements Serializable {
      * @return the consommation
      */
     
-    /**
-     * @return the listConsultation
-     */
-    public List<Consultation> getListConsultation() {
-        return listConsultation;
-    }
-
-    /**
-     * @param listConsultation the listConsultation to set
-     */
-    public void setListConsultation(List<Consultation> listConsultation) {
-        this.listConsultation = listConsultation;
-    }
-
-    /**
-     * @return the listRdv
-     */
-    public List<RendezVous> getListRdv() {
-        return listRdv;
-    }
-
-    /**
-     * @param listRdv the listRdv to set
-     */
-    public void setListRdv(List<RendezVous> listRdv) {
-        this.listRdv = listRdv;
-    }
+    
 
     @Override
     public int hashCode() {
@@ -412,8 +400,10 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", age=" + age + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poid=" + poid + ", tourtaille=" + tourtaille + ", tension=" + tension + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", pathologie=" + pathologie + ", listConsultation=" + listConsultation + ", listRdv=" + listRdv + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", age=" + age + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poid=" + poid + ", tourtaille=" + tourtaille + ", tension=" + tension + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", pathologie=" + pathologie + '}';
     }
+
+   
 
    
 

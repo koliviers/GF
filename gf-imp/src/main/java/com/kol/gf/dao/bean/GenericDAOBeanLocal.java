@@ -59,5 +59,7 @@ public interface GenericDAOBeanLocal<E extends Serializable, ID> {
      * @return <code>true</code> si l'objet existe.
      */
     boolean exists(ID id);
+    
+    public <E> List<E> getBy(String sortProperty, E sortValue);
 
 }
