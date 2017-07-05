@@ -29,6 +29,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Level;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -233,7 +234,7 @@ public class ConnexionManagedBean implements Serializable {
                 userPoste = userConnexionTest.getPoste().getLibPoste();
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
                 Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "dashboard.xhtml");
-//            Mtm.logMikiLog4j(ConnexionManagedBean.class.getName(), Level.INFO, "Connexion à l'application");
+                new Mtm().logMikiLog4j(ConnexionManagedBean.class.getName(), Level.INFO, "Connexion à l'application");
             }
 
         } catch (UnknownAccountException uae) {
@@ -268,7 +269,7 @@ public class ConnexionManagedBean implements Serializable {
             try {
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
                 Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "dashboard.xhtml");
-//                Mtm.logMikiLog4j(ConnexionManagedBean.class.getName(), Level.INFO, "Connexion à l'application");
+                new Mtm().logMikiLog4j(ConnexionManagedBean.class.getName(), Level.INFO, "Connexion à l'application");
             } catch (AuthenticationException e) {
                 Mtm.mikiMessageError();
             }

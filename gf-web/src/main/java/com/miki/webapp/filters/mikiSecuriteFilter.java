@@ -6,10 +6,11 @@
 package com.miki.webapp.filters;
 
 
+import com.miki.webapp.shiro.EntityRealm;
+import com.miki.webapp.shiro.utils.constante;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class mikiSecuriteFilter implements Filter {
 
     private static final String PAGE_ACCUEIL = "dashboard.xhtml";
-    private static final String PAGE_ERROR = "access.xhtml";
+    private static final String PAGE_ERROR = "/access.xhtml";
 
     private FilterConfig filterConfig = null;
 
@@ -33,19 +34,23 @@ public class mikiSecuriteFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         HttpServletRequest request2 = (HttpServletRequest) request;
         String page = request2.getRequestURI().substring(request2.getContextPath().length() + 1);
+        
         try {
 
-//            switch (page) {
-//                case "Administration.xhtml":
-//                    if (EntityRealm.getSubject().isPermitted(constante.ROLE_CONSULTER_LIVRAISON_CLE)) {
-//                        request2.getRequestDispatcher("Administration.xhtml").forward(request, response);
-//                    } else {
-//                        request2.getRequestDispatcher(PAGE_ERROR).forward(request, response);
-//                    }   break;
-//                
-//                default:
-//                    chain.doFilter(request, response);
-//            }
+            switch (page) {
+                case "gf/administration/gestion.xhtml":
+                    if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+                        System.out.println("Bon courg");
+                        request2.getRequestDispatcher("gestion.xhtml").forward(request, response);
+                    } else {
+                        request2.getRequestDispatcher(PAGE_ERROR).forward(request, response);
+                        System.out.println("Mauvais courg");
+                    }  
+                    break;
+                
+                default:
+                    chain.doFilter(request, response);
+            }
            
         } catch (Exception e) {
             //erreur dans le filtre

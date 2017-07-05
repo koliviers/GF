@@ -109,7 +109,7 @@ public class AdministrationManagedBean implements Serializable {
         posteListe = new ArrayList<>();
         possederSupp = new ArrayList<>();
 
-//        tofProfil = "images/tofProfilDefaut.png";
+        tofProfil = "images/tofProfilDefaut.png";
         disAdmin = false;
     }
 
@@ -167,7 +167,7 @@ public class AdministrationManagedBean implements Serializable {
                 } else {
                     utilisateurServices.updateOne(utilisateurProfil);
                     tx.commit();
-                    //Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Affectation du profil : " + utilisateurProfil.getProfil().getNomProf() + ", à l'utilsateur : " + utilisateurProfil.getLogin());
+                    new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Affectation du profil : " + utilisateurProfil.getProfil().getNomProf() + ", à l'utilsateur : " + utilisateurProfil.getLogin());
                     utilisateurProfil = new Utilisateur();
                     Mtm.mikiMessageInfo();
                 }
@@ -183,9 +183,12 @@ public class AdministrationManagedBean implements Serializable {
                 }
                 Mtm.mikiMessageError();
             }
+            
+           
         } else {
             Mtm.mikiLog4jMessageError();
         }
+        
 
     }
 
@@ -229,9 +232,9 @@ public class AdministrationManagedBean implements Serializable {
                             utilisateur.setReinitialiserPswd(true);
                             utilisateurServices.saveOne(utilisateur);
                             tx.commit();
-                            //Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement d'un personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
+                            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement d'un personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
                             utilisateur = new Utilisateur();
-                            //tofProfil = "images/tofProfilDefaut.png";
+                            tofProfil = "images/tofProfilDefaut.png";
                             Mtm.mikiMessageInfo();
                         } else {
                             Mtm.mikiMessageErrorPerso("Ce nom d'utilisateur est déja utilisé, réessayez svp !");
@@ -241,16 +244,18 @@ public class AdministrationManagedBean implements Serializable {
                         tx.commit();
 
                         if (utilisateur.getNom().equals(utilisateurTampon.getNom()) && utilisateur.getPrenom().equals(utilisateurTampon.getPrenom())) {
-                           // Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des données du personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
+                            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des données du personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
                         } else {
-                           // Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée d'un personnel :" + utilisateurTampon.getNom() + " " + utilisateurTampon.getPrenom() + ", par :"
-                                   // + utilisateur.getNom() + " " + utilisateur.getPrenom());
+                            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée d'un personnel :" + utilisateurTampon.getNom() + " " + utilisateurTampon.getPrenom() + ", par :"
+                                    + utilisateur.getNom() + " " + utilisateur.getPrenom());
                         }
                         utilisateur = new Utilisateur();
                         utilisateurTampon = new Utilisateur();
                         tofProfil = "images/tofProfilDefaut.png";
                         Mtm.mikiMessageInfo();
                     }
+                    
+                 
                 }
             } catch (Exception ex) {
                 try {
@@ -262,7 +267,7 @@ public class AdministrationManagedBean implements Serializable {
                 } catch (SystemException ex1) {
                     Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
                 }
-                //Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
+               new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
                 Mtm.mikiMessageError();
             }
         } else {
@@ -295,7 +300,7 @@ public class AdministrationManagedBean implements Serializable {
 
     public void annulerUtilisateur() {
         utilisateur = new Utilisateur();
-       // tofProfil = "images/tofProfilDefaut.png";
+        tofProfil = "images/tofProfilDefaut.png";
         disAdmin = false;
     }
 
@@ -310,6 +315,7 @@ public class AdministrationManagedBean implements Serializable {
                 Mtm.mikiMessageWarnSelectionner("le(s) droit(s)");
             } else {
                 if (profil.getIdProf()== null) {
+                    profil.setDateCreaProf(new Date());
                     profilServices.saveOne(profil);
                     tx.commit();
 
@@ -338,7 +344,7 @@ public class AdministrationManagedBean implements Serializable {
                         tx.commit();
                     }
 
-                   // Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Ajout d'un profil : " + profil.getDescProfil());
+                    new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Ajout d'un profil : " + profil.getNomProf());
                     profil = new Profil();
                     droitListeSource = new ArrayList<>();
                     Mtm.mikiMessageInfo();
@@ -389,11 +395,11 @@ public class AdministrationManagedBean implements Serializable {
                         profilServices.updateOne(profil);
                         tx.commit();
                     }
-//                    if (profil.getNomProf().equals(profilTampon.getNomProf())) {
-//                        Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des droits du profil :" + profil.getNomProf());
-//                    } else {
-//                        Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée du profil :" + profilTampon.getNomProf() + ", par :" + profil.getNomProf());
-//                    }
+                    if (profil.getNomProf().equals(profilTampon.getNomProf())) {
+                        new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des droits du profil :" + profil.getNomProf());
+                    } else {
+                        new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée du profil :" + profilTampon.getNomProf() + ", par :" + profil.getNomProf());
+                    }
                     profil = new Profil();
                     profilTampon = new Profil();
                     droitListeSource = new ArrayList<>();
@@ -412,9 +418,11 @@ public class AdministrationManagedBean implements Serializable {
             } catch (SystemException ex1) {
                 Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            //Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le profil:" + profil.getDescProfil());
+            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le profil:" + profil.getNomProf());
             Mtm.mikiMessageError();
         }
+        
+       
     }
 
     
@@ -445,14 +453,13 @@ public void renvoieProfil(Profil pl) {
     }
 
     public void resetPasswordUser(Utilisateur ur) {
-        System.out.println(ur);
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
             try {
                 utilisateurPswd = ur;
                 if (utilisateurPswd != null) {
                     utilisateurPswd.setMotDePasse(new Sha256Hash(constante.MOT_DE_PASSE_DEFAUT).toHex());
                     utilisateurPswd.setReinitialiserPswd(true);
-                    RequestContext.getCurrentInstance().execute("jQuery('#InfoReinit').modal('show', {backdrop: 'static'});");
+                    RequestContext.getCurrentInstance().execute("PF('confDialgModal').show();");
                 } else {
                     System.out.println("Erreur");
                 }
@@ -472,10 +479,11 @@ public void renvoieProfil(Profil pl) {
             tx.begin();
             utilisateurServices.updateOne(utilisateurPswd);
             tx.commit();
-            //Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Réinitialisation du mot de passe de l'utilisateur : " + utilisateurPswd.getLogin());
+            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Réinitialisation du mot de passe de l'utilisateur : " + utilisateurPswd.getLogin());
             utilisateurPswd = new Utilisateur();
-            RequestContext.getCurrentInstance().execute("jQuery('#InfoReinit').modal('hide');");
-
+            
+            RequestContext.getCurrentInstance().execute("PF('confDialgModal').hide();");
+            
             FacesMessage message3 = new FacesMessage(FacesMessage.SEVERITY_INFO, "Opération effectuée avec succès !", "");
             FacesContext.getCurrentInstance().addMessage(null, message3);
         } catch (Exception ex) {
@@ -489,8 +497,8 @@ public void renvoieProfil(Profil pl) {
                 Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
             }
             utilisateurPswd = new Utilisateur();
-            RequestContext.getCurrentInstance().execute("jQuery('#InfoReinit').modal('hide');");
-           // Mtm.logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors de la réinitialisation du mot de passe de l'utilisateur: " + utilisateurPswd.getLogin());
+            RequestContext.getCurrentInstance().execute("PF('confDialgModal').hide();");
+            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors de la réinitialisation du mot de passe de l'utilisateur: " + utilisateurPswd.getLogin());
             Mtm.mikiMessageError();
         }
 
@@ -519,10 +527,10 @@ public void renvoieProfil(Profil pl) {
 
     }
 
-    public void onRowSelect(SelectEvent event) {
-        utilisateurProfil = utilisateur2;
-        RequestContext.getCurrentInstance().execute("jQuery('#SearchUser').modal('hide');");
-    }
+//    public void onRowSelect(SelectEvent event) {
+//        utilisateurProfil = utilisateur2;
+//        RequestContext.getCurrentInstance().execute("jQuery('#SearchUser').modal('hide');");
+//    }
 
     public void onRowUnselect(UnselectEvent event) {
 

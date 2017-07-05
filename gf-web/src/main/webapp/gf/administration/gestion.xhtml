@@ -1,0 +1,347 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                template="./../../WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <title>Administration</title>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <h:form id="form">
+            <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
+            <p:growl id="growl" showDetail="true" sticky="true" />
+        </h:form>
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView>
+                            <p:tab title="Utilisateur">
+                                <h:form id="utilisateurForm">
+
+                                    <h:inputHidden value="#{administrationManagedBean.utilisateur.id}"/>
+
+                                    <br/>
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid">
+
+
+
+                                        <p:outputLabel for="nom" value="Nom *"/>
+                                        <p:inputText id="nom" value="#{administrationManagedBean.utilisateur.nom}"/>
+
+                                        <p:outputLabel for="Prenom" value="Prenom *"/>
+                                        <p:inputText id="Prenom" value="#{administrationManagedBean.utilisateur.prenom}"/>
+
+                                        <p:outputLabel for="Sexe" value="Sexe"/>
+                                        <p:selectOneMenu id="Sexe">
+                                            <f:selectItem itemValue="M" itemLabel="M" />
+                                            <f:selectItem itemValue="F" itemLabel="F" />
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="Contact" value="Contact"/>
+                                        <p:inputText id="Contact" value="#{administrationManagedBean.utilisateur.contact}"/>
+
+                                        <p:outputLabel for="Email" value="Email"/>
+                                        <p:inputText id="Email" value="#{administrationManagedBean.utilisateur.adresseEmail}"/>
+
+                                        <p:outputLabel for="poste" value="Poste"/>
+                                        <p:selectOneMenu id="poste" value="#{administrationManagedBean.utilisateur.poste}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <f:selectItem itemLabel="Selectionner un poste" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems var="post1" value="#{administrationManagedBean.posteListe}" itemValue="#{post1}" itemLabel="#{post1.libPoste}"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="Utilisateur" value="Utilisateur *"/>
+                                        <p:inputText id="Utilisateur" value="#{administrationManagedBean.utilisateur.login}"/>
+
+                                        <p:outputLabel for="Actif" value="Actif *"/>
+                                        <p:inputSwitch id="Actif" value="#{administrationManagedBean.utilisateur.actif}" onLabel="Oui" offLabel="Non"/>
+                                    </p:panelGrid>
+
+                                    <br/>
+
+                                    <div class="ui-g-12 ui-md-6" >
+                                        <center><p:commandButton value="Annuler" action="#{administrationManagedBean.annulerUtilisateur()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6" >
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.ajouterUtilisateur()}" style="width:auto;margin-bottom:10px;"  update="@form,:form:growl,@widgetVar(journalWV),@widgetVar(userProfilWV),@widgetVar(affectationWV)" process="@form"/></center>
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+
+                                    <p:dataTable id="utilisateurDT" var="cp" value="#{administrationManagedBean.utilisateurListe}" 
+                                                 widgetVar="utilisateurWV"                                 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste d'utilisateur est vide" reflow="true" rows="10" paginator="true" >                                
+                                        <p:column filterBy="#{cp.poste.libPoste}" headerText="Poste" filterMatchMode="exact">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('utilisateurWV').filter()" >
+                                                    <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems var="post" value="#{administrationManagedBean.posteListe}" itemValue="#{post.libPoste}" itemLabel="#{post.libPoste}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                            <h:outputText value="#{cp.poste.libPoste}" />
+                                        </p:column>                                                                          
+                                        <p:column filterBy="#{cp.nom} #{cp.prenom}" headerText="Nom et prénom" filterMatchMode="contains">                       
+                                            <h:outputText value="#{cp.nom} #{cp.prenom}" />
+                                        </p:column>                          
+                                        <p:column filterBy="#{cp.sexe}"  headerText="Sexe" filterMatchMode="contains">                           
+                                            <center><h:outputText value="#{cp.sexe}" /></center>                                          
+                                        </p:column>  
+                                        <p:column filterBy="#{cp.login}"  headerText="Nom d'utilisateur" filterMatchMode="contains">                           
+                                            <center><h:outputText value="#{cp.login}" /></center>                                          
+                                        </p:column>  
+                                        <p:column filterBy="#{cp.adresseEmail}"  headerText="Email" filterMatchMode="contains">                           
+                                            <center><h:outputText value="#{cp.adresseEmail}" /></center>                                          
+                                        </p:column>  
+                                        <p:column  headerText="Actif" >                                       
+                                            <center><h:outputText value="#{administrationManagedBean.actifLabel(cp.actif)}"/></center>                                          
+                                        </p:column>  
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieUtilisateur(cp)}" styleClass="cyan-btn" style="width:auto;" update="@form"/></center>
+                                        </p:column>
+                                        <p:column >                           
+                                            <center>
+                                                <p:commandButton value="Réinit." action="#{administrationManagedBean.resetPasswordUser(cp)}"  styleClass="red-btn" style="width:auto;" update="@form,:reinitForm,:form:growl" title="Réinitialiser le mot de passe"/>
+                                            </center>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="Profil">
+                                <h:form id="droitForm">
+                                    <h:inputHidden value="#{administrationManagedBean.profil.idProf}"/>
+
+                                    <br/>
+
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                        <p:outputLabel for="nom_prof" value="Nom du Profil *"/>
+                                        <p:inputText id="nom_prof" value="#{administrationManagedBean.profil.nomProf}"/>
+
+                                        <p:outputLabel for="descProfil" value="Description"/>
+                                        <p:inputText id="descProfil" value="#{administrationManagedBean.profil.description}"/>
+
+                                        <p:outputLabel for="chkbox" value="Droits *"/>
+
+                                    </p:panelGrid>
+
+                                    <p:selectManyCheckbox id="chkbox" value="#{administrationManagedBean.droitListeSource}" layout="responsive" columns="3" converter="omnifaces.SelectItemsIndexConverter" styleClass="form-group">
+                                        <f:selectItems value="#{administrationManagedBean.droitListe}" var="grp" itemLabel="#{grp.libDroit}" itemValue="#{grp}" />
+                                    </p:selectManyCheckbox>
+
+                                    <br/>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{administrationManagedBean.annulerProfil()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.ajouterProfil()}" update="@form,:form:growl,@widgetVar(journalWV),@widgetVar(profUserCombWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p:dataTable id="profilDT" var="pr" value="#{administrationManagedBean.profilListe}"
+                                                 widgetVar="profilWV"                                 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste de profil est vide" reflow="true" rows="10" paginator="true" >                                
+                                        <p:column filterBy="#{pr.nomProf}" headerText="Profil" filterMatchMode="contains">        
+                                            <h:outputText value="#{pr.nomProf}" />
+                                        </p:column>                                                                                 
+                                        <p:column filterBy="#{pr.description}" headerText="Description" filterMatchMode="contains">        
+                                            <h:outputText value="#{pr.description}" />
+                                        </p:column>                                                                                 
+                                        <p:column>        
+                                            <h:outputText value="#{pr.dateCreaProf}" >
+                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                            </h:outputText>
+                                        </p:column>                                                                                 
+                                        <p:column  headerText="Droit(s)">                           
+                                            <p:dataList value="#{administrationManagedBean.droitsUtilList(pr)}" var="infodroit" emptyMessage="Aucun droit enregistré">
+                                                #{infodroit.libDroit}
+                                            </p:dataList>                                          
+                                        </p:column>  
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieProfil(pr)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
+                                        </p:column>
+                                    </p:dataTable>
+
+
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="Attribution de profil">
+                                <h:form id="attribDroitForm">
+
+                                    <br/>
+
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                        <p:outputLabel for="ch_user" value="Choisir l'utilisateur"/>
+                                        <p:selectOneMenu id="ch_user" widgetVar="userProfilWV" value="#{administrationManagedBean.utilisateurProfil}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <f:selectItem itemLabel="Selectionner un utilisateur" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems var="user" value="#{administrationManagedBean.utilisateurListeSansAdmin}" itemValue="#{user}" itemLabel="#{user.login}"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="profUserCombId" value="Choisir le profil"/>
+                                        <p:selectOneMenu id="profUserCombId" widgetVar="profUserCombWV" value="#{administrationManagedBean.utilisateurProfil.profil}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <f:selectItem itemLabel="Selectionner un profil" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems var="prof" value="#{administrationManagedBean.profilListe}" itemValue="#{prof}" itemLabel="#{prof.nomProf}"/>
+                                        </p:selectOneMenu>
+
+                                    </p:panelGrid>
+
+                                    <br/>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{administrationManagedBean.annulerUtilisateurDroit()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.affectationUtilisateurDroit()}" style="width:auto;margin-bottom:10px;" styleClass="green-btn" update="@form,:form:growl,@widgetVar(journalWV),@widgetVar(utilisateurWV)" process="@form"/></center>
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+
+                                    <p:dataTable id="affectationDT" var="aff" value="#{administrationManagedBean.utilisateurListe}"
+                                                 widgetVar="affectationWV"                                 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste d'affectation est vide" reflow="true" rows="10" paginator="true" >                                
+                                        <p:column filterBy="#{aff.profil.nomProf}" headerText="Profil" filterMatchMode="exact">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('affectationWV').filter()" >
+                                                    <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems var="prof2" value="#{administrationManagedBean.profilListe}" itemValue="#{prof2.nomProf}" itemLabel="#{prof2.nomProf}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                            <h:outputText value="#{aff.profil.nomProf}" />
+                                        </p:column>                                                                          
+                                        <p:column filterBy="#{aff.login}" headerText="Nom d'utilisateur" filterMatchMode="contains">                                       
+                                            <h:outputText value="#{aff.login}" />
+                                        </p:column>                                                             
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieUtilisateurDroit(aff)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="Journal">
+                                <br/>
+                                <h:form id="journalForm">
+                                    <p:dataTable  var="jr" value="#{journalManagedBean.journalListe}"
+                                                  widgetVar="journalWV"                                 
+                                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                  rowsPerPageTemplate="5,10,15"
+                                                  emptyMessage="Le journal est vide" reflow="true" rows="10" paginator="true" >                                
+                                        <p:column filterBy="#{jr.utilisateur}" headerText="Utilisateur" filterMatchMode="exact"> 
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('journalWV').filter()" >
+                                                    <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems var="user3" value="#{administrationManagedBean.utilisateurListe}" itemValue="#{user3.login}" itemLabel="#{user3.login}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                            <h:outputText value="#{jr.utilisateur}" />          
+                                        </p:column>                                                                                 
+                                        <p:column  headerText="Date" >        
+                                            <h:outputText value="#{jr.dateJourn}" >
+                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                            </h:outputText>
+                                        </p:column>                                                                                 
+                                        <p:column filterBy="#{jr.heureJourn}" headerText="Heure" filterMatchMode="contains" width="120">                           
+                                            <h:outputText value="#{jr.heureJourn}" />                                       
+                                        </p:column>  
+                                        <p:column filterBy="#{jr.levelJourn}" headerText="Level" filterMatchMode="contains" width="120">                           
+                                            <center><h:outputText value="#{jr.levelJourn}" /></center>                                       
+                                        </p:column>  
+                                        <p:column filterBy="#{jr.messageJourn}" headerText="Message" filterMatchMode="contains">                           
+                                            <h:outputText value="#{jr.messageJourn}" />                                       
+                                        </p:column>  
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Voir" action="#{journalManagedBean.renvoieJournal(jr)}" styleClass="purple-btn flat" style="width: auto;" update=":jnlModal"/></center>
+                                        </p:column>                           
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                        </p:tabView>
+
+
+
+                        <p:dialog header="Information" widgetVar="infoJournalWV" modal="true" width="800" closable="true" responsive="true">
+                            <h:form id="jnlModal">
+                                <div class="ui-fluid">
+                                    <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid" style="border:0px none; background-color:transparent;">
+                                            <p:outputLabel value="Utilisateur" style="font-weight: bold;"/>
+                                            <h:outputText  value="#{journalManagedBean.journal.utilisateur}" style="font-weight: bold;"/>
+
+                                            <p:outputLabel value="Date" style="font-weight: bold;"/>
+                                            <h:outputText  value="#{journalManagedBean.journal.dateJourn}" style="font-weight: bold;">
+                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                            </h:outputText>
+
+                                            <p:outputLabel value="Heure" style="font-weight: bold;"/>
+                                            <h:outputText  value="#{journalManagedBean.journal.heureJourn}" style="font-weight: bold;"/>
+
+                                            <p:outputLabel value="Logger" style="font-weight: bold;"/>
+                                            <h:outputText  value="#{journalManagedBean.journal.logger}" style="font-weight: bold;"/>
+
+                                            <p:outputLabel value="Level" style="font-weight: bold;"/>
+                                            <h:outputText  value="#{journalManagedBean.journal.levelJourn}" style="font-weight: bold;"/>
+
+                                            <p:outputLabel value="Message" style="font-weight: bold;"/>
+                                            <h:outputText id="area" value="#{journalManagedBean.journal.messageJourn}" style="font-weight: bold;"/>
+                                        </p:panelGrid>
+                                    </div>
+                                </div>
+                                </div>
+                            </h:form>
+                        </p:dialog> 
+
+                        <p:dialog header="Confirmation" widgetVar="confDialgModal" modal="true" closable="true" responsive="true">
+                            <h:form id="reinitForm">
+                                <h:outputText value=" Voulez vous réinitialiser le mot de passe de : #{administrationManagedBean.utilisateurPswd.login} ?"/>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6" >
+                                        <center><p:commandButton value="Non" onclick="PF('confDialgModal').hide();" styleClass="teal-btn" icon="ui-icon-close" /></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6" >
+                                        <center><p:commandButton value="Oui" action="#{administrationManagedBean.confirmResetPasswordUser()}" update=":form:growl,@widgetVar(journalWV)"  styleClass="red-btn" icon="ui-icon-check" /></center>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </p:dialog> 
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

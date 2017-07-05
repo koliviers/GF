@@ -13,7 +13,7 @@
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}" />
         </f:facet>
-        <title>PrimeFaces Ultima</title>
+        
         <h:outputScript name="js/nanoscroller.js" library="ultima-layout" />
         <h:outputScript name="js/layout.js" library="ultima-layout" />
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
@@ -30,7 +30,7 @@
             <h:form>
                 <p:growl id="message" showDetail="true" />
 
-                <p:dialog header="Confirmation" widgetVar="logoutWV" modal="true" height="100" responsive="true">
+                <p:dialog header="Confirmation" widgetVar="logoutWV" modal="true"  responsive="true">
                     <h:outputText value="Voulez vous éffectuer une deconnexion ?" />
                     <f:facet name="footer">
                         <center>

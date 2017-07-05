@@ -8,7 +8,6 @@ package com.kol.gf.bean;
 import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
 import com.kol.gf.dao.bean.PatientDaoBeanLocal;
 import com.kol.gf.dao.bean.RendezVousDaoBeanLocal;
-import com.kol.gf.entities.Habitude_alimentaireId;
 import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.Patient_intervenantid;

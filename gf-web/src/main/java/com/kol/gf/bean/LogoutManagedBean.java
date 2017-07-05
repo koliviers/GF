@@ -7,11 +7,13 @@ package com.kol.gf.bean;
 
 
 
+import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.shiro.EntityRealm;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import org.apache.log4j.Level;
 import org.omnifaces.util.Faces;
 //import org.omnifaces.util.Faces;
 
@@ -25,7 +27,7 @@ import org.omnifaces.util.Faces;
 public class LogoutManagedBean implements Serializable{
 
     public void deconnexionUser() throws IOException {
-//        Mtm.logMikiLog4j(LogoutManagedBean.class.getName(), Level.INFO, "Deconnexion");
+        new Mtm().logMikiLog4j(LogoutManagedBean.class.getName(), Level.INFO, "Deconnexion");
         EntityRealm.getSubject().logout();
         Faces.invalidateSession();
         Faces.redirect("login.xhtml");

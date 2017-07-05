@@ -29,7 +29,6 @@ import javax.persistence.TemporalType;
 @Table(name = "rendez_vous")
 public class RendezVous implements Serializable{
     @EmbeddedId
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Patient_intervenantid id;
 
     @Temporal(TemporalType.TIMESTAMP)

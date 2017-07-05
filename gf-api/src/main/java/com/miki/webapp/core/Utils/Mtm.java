@@ -10,6 +10,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+import org.apache.log4j.xml.DOMConfigurator;
 
 
 /**
@@ -95,6 +98,25 @@ public class Mtm {
     public static void mikiLog4jMessageError() {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Opération interrompue : Absence de droit permettant d'effectuer cette opération, veuillez contacter l'administrateur Svp !", "");
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    /**
+     * Enregistre dans le journal grace a log4j
+     *
+     * @param loggerName le nom de la classe concernée
+     * @param priority priorité
+     * @param message le message qui suit le log
+     */
+    public void logMikiLog4j(String loggerName, Priority priority, String message) {
+        try {
+            Logger loggerMiki = Logger.getLogger(loggerName);
+            URL u = getClass().getClassLoader().getResource("log4j.xml");            
+            DOMConfigurator.configure(u);
+            loggerMiki.log(priority, message);
+        } catch (Exception e) {
+            Mtm.mikiMessageErrorPerso("Erreur lors de la journalisation, veuillez verifier les configurations svp !");
+        }
+
     }
    
 
