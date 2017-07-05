@@ -28,27 +28,26 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class RendezVousBean implements Serializable {
 
-    private Patient_intervenantid idrdv;
     private RendezVous rdvselect;
     private RendezVous rdv;
     private Intervenant intervenant;
     private Patient patient;
-    
+    private Patient_intervenantid id;
     private List<Intervenant> listintervenant;
     private List<Patient> listePatient;
     private List<RendezVous> listeRdv;
-    
+
     @EJB
     private PatientDaoBeanLocal daoPatient;
-    
+
     @EJB
     private IntervenantDaoBeanLocal daoIntervenant;
-    
+
     @EJB
     private RendezVousDaoBeanLocal daoRdv;
-    
+
     public RendezVousBean() {
-        
+
         rdv = new RendezVous();
         intervenant = new Intervenant();
         patient = new Patient();
@@ -56,40 +55,70 @@ public class RendezVousBean implements Serializable {
         listeRdv = new ArrayList<RendezVous>();
         listintervenant = new ArrayList<Intervenant>();
         rdvselect = new RendezVous();
-        idrdv = new Patient_intervenantid();
+        id = new Patient_intervenantid();
+
     }
 
     /**
      * @return the rdv
      */
     public void addRdv() {
-        
+
         try {
-            idrdv.setId_intervenant(patient.getId());
-            idrdv.setId_patient(intervenant.getId());
-            
+            getId().setId_intervenant(rdv.getIntervenant().getId());
+            getId().setId_patient(rdv.getPatient().getId());
+            rdv.setId(getId());
+            System.out.println("" + rdv.getId().getId_intervenant());
+            System.out.println("tste de lidee" + rdv.getId().getId_intervenant() + " " + rdv.getId().getId_patient());
+            System.out.println("le patient " + rdv.getPatient().getNomPatient());
+            System.out.println("l'intervenant " + rdv.getIntervenant().getNomIntervenant());
+
             this.daoRdv.addOne(rdv);
+            rdv=new RendezVous();
+
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
-    public List<RendezVous> getAllRdv() {
+    
+    public void deleteRdv(){
         
+        try {
+            this.daoRdv.deleteOne(rdvselect);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void deleteOneRdv(){
+        
+        try {
+            this.daoRdv.deleteOne(id);
+            
+        } catch (Exception e) {
+        }
+        
+    }
+
+    public List<RendezVous> getAllRdv() {
+
         listeRdv = this.daoRdv.getAll();
         return listeRdv;
     }
-    
+
     public List<Patient> getAllPatient() {
-        
+
         listePatient = this.daoPatient.getAll();
         return listePatient;
     }
-    
+
     public List<Intervenant> getAllIntervenant() {
         listintervenant = this.daoIntervenant.getAll();
         return listintervenant;
     }
-    
+
     public RendezVous getRdv() {
         return rdv;
     }
@@ -226,5 +255,19 @@ public class RendezVousBean implements Serializable {
     public void setRdvselect(RendezVous rdvselect) {
         this.rdvselect = rdvselect;
     }
-    
+
+    /**
+     * @return the id
+     */
+    public Patient_intervenantid getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Patient_intervenantid id) {
+        this.id = id;
+    }
+
 }

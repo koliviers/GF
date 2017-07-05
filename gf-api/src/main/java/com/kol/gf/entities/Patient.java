@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
 
 /**
  *
@@ -81,8 +83,8 @@ public class Patient implements Serializable {
     @Column(name = "antChir")
     private String antChirugicaux;
 
-    @ManyToOne
-    @JoinColumn(name = "pathologie")
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "pathologie",nullable = false)
     private Pathologie pathologie;
 
      

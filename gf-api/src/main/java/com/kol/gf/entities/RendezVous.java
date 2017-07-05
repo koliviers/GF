@@ -12,9 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -29,8 +26,7 @@ import javax.persistence.TemporalType;
 @Table(name = "rendez_vous")
 public class RendezVous implements Serializable{
     @EmbeddedId
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Patient_intervenantid id;
+   private Patient_intervenantid id;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dateRdv")
@@ -40,15 +36,25 @@ public class RendezVous implements Serializable{
     private String motifRdv;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_patient",nullable = false, insertable = false,updatable = false)
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "intervenant",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_intervenant",nullable = false, insertable = false,updatable = false)
     private Intervenant intervenant;
 
     public RendezVous() {
     }
+
+    public RendezVous(Patient_intervenantid id, Date dateRdv, String motifRdv, Patient patient, Intervenant intervenant) {
+        this.id = id;
+        this.dateRdv = dateRdv;
+        this.motifRdv = motifRdv;
+        this.patient = patient;
+        this.intervenant = intervenant;
+    }
+    
+    
 
     /**
      * @return the id

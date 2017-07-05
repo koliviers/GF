@@ -13,6 +13,7 @@ import com.kol.gf.entities.Consultation;
 import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
+import com.kol.gf.entities.Patient_intervenantid;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ConsultationBean implements Serializable {
     private Intervenant intervenant;
     private Patient patient;
     private Pathologie pathologie;
+    private Patient_intervenantid id;
 
     private List<Intervenant> listintervenant;
     private List<Patient> listePatient;
@@ -58,6 +60,7 @@ public class ConsultationBean implements Serializable {
         listintervenant = new ArrayList<Intervenant>();
         listeConsultation = new ArrayList<Consultation>();
         listePathologie = new ArrayList<Pathologie>();
+        id=new Patient_intervenantid();
 
     }
 
@@ -66,6 +69,9 @@ public class ConsultationBean implements Serializable {
      */
     public void addConsultation() {
         try {
+            id.setId_intervenant(consultation.getIntervenant().getId());
+            id.setId_patient(consultation.getPatient().getId());
+            consultation.setId(id);
             this.daoConsultation.addOne(consultation);
 
         } catch (Exception e) {
@@ -228,6 +234,34 @@ public class ConsultationBean implements Serializable {
      */
     public void setDaoConsultation(ConsultationDaoBeanLocal daoConsultation) {
         this.daoConsultation = daoConsultation;
+    }
+
+    /**
+     * @return the pathologie
+     */
+    public Pathologie getPathologie() {
+        return pathologie;
+    }
+
+    /**
+     * @param pathologie the pathologie to set
+     */
+    public void setPathologie(Pathologie pathologie) {
+        this.pathologie = pathologie;
+    }
+
+    /**
+     * @return the id
+     */
+    public Patient_intervenantid getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Patient_intervenantid id) {
+        this.id = id;
     }
 
 }

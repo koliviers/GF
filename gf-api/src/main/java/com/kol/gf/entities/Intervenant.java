@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,12 +41,12 @@ public class Intervenant implements Serializable {
     @Column(name = "active")
     private boolean active;
 
-    @ManyToOne
-    @JoinColumn(name = "services")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "services",nullable = false)
     private Services services;
 
-    @ManyToOne
-    @JoinColumn(name = "type_intervenant")
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "type_intervenant",nullable = false)
     private TypeIntervenant type_intervenant;
 
     @OneToMany(mappedBy = "intervenant")

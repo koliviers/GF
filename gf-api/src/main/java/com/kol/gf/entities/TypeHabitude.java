@@ -38,7 +38,7 @@ public class TypeHabitude implements Serializable {
         @JoinColumn(name = "id_Patient", referencedColumnName = "id_Patient")
         ,
         @JoinColumn(name = "id_Consommation", referencedColumnName = "id_Consommation")})
-    private Habitude_alimentaire habitude;
+        private Habitude_alimentaire habitude;
 
     public TypeHabitude() {
     }

@@ -34,7 +34,7 @@ public class Pathologie implements Serializable{
     @OneToMany(mappedBy = "pathologie")
     private List<Patient> listpatient;
     
-     @OneToMany(mappedBy = "pathologie")
+    @OneToMany(mappedBy = "pathologie")
     private List<Consultation> listconsultation;
 
     public Pathologie() {
