@@ -405,6 +405,15 @@ public class Patient implements Serializable {
 
    
 
+    public double calculMasse(){
+        
+        
+        double m=0;
+        
+        m=((this.poid)/(this.taille*this.taille));
+        
+        return m;
+    }
    
 
 }
