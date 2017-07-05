@@ -27,7 +27,7 @@ import javax.persistence.Table;
 public class Consultation implements Serializable{
     
     @EmbeddedId
-    private Patient_ConsultationId id;
+    private Patient_intervenantid id;
     
     @Column (name = "traitement")
     private String traitement;
@@ -36,21 +36,21 @@ public class Consultation implements Serializable{
     private String detailConsultation;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_patient",nullable = false, insertable = false, updatable = false)
     private Patient patient;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "intervenant",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_intervenant",nullable = false, insertable = false, updatable = false)
     private Intervenant intervenant;
     
-    @ManyToOne
-    @JoinColumn(name = "pathologie")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pathologie",nullable = false)
     private Pathologie pathologie;
 
     public Consultation() {
     }
 
-    public Consultation(Patient_ConsultationId id, String traitement, String detailConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
+    public Consultation(Patient_intervenantid id, String traitement, String detailConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
         this.id = id;
         this.traitement = traitement;
         this.detailConsultation = detailConsultation;
@@ -62,14 +62,14 @@ public class Consultation implements Serializable{
     /**
      * @return the id
      */
-    public Patient_ConsultationId getId() {
+    public Patient_intervenantid getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Patient_ConsultationId id) {
+    public void setId(Patient_intervenantid id) {
         this.id = id;
     }
 
@@ -146,7 +146,7 @@ public class Consultation implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -172,12 +172,9 @@ public class Consultation implements Serializable{
     public String toString() {
         return "Consultation{" + "id=" + id + ", traitement=" + traitement + ", detailConsultation=" + detailConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", pathologie=" + pathologie + '}';
     }
-
-    /**
-     * @return the id
-     */
+    
+    
     
 
-    
     
 }

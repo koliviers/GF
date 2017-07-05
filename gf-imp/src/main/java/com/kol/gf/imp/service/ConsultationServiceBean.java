@@ -8,6 +8,7 @@ package com.kol.gf.imp.service;
 import com.kol.gf.dao.bean.ConsultationDaoBeanLocal;
 import com.kol.gf.dao.bean.GenericDAOBeanLocal;
 import com.kol.gf.entities.Consultation;
+import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.service.ConsultationServiceBeanLocal;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,20 +18,20 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class ConsultationServiceBean extends GenericServiceBean<Consultation, Long> implements ConsultationServiceBeanLocal {
+public class ConsultationServiceBean extends GenericServiceBean<Consultation, Patient_intervenantid> implements ConsultationServiceBeanLocal {
 
     @EJB
     private ConsultationDaoBeanLocal dao;
 
     @Override
-    protected GenericDAOBeanLocal<Consultation, Long> getDAO() {
+    protected GenericDAOBeanLocal<Consultation, Patient_intervenantid> getDAO() {
 
         return this.dao;
     }
 
     @Override
-    public Long getId(Consultation e) {
-        return null;
+    public Patient_intervenantid getId(Consultation e) {
+        return e.getId();
     }
 
 }

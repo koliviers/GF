@@ -5,6 +5,7 @@
  */
 package com.kol.gf.service;
 
+import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
 import javax.ejb.Local;
 
@@ -13,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface RendezVousServiceBeanLocal extends GenericServiceBeanLocal<RendezVous, Long>{
+public interface RendezVousServiceBeanLocal extends GenericServiceBeanLocal<RendezVous, Patient_intervenantid>{
     
 }

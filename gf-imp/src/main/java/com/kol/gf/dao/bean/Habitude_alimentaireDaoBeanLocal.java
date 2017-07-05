@@ -5,8 +5,8 @@
  */
 package com.kol.gf.dao.bean;
 
-import com.kol.gf.entities.Patient_intervenantid;
-import com.kol.gf.entities.RendezVous;
+import com.kol.gf.entities.Habitude_alimentaire;
+import com.kol.gf.entities.Habitude_alimentaireId;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface RendezVousDaoBeanLocal extends GenericDAOBeanLocal<RendezVous, Patient_intervenantid>{
+public interface Habitude_alimentaireDaoBeanLocal extends GenericDAOBeanLocal<Habitude_alimentaire, Habitude_alimentaireId>{
     
 }

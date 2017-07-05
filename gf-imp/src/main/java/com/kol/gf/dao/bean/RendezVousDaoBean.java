@@ -5,6 +5,7 @@
  */
 package com.kol.gf.dao.bean;
 
+import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
 import javax.ejb.Stateless;
 
@@ -13,7 +14,7 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class RendezVousDaoBean extends GenericDaoBean<RendezVous, Long> implements RendezVousDaoBeanLocal{
+public class RendezVousDaoBean extends GenericDaoBean<RendezVous, Patient_intervenantid> implements RendezVousDaoBeanLocal{
 
     public RendezVousDaoBean() {
         
