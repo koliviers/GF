@@ -10,19 +10,18 @@
 
     <ui:define name="content">
 
+
         <h:form id="formpat">
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card card-w-title">
-                        <h1 align="center">Liste des Patients</h1>
+                        <h1 align="center">Rapport du moi</h1>
                         <p:dataTable var="p" value="#{patientBean.allPatient}" selectionMode="single" reflow="true"
                                      selection="#{patientBean.patient}" rowKey="#{p.id}" paginator="true" rows="10">
                             <f:facet name="header">
                                 Mes patients
                             </f:facet>
-                            <p:column headerText="Id" sortBy="#{p.id}">
-                                <h:outputText value="#{p.id}" />
-                            </p:column>
+
                             <p:column headerText="Nom" sortBy="#{p.nomPatient}">
                                 <h:outputText value="#{p.nomPatient}" />
                             </p:column>
@@ -45,8 +44,11 @@
                                 <h:outputText value="#{p.profession}" />
                             </p:column>
 
-                            <p:column headerText="Masse corporelle" sortBy="#{p.calculMasse()}">
-                                <h:outputText value="#{p.calculMasse()}"  />
+                            <p:column headerText="Pathologie" sortBy="#{p.pathologie.nomPathologie}">
+                                <h:outputText value="#{p.pathologie.nomPathologie}" />
+                            </p:column>
+                            <p:column headerText="Tranche d'age" sortBy="#{p.profession}">
+                                <h:outputText value="" />
                             </p:column>
 
                             <p:column style="width:32px;text-align: center">
@@ -54,6 +56,11 @@
                                     <f:setPropertyActionListener value="#{p}" target="#{patientBean.patient}" />
                                 </p:commandButton>
                             </p:column>
+
+
+                            <f:facet name="footer">
+                                <p:commandButton process="@this"   icon="ui-icon-seach" value="Imprimer" oncomplete="PF('consnew').show()"/>
+                            </f:facet>
 
                         </p:dataTable>
 
@@ -85,7 +92,6 @@
                 </div>
             </div>
         </h:form>        
-
 
     </ui:define>
 

@@ -43,7 +43,7 @@
 
                                             <p:outputLabel for="age" value="Age "/>
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="age" value="#{patientBean.patient.age}"/>
+                                                <p:inputNumber id="age" value="#{patientBean.patient.age}" decimalPlaces="0" />
                                                 <label>Age</label>
                                             </h:panelGroup>
 
@@ -91,26 +91,33 @@
 
                                             <p:outputLabel for="mtaille" value="Taille:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="mtaille" value="#{patientBean.patient.taille}"/>
+                                                <p:inputNumber id="mtaille" value="#{patientBean.patient.taille}" decimalPlaces="2" symbol=" m" symbolPosition="5"/>
                                                 <label>Taille</label>
                                             </h:panelGroup>
 
-                                            <p:outputLabel for="ttaille" value="Tour de taille:" />
+                                            <p:outputLabel for="ttaille" value="Perimetre  de taille:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="ttaille" value="#{patientBean.patient.tourtaille}" />
-                                                <label>Tour de taille</label>
+                                                <p:inputNumber id="ttaille" value="#{patientBean.patient.tourtaille}" symbol=" cm" decimalPlaces="0" symbolPosition="5" />
+                                                <label>Perimetre de taille</label>
                                             </h:panelGroup>
 
                                             <p:outputLabel for="mpoids" value="Poids:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="mpoids" value="#{patientBean.patient.poid}"/>
+                                                <p:inputNumber id="mpoids" value="#{patientBean.patient.poid}" decimalPlaces="0" symbol=" kg" symbolPosition="5"/>
                                                 <label>Poids</label>
                                             </h:panelGroup>
 
-                                            <p:outputLabel for="tension" value="Tension Alterielle:" />
+                                            <p:outputLabel for="tension" value="Tension Alterielle bras gauche:" />
                                             <h:panelGroup styleClass="md-inputfield">
                                                 <p:inputNumber id="tension" value="#{patientBean.patient.tension}" />
-                                                <label>Tension alterielle</label>
+                                                <label>Tension alterielle bras gauche</label>
+                                            </h:panelGroup>
+                                            
+                                            
+                                            <p:outputLabel for="tensiondroit" value="Tension Alterielle bras droit:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="tensiondroit" value="#{patientBean.patient.tensiondroit}" />
+                                                <label>Tension alterielle bras droit</label>
                                             </h:panelGroup>
 
 
@@ -165,7 +172,7 @@
 
 
                                 <p:tab id="halimentaire" title="Habitude allimentaire">
-                                    
+
                                     <p:panel style="height: 500px">
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
@@ -184,13 +191,13 @@
                                                 <f:selectItems var="tpc" value="#{patientBean.allTypeConsommations}" itemValue="#{tpc}" itemLabel="#{tpc.label}"/>  
                                                 <p:ajax update="@form:cns,@form:typhb" />
                                             </p:selectOneMenu>
-                                            
+
                                             <p:outputLabel for="cns" value="Consommation" />
                                             <p:selectOneMenu  id="cns" value="#{patientBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner une consommation" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="cs" value="#{patientBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
                                             </p:selectOneMenu>
-                                            
+
                                             <p:outputLabel for="typhb" value="Type habitude" />
                                             <p:selectOneMenu  id="typhb" value="#{patientBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner un type habitude" itemValue="#{null}" noSelectionOption="true"/>
@@ -198,14 +205,14 @@
                                             </p:selectOneMenu>
 
                                         </p:panelGrid>
-                                        
+
                                         <center>
                                             <p:commandButton value="Ajouter" action="#{patientBean.ajouterHabitudeAlimentaire()}" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
                                         </center>
 
 
                                         <div class="ui-g-12">
-                                            
+
                                             <p:dataTable value="#{patientBean.tamponHabitudeAlimentaire.entrySet()}" var="htal" id="tamponId" >
                                                 <p:column headerText="Type consommation" >
                                                     <h:outputText value="#{htal.key}">
@@ -224,7 +231,7 @@
                                                         <f:converter converterId="typeHabitudeConverterId"/>
                                                     </h:outputText>
                                                 </p:column>
-                                                
+
                                                 <p:column headerText="Action" >
                                                     <center>
                                                         <p:commandButton  value="Supprimer" action="#{patientBean.supprimerHabitudeAlimentaire(htal.key)}" update="@form:tamponId" styleClass="red-btn" style="width: auto;"/>
@@ -245,62 +252,62 @@
 
                                 <p:tab id="detail" title="Detail">
 
-                                    <div class="ui-g-12">
-                                        <p:panel style="height: 500px">
-
-                                            <h:panelGrid id="confirmation" columns="3" columnClasses="grid,grid,grid">
-
-                                                <h:panelGrid columns="2" columnClasses="label, value">
-                                                    <h:outputText value="Nom patient: " />
-                                                    <h:outputText value="#{patientBean.patient.nomPatient}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value="Prenom: " />
-                                                    <h:outputText value="#{patientBean.patient.prenomPatient}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value="Age: " />
-                                                    <h:outputText value="#{patientBean.patient.age}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value="Profession: " />
-                                                    <h:outputText value="#{patientBean.patient.profession}" styleClass="outputLabel"/>
-                                                </h:panelGrid>
+                                    <p:panel style="height: 400px">
 
 
-                                                <h:panelGrid columns="2" columnClasses="label, value">
-                                                    <h:outputText value="Antecedant: " />
-                                                    <h:outputText value="#{patientBean.patient.pathologie.nomPathologie}" styleClass="outputLabel"/>
+                                        <p:panelGrid id="confirmation" columns="3">
 
-                                                    <h:outputText value=" antecedant chirugicaux: " />
-                                                    <h:outputText value="#{patientBean.patient.antChirugicaux}" styleClass="outputLabel"/>
+                                            <p:panelGrid columns="2" columnClasses="label, value">
+                                                <h:outputText value="Nom patient: " />
+                                                <h:outputText value="#{patientBean.patient.nomPatient}" styleClass="outputLabel"/>
 
-                                                    <h:outputText value="Antecedant Medical: " />
-                                                    <h:outputText value="#{patientBean.patient.antMedicaux}" styleClass="outputLabel"/>
+                                                <h:outputText value="Prenom: " />
+                                                <h:outputText value="#{patientBean.patient.prenomPatient}" styleClass="outputLabel"/>
 
-                                                    <h:outputText value="Tension: " />
-                                                    <h:outputText value="#{patientBean.patient.tension}" styleClass="outputLabel"/>
-                                                </h:panelGrid>
+                                                <h:outputText value="Age: " />
+                                                <h:outputText value="#{patientBean.patient.age}" styleClass="outputLabel"/>
 
-
-                                                <h:panelGrid columns="2" columnClasses="label, value">
-                                                    <h:outputText value="Taille: " />
-                                                    <h:outputText value="#{patientBean.patient.taille}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value=" Tour de taille: " />
-                                                    <h:outputText value="#{patientBean.patient.tourtaille}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value="Poids: " />
-                                                    <h:outputText value="#{patientBean.patient.poid}" styleClass="outputLabel"/>
-
-                                                    <h:outputText value="Masse corporelle: " />
-                                                    <h:outputText value="0" styleClass="outputLabel"/>
-                                                </h:panelGrid>
-
-                                            </h:panelGrid>
+                                                <h:outputText value="Profession: " />
+                                                <h:outputText value="#{patientBean.patient.profession}" styleClass="outputLabel"/>
+                                            </p:panelGrid>
 
 
+                                            <p:panelGrid columns="2" columnClasses="label, value">
+                                                <h:outputText value="Antecedant: " />
+                                                <h:outputText value="#{patientBean.patient.pathologie.nomPathologie}" styleClass="outputLabel"/>
 
-                                        </p:panel>
+                                                <h:outputText value=" antecedant chirugicaux: " />
+                                                <h:outputText value="#{patientBean.patient.antChirugicaux}" styleClass="outputLabel"/>
 
-                                    </div>
+                                                <h:outputText value="Antecedant Medical: " />
+                                                <h:outputText value="#{patientBean.patient.antMedicaux}" styleClass="outputLabel"/>
+
+                                                <h:outputText value="Tension: " />
+                                                <h:outputText value="#{patientBean.patient.tension}" styleClass="outputLabel"/>
+                                            </p:panelGrid>
+
+
+                                            <p:panelGrid columns="2" columnClasses="label, value">
+                                                <h:outputText value="Taille: " />
+                                                <h:outputText value="#{patientBean.patient.taille}" styleClass="outputLabel"/>
+
+                                                <h:outputText value=" Tour de taille: " />
+                                                <h:outputText value="#{patientBean.patient.tourtaille}" styleClass="outputLabel"/>
+
+                                                <h:outputText value="Poids: " />
+                                                <h:outputText value="#{patientBean.patient.poid}" styleClass="outputLabel"/>
+
+                                                <h:outputText value="Masse corporelle: " />
+                                                <h:outputText value="#{patientBean.patient.calculMasse()}" styleClass="outputLabel"/>
+                                            </p:panelGrid>
+
+                                        </p:panelGrid>
+
+
+                                    </p:panel>
+
+
+
 
                                     <p:commandButton value="Confirmation" actionListener="#{patientBean.addPatient()}" update="growl" process="@this"/>
 

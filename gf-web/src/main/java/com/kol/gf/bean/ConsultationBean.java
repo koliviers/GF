@@ -16,6 +16,7 @@ import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.Patient_intervenantid;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -37,6 +38,7 @@ public class ConsultationBean implements Serializable {
     private List<Patient> listePatient;
     private List<Consultation> listeConsultation;
     private List<Pathologie> listePathologie;
+    private Date madate;
 
     @EJB
     private PathologieDaoBeanLocal daoPathologie;
@@ -61,6 +63,7 @@ public class ConsultationBean implements Serializable {
         listeConsultation = new ArrayList<Consultation>();
         listePathologie = new ArrayList<Pathologie>();
         id=new Patient_intervenantid();
+        madate=new Date();
 
     }
 
@@ -78,6 +81,30 @@ public class ConsultationBean implements Serializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void setListePathologie(List<Pathologie> listePathologie) {
+        this.listePathologie = listePathologie;
+    }
+
+    public void setMadate(Date madate) {
+        this.madate = madate;
+    }
+
+    public void setDaoPathologie(PathologieDaoBeanLocal daoPathologie) {
+        this.daoPathologie = daoPathologie;
+    }
+
+    public List<Pathologie> getListePathologie() {
+        return listePathologie;
+    }
+
+    public Date getMadate() {
+        return madate;
+    }
+
+    public PathologieDaoBeanLocal getDaoPathologie() {
+        return daoPathologie;
     }
 
     public List<Pathologie> getAllPathologie() {

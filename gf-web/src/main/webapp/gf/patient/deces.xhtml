@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+
+    <ui:define name="content">
+
+        <h:form id="decform">
+            <p:growl />
+
+            <div class="ui-g">
+
+                <div class="ui-g-12">
+
+                    <div class="ui-g-12 ui-lg-6">
+
+                        <div class="card card-w-title">
+                            <h1>Les Deces </h1>
+                            <p:accordionPanel>
+                                <p:tab title="Nouveau Deces">
+                                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                                        <h:outputText  value="Patient: *" />
+                                        <p:selectOneMenu id="intdc" style="margin-bottom:10px;" value="#{decesbean.deces.patient}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                                            <f:selectItem itemLabel="Select One" itemValue="" />
+                                            <f:selectItems value="#{decesbean.allPatient}" var="intser" itemLabel="#{intser.nomPatient}--#{intser.prenomPatient} " itemValue="#{intser}"/>
+                                        </p:selectOneMenu>
+
+                                        <h:outputLabel  value="Date Deces"/>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:calendar value="#{decesbean.deces.datedeces}" mask="99/99/9999" pattern="dd/MM/yyyy"/>
+
+                                        </h:panelGroup>
+
+                                    </p:panelGrid>
+                                    <center>    <p:commandButton actionListener="#{decesbean.addDeces()}" update=":decform"  value="Enregistrer" icon="ui-icon-edit" style="width: 200px"/></center>
+
+                                </p:tab>
+
+                            </p:accordionPanel>
+                        </div>
+
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-6">
+                        <div class="card card-w-title">
+                            <h1>Liste des Deces</h1>
+
+
+                            <p:dataTable id="decdt" var="ser" value="#{decesbean.listDeces}" reflow="true" selection="#{decesbean.deces}" selectionMode="single"  rowKey="#{ser.id}" paginator="true" rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                                <f:facet name="header">
+                                    Liste des Deces
+                                </f:facet>
+                                <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                                <p:column headerText="Patient" sortBy="#{ser.patient.nomPatient}">
+                                    <h:outputText value="#{ser.patient.nomPatient}--#{ser.patient.prenomPatient}" />
+                                </p:column>
+
+                                <p:column headerText="DateDeces" sortBy="#{ser.datedeces}">
+                                    <h:outputText value="#{ser.datedeces}" >
+                                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:commandButton process="decdt" update=":decform"  icon="ui-icon-seach" value="Edit" oncomplete="PF('carDialog').show()"/>
+
+                                </f:facet>
+                            </p:dataTable>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+
+
+    </ui:define>
+
+</ui:composition>
