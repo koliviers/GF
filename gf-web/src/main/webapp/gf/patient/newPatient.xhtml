@@ -43,7 +43,7 @@
 
                                             <p:outputLabel for="age" value="Age "/>
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="age" value="#{patientBean.patient.age}"/>
+                                                <p:inputNumber id="age" value="#{patientBean.patient.age}" decimalPlaces="0" />
                                                 <label>Age</label>
                                             </h:panelGroup>
 
@@ -91,26 +91,33 @@
 
                                             <p:outputLabel for="mtaille" value="Taille:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="mtaille" value="#{patientBean.patient.taille}"/>
+                                                <p:inputNumber id="mtaille" value="#{patientBean.patient.taille}" decimalPlaces="2" symbol=" m" symbolPosition="5"/>
                                                 <label>Taille</label>
                                             </h:panelGroup>
 
-                                            <p:outputLabel for="ttaille" value="Tour de taille:" />
+                                            <p:outputLabel for="ttaille" value="Perimetre  de taille:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="ttaille" value="#{patientBean.patient.tourtaille}" />
-                                                <label>Tour de taille</label>
+                                                <p:inputNumber id="ttaille" value="#{patientBean.patient.tourtaille}" symbol=" cm" decimalPlaces="0" symbolPosition="5" />
+                                                <label>Perimetre de taille</label>
                                             </h:panelGroup>
 
                                             <p:outputLabel for="mpoids" value="Poids:" />
                                             <h:panelGroup styleClass="md-inputfield">
-                                                <p:inputNumber id="mpoids" value="#{patientBean.patient.poid}"/>
+                                                <p:inputNumber id="mpoids" value="#{patientBean.patient.poid}" decimalPlaces="0" symbol=" kg" symbolPosition="5"/>
                                                 <label>Poids</label>
                                             </h:panelGroup>
 
-                                            <p:outputLabel for="tension" value="Tension Alterielle:" />
+                                            <p:outputLabel for="tension" value="Tension Alterielle bras gauche:" />
                                             <h:panelGroup styleClass="md-inputfield">
                                                 <p:inputNumber id="tension" value="#{patientBean.patient.tension}" />
-                                                <label>Tension alterielle</label>
+                                                <label>Tension alterielle bras gauche</label>
+                                            </h:panelGroup>
+                                            
+                                            
+                                            <p:outputLabel for="tensiondroit" value="Tension Alterielle bras droit:" />
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="tensiondroit" value="#{patientBean.patient.tensiondroit}" />
+                                                <label>Tension alterielle bras droit</label>
                                             </h:panelGroup>
 
 

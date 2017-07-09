@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -67,16 +67,19 @@ public class Patient implements Serializable {
 
     @Column(name = "tourtaille")
     private double tourtaille;
+    
+    @Column(name = "tensiondroit")
+    private double tensiondroit;
 
     @Column(name = "tension")
     private double tension;
 
     @Column(name = "sport")
     private String sport;
-
+    
     @Column(name = "fruit")
     private String fruit;
-
+            
     @Column(name = "antmed")
     private String antMedicaux;
 
@@ -90,7 +93,8 @@ public class Patient implements Serializable {
     public Patient() {
     }
 
-    public Patient(String nomPatient, String prenomPatient, int age, char sexe, long contact, String civilite, String profession, String adresse, double taille, double poid, double tourtaille, double tension, String sport, String fruit, String antMedicaux, String antChirugicaux, Pathologie pathologie) {
+    public Patient(Long id, String nomPatient, String prenomPatient, int age, char sexe, long contact, String civilite, String profession, String adresse, double taille, double poid, double tourtaille, double tensiondroit, double tension, String sport, String fruit, String antMedicaux, String antChirugicaux, Pathologie pathologie) {
+        this.id = id;
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
         this.age = age;
@@ -102,6 +106,7 @@ public class Patient implements Serializable {
         this.taille = taille;
         this.poid = poid;
         this.tourtaille = tourtaille;
+        this.tensiondroit = tensiondroit;
         this.tension = tension;
         this.sport = sport;
         this.fruit = fruit;
@@ -109,6 +114,17 @@ public class Patient implements Serializable {
         this.antChirugicaux = antChirugicaux;
         this.pathologie = pathologie;
     }
+
+    public double getTensiondroit() {
+        return tensiondroit;
+    }
+
+    public static Logger getLOG() {
+        return LOG;
+    }
+    
+    
+    
 
     
 
@@ -413,6 +429,10 @@ public class Patient implements Serializable {
         m=((this.poid)/(this.taille*this.taille));
         
         return m;
+    }
+
+    public void setTensiondroit(double tensiondroit) {
+        this.tensiondroit = tensiondroit;
     }
    
 

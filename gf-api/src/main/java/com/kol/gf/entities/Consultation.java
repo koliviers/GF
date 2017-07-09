@@ -6,6 +6,7 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -17,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -35,6 +38,11 @@ public class Consultation implements Serializable{
     @Column(name = "detailConsultation")
     private String detailConsultation;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dateConsultation")
+    private Date dateConsultation;
+
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_patient",nullable = false, insertable = false, updatable = false)
     private Patient patient;
@@ -50,15 +58,17 @@ public class Consultation implements Serializable{
     public Consultation() {
     }
 
-    public Consultation(Patient_intervenantid id, String traitement, String detailConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
+    public Consultation(Patient_intervenantid id, String traitement, String detailConsultation, Date dateConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
         this.id = id;
         this.traitement = traitement;
         this.detailConsultation = detailConsultation;
+        this.dateConsultation = dateConsultation;
         this.patient = patient;
         this.intervenant = intervenant;
         this.pathologie = pathologie;
     }
 
+    
     /**
      * @return the id
      */
@@ -172,8 +182,16 @@ public class Consultation implements Serializable{
     public String toString() {
         return "Consultation{" + "id=" + id + ", traitement=" + traitement + ", detailConsultation=" + detailConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", pathologie=" + pathologie + '}';
     }
+
+    public Date getDateConsultation() {
+        return dateConsultation;
+    }
+
+    public void setDateConsultation(Date dateConsultation) {
+        this.dateConsultation = dateConsultation;
+    }
     
-    
+        
     
 
     
