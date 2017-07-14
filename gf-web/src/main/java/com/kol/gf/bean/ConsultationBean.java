@@ -228,14 +228,16 @@ public class ConsultationBean implements Serializable {
                             consultationServices.saveOne(consultation);
                             tx.commit();
 
-                            tx.begin();
-                            Patient_intervenantid idRdv = new Patient_intervenantid();
-                            idRdv.setId_intervenant(consultation.getIntervenant().getId());
-                            idRdv.setId_patient(consultation.getPatient().getId());
-                            rdv.setId(idRdv);
-                            rdv.setIntervenant(consultation.getIntervenant());
-                            rdv.setPatient(consultation.getPatient());
-                            tx.commit();
+                            if (rdv.getDateRdv() != null) {
+                                tx.begin();
+                                Patient_intervenantid idRdv = new Patient_intervenantid();
+                                idRdv.setId_intervenant(consultation.getIntervenant().getId());
+                                idRdv.setId_patient(consultation.getPatient().getId());
+                                rdv.setId(idRdv);
+                                rdv.setIntervenant(consultation.getIntervenant());
+                                rdv.setPatient(consultation.getPatient());
+                                tx.commit();
+                            }
 
                             for (Pathologie pth : listePathologieTampon) {
                                 tx.begin();
@@ -302,18 +304,20 @@ public class ConsultationBean implements Serializable {
                         consultationServices.updateOne(consultation);
                         tx.commit();
 
-                        tx.begin();
-                        rdvServices.deleteOne(rdvTampon.getId());
-                        tx.commit();
+                        if (rdv.getDateRdv() != null) {
+                            tx.begin();
+                            rdvServices.deleteOne(rdvTampon.getId());
+                            tx.commit();
 
-                        tx.begin();
-                        Patient_intervenantid idRdv = new Patient_intervenantid();
-                        idRdv.setId_intervenant(consultation.getIntervenant().getId());
-                        idRdv.setId_patient(consultation.getPatient().getId());
-                        rdv.setId(idRdv);
-                        rdv.setIntervenant(consultation.getIntervenant());
-                        rdv.setPatient(consultation.getPatient());
-                        tx.commit();
+                            tx.begin();
+                            Patient_intervenantid idRdv = new Patient_intervenantid();
+                            idRdv.setId_intervenant(consultation.getIntervenant().getId());
+                            idRdv.setId_patient(consultation.getPatient().getId());
+                            rdv.setId(idRdv);
+                            rdv.setIntervenant(consultation.getIntervenant());
+                            rdv.setPatient(consultation.getPatient());
+                            tx.commit();
+                        }
 
                         for (Antecedent_familial antC : antecedentFamilialListe) {
 
@@ -487,7 +491,7 @@ public class ConsultationBean implements Serializable {
         rdvTampon = new RendezVous();
 
         consultation.setIntervenant(intervenantTampon2);
-        
+
         disable = false;
     }
 
@@ -937,7 +941,5 @@ public class ConsultationBean implements Serializable {
     public void setDisable(boolean disable) {
         this.disable = disable;
     }
-    
-    
 
 }
