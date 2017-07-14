@@ -5,6 +5,7 @@
  */
 package com.kol.gf.entities;
 
+import com.miki.webapp.miki.securite.entities.Utilisateur;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -33,27 +34,33 @@ public class Intervenant implements Serializable {
     private Long id;
     @Column(name = "nomIntervenant", nullable = false)
     private String nomIntervenant;
+    
     @Column(name = "prenomIntervenant", nullable = false)
     private String prenomIntervenant;
-    @Column(name = "contact")
-    private Long contact;
     
-    @Column(name = "active")
+    @Column(name = "sexeIntervenant", nullable = false)
+    private String sexeIntervenant;
+    
+    
+    @Column(name = "contact", nullable = true)
+    private String contact;
+    
+    @Column(name = "active", nullable = true)
     private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "services",nullable = false)
     private Services services;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_utilisateur", nullable = true)
+    private Utilisateur utilisateur;
 
     @ManyToOne(fetch =FetchType.LAZY)
     @JoinColumn(name = "type_intervenant",nullable = false)
     private TypeIntervenant type_intervenant;
 
-    @OneToMany(mappedBy = "intervenant")
-    private List<Consultation> listeConsultation;
-
-    @OneToMany(mappedBy = "intervenant")
-    private List<RendezVous> listRdv;
+   
     
     
 
@@ -61,16 +68,14 @@ public class Intervenant implements Serializable {
 
     }
 
-    public Intervenant(String nomIntervenant, String prenomIntervenant, Long contact, boolean active, Services services, TypeIntervenant type_intervenant, List<Consultation> listeConsultation, List<RendezVous> listRdv) {
-        this.nomIntervenant = nomIntervenant;
-        this.prenomIntervenant = prenomIntervenant;
-        this.contact = contact;
-        this.active = active;
-        this.services = services;
-        this.type_intervenant = type_intervenant;
-        this.listeConsultation = listeConsultation;
-        this.listRdv = listRdv;
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
     }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
     
     
 
@@ -116,19 +121,25 @@ public class Intervenant implements Serializable {
         this.prenomIntervenant = prenomIntervenant;
     }
 
-    /**
-     * @return the contact
-     */
-    public Long getContact() {
+    public String getContact() {
         return contact;
     }
 
-    /**
-     * @param contact the contact to set
-     */
-    public void setContact(Long contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
+
+    public String getSexeIntervenant() {
+        return sexeIntervenant;
+    }
+
+    public void setSexeIntervenant(String sexeIntervenant) {
+        this.sexeIntervenant = sexeIntervenant;
+    }
+
+    
+    
+    
 
     /**
      * @return the services
@@ -171,10 +182,7 @@ public class Intervenant implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Intervenant{" + "id=" + id + ", nomIntervenant=" + nomIntervenant + ", prenomIntervenant=" + prenomIntervenant + ", contact=" + contact + ", services=" + services + '}';
-    }
+    
 
     /**
      * @return the type_intervenant
@@ -191,34 +199,6 @@ public class Intervenant implements Serializable {
     }
 
     /**
-     * @return the listeConsultation
-     */
-    public List<Consultation> getListeConsultation() {
-        return listeConsultation;
-    }
-
-    /**
-     * @param listeConsultation the listeConsultation to set
-     */
-    public void setListeConsultation(List<Consultation> listeConsultation) {
-        this.listeConsultation = listeConsultation;
-    }
-
-    /**
-     * @return the listRdv
-     */
-    public List<RendezVous> getListRdv() {
-        return listRdv;
-    }
-
-    /**
-     * @param listRdv the listRdv to set
-     */
-    public void setListRdv(List<RendezVous> listRdv) {
-        this.listRdv = listRdv;
-    }
-
-    /**
      * @return the active
      */
     public boolean isActive() {
@@ -231,5 +211,12 @@ public class Intervenant implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "Intervenant{" + "id=" + id + ", nomIntervenant=" + nomIntervenant + ", prenomIntervenant=" + prenomIntervenant + ", sexeIntervenant=" + sexeIntervenant + ", contact=" + contact + ", active=" + active + ", services=" + services + ", utilisateur=" + utilisateur + ", type_intervenant=" + type_intervenant + '}';
+    }
+
+   
 
 }

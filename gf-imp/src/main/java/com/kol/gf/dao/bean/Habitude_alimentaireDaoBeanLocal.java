@@ -7,6 +7,7 @@ package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Habitude_alimentaireId;
+import com.miki.webapp.core.Dao.BaseDaoBean;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +15,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface Habitude_alimentaireDaoBeanLocal extends GenericDAOBeanLocal<Habitude_alimentaire, Habitude_alimentaireId>{
+public interface Habitude_alimentaireDaoBeanLocal extends BaseDaoBean<Habitude_alimentaire, Habitude_alimentaireId>{
     
 }

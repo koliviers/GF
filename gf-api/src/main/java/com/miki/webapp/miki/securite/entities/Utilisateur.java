@@ -59,8 +59,8 @@ public class Utilisateur extends BaseEntite{
     @Column(name = "REINIT_MOT_DE_PASSE")
     private boolean reinitialiserPswd = false;
     
-    @Column(name = "PHOTO", nullable = true)
-    private String photo;
+//    @Column(name = "PHOTO", nullable = true)
+//    private String photo;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_CREATION", nullable = true)
@@ -72,9 +72,6 @@ public class Utilisateur extends BaseEntite{
     @Column(name = "ADRESSE", nullable = true)
     private String adresse;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Poste_ID", nullable = false)
-    private Poste poste;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Profil_ID", nullable = false)
@@ -83,7 +80,7 @@ public class Utilisateur extends BaseEntite{
     public Utilisateur() {
     }
 
-    public Utilisateur(String login, String motDePasse, boolean actif, String nom, String prenom, String sexe, String adresseEmail, String photo, Date dateCreation, String contact, String adresse, Poste poste, Profil profil) {
+    public Utilisateur(String login, String motDePasse, boolean actif, String nom, String prenom, String sexe, String adresseEmail, Date dateCreation, String contact, String adresse, Profil profil) {
         this.login = login;
         this.motDePasse = motDePasse;
         this.actif = actif;
@@ -91,13 +88,15 @@ public class Utilisateur extends BaseEntite{
         this.prenom = prenom;
         this.sexe = sexe;
         this.adresseEmail = adresseEmail;
-        this.photo = photo;
         this.dateCreation = dateCreation;
         this.contact = contact;
         this.adresse = adresse;
-        this.poste = poste;
         this.profil = profil;
     }
+
+   
+
+    
 
     
     
@@ -127,13 +126,6 @@ public class Utilisateur extends BaseEntite{
         this.adresse = adresse;
     }   
 
-    public Poste getPoste() {
-        return poste;
-    }
-
-    public void setPoste(Poste poste) {
-        this.poste = poste;
-    }
 
     public Profil getProfil() {
         return profil;
@@ -252,14 +244,14 @@ public class Utilisateur extends BaseEntite{
     public void setReinitialiserPswd(boolean reinitialiserPswd) {
         this.reinitialiserPswd = reinitialiserPswd;
     }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+//
+//    public String getPhoto() {
+//        return photo;
+//    }
+//
+//    public void setPhoto(String photo) {
+//        this.photo = photo;
+//    }
 
     @Override
     public boolean equals(Object obj) {
@@ -284,10 +276,21 @@ public class Utilisateur extends BaseEntite{
         return hash;
     }
 
+    public String getIdPointService() {
+        return idPointService;
+    }
+
+    public void setIdPointService(String idPointService) {
+        this.idPointService = idPointService;
+    }
+
     @Override
     public String toString() {
-        return "Utilisateur{" + "id=" + id + ", login=" + login + ", motDePasse=" + motDePasse + ", actif=" + actif + ", nom=" + nom + ", prenom=" + prenom + ", sexe=" + sexe + ", adresseEmail=" + adresseEmail + ", reinitialiserPswd=" + reinitialiserPswd + ", photo=" + photo + ", dateCreation=" + dateCreation + ", contact=" + contact + ", adresse=" + adresse + ", poste=" + poste + ", profil=" + profil + '}';
+        return "Utilisateur{" + "id=" + id + ", login=" + login + ", motDePasse=" + motDePasse + ", actif=" + actif + ", nom=" + nom + ", prenom=" + prenom + ", sexe=" + sexe + ", adresseEmail=" + adresseEmail + ", reinitialiserPswd=" + reinitialiserPswd + ", dateCreation=" + dateCreation + ", contact=" + contact + ", adresse=" + adresse + ", profil=" + profil + '}';
     }
+
+   
+
 
     
 

@@ -52,12 +52,6 @@
                                         <p:outputLabel for="Email" value="Email"/>
                                         <p:inputText id="Email" value="#{administrationManagedBean.utilisateur.adresseEmail}"/>
 
-                                        <p:outputLabel for="poste" value="Poste"/>
-                                        <p:selectOneMenu id="poste" value="#{administrationManagedBean.utilisateur.poste}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner un poste" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="post1" value="#{administrationManagedBean.posteListe}" itemValue="#{post1}" itemLabel="#{post1.libPoste}"/>
-                                        </p:selectOneMenu>
-
                                         <p:outputLabel for="Utilisateur" value="Utilisateur *"/>
                                         <p:inputText id="Utilisateur" value="#{administrationManagedBean.utilisateur.login}"/>
 
@@ -85,15 +79,7 @@
                                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                                  rowsPerPageTemplate="5,10,15"
                                                  emptyMessage="La liste d'utilisateur est vide" reflow="true" rows="10" paginator="true" >                                
-                                        <p:column filterBy="#{cp.poste.libPoste}" headerText="Poste" filterMatchMode="exact">
-                                            <f:facet name="filter">
-                                                <p:selectOneMenu onchange="PF('utilisateurWV').filter()" >
-                                                    <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
-                                                    <f:selectItems var="post" value="#{administrationManagedBean.posteListe}" itemValue="#{post.libPoste}" itemLabel="#{post.libPoste}"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                            <h:outputText value="#{cp.poste.libPoste}" />
-                                        </p:column>                                                                          
+                                                                   
                                         <p:column filterBy="#{cp.nom} #{cp.prenom}" headerText="Nom et prénom" filterMatchMode="contains">                       
                                             <h:outputText value="#{cp.nom} #{cp.prenom}" />
                                         </p:column>                          
@@ -120,6 +106,7 @@
                                     </p:dataTable>
                                 </h:form>
                             </p:tab>
+                            
 
                             <p:tab title="Profil">
                                 <h:form id="droitForm">

@@ -6,31 +6,48 @@
 package com.kol.gf.bean;
 
 import com.kol.gf.dao.bean.ConsommationDaoBeanLocal;
+import com.kol.gf.dao.bean.ConsultationDaoBeanLocal;
 import com.kol.gf.dao.bean.Habitude_alimentaireDaoBeanLocal;
-import com.kol.gf.dao.bean.PathologieDaoBeanLocal;
-import com.kol.gf.dao.bean.PatientDaoBeanLocal;
+import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
+import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
+import com.kol.gf.entities.Antecedent_familial;
+import com.kol.gf.entities.Antecedent_familial_Id;
 import com.kol.gf.entities.Consommation;
+import com.kol.gf.entities.Consultation;
 import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Habitude_alimentaireId;
+import com.kol.gf.entities.Intervenant;
+import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
+import com.kol.gf.entities.Suivi;
+import com.kol.gf.entities.Traitement;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.entities.TypeHabitude;
-import com.kol.gf.service.Habitude_alimentaireServiceBeanLocal;
+import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
+import com.kol.gf.service.OrdonnanceSessionBeanLocal;
+import com.kol.gf.service.PathologieServiceBeanLocal;
+import com.kol.gf.service.PatientServiceBeanLocal;
+import com.kol.gf.service.SuiviSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
+import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.Mtm;
+import com.miki.webapp.shiro.EntityRealm;
+import com.miki.webapp.shiro.utils.constante;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -42,131 +59,98 @@ public class PatientBean implements Serializable {
 
     private Patient patient;
 
-    private Pathologie pathologie;
-
-    private Consommation consommation;
-    private TypeConsommation typecons;
-    private TypeHabitude typeHabitude;
+    
 
     private List<Patient> listePatient;
-    private List<Pathologie> listePathologie;
-    private List<Consommation> listeConsommation;
-    private List<TypeHabitude> listeTypeHabitude;
 
-    private Map<Consommation, TypeHabitude> tamponHabitudeAlimentaire;
-
-    private List<TypeConsommation> liteType;
-
-    @EJB
-    private PatientDaoBeanLocal daoPatient;
-
-    @EJB
-    private PathologieDaoBeanLocal daoPathologie;
-    @EJB
-    private ConsommationDaoBeanLocal daoConsommation;
-
-    @EJB
-    private TypeConsommationDaoBeanLocal daotype;
-
-    @EJB
-    private TypeHabitudeServiceBeanLocal typeHabitudeServices;
     
+
     @EJB
-    private Habitude_alimentaireDaoBeanLocal habitudeAlimentaireServices;
+    private PatientServiceBeanLocal patientServices;
+
+    
 
     public PatientBean() {
 
         patient = new Patient();
-        pathologie = new Pathologie();
-        consommation = new Consommation();
-        listePatient = new ArrayList<Patient>();
-        listePathologie = new ArrayList<Pathologie>();
-        listeConsommation = new ArrayList<Consommation>();
-        typecons = new TypeConsommation();
-        liteType = new ArrayList<TypeConsommation>();
-        listeTypeHabitude = new ArrayList<>();
-        tamponHabitudeAlimentaire = new LinkedHashMap<>();
+       
+        listePatient = new ArrayList<>();
+        
     }
 
-    @PostConstruct
-    public void init() {
-        patient = new Patient();
+    public void gestionPatient() {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE) || EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE)) {
+            UserTransaction tx = TransactionManager.getUserTransaction();
+            try {
+                if (patient.getNomPatient().trim().isEmpty()) {
+                    Mtm.mikiMessageWarnSaisir("le nom du patient");
+                } else if (patient.getPrenomPatient().trim().isEmpty()) {
+                    Mtm.mikiMessageWarnSaisir("le prenom du patient");
+                } else if (patient.getSexe().isEmpty()) {
+                    Mtm.mikiMessageWarnSelectionner("le sexe du patient");
+                } else if (patient.getDate_naissance() == null) {
+                    Mtm.mikiMessageWarnSaisir("la date de naissance du patient");
+                } else {
+                    if (patient.getId() == null) {
+                        if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {
 
-    }
+                            tx.begin();
+                            patientServices.saveOne(patient);
+                            tx.commit();
+                            
+                            new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement du patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+                            
 
-    public void addPatient() {
+                        } else {
+                            Mtm.mikiLog4jMessageError();
+                        }
+                    } else {
 
-        try {
-            this.daoPatient.addOne(patient);
-            
-            for(Map.Entry<Consommation, TypeHabitude> bt : tamponHabitudeAlimentaire.entrySet()){
-                Habitude_alimentaireId idHb = new Habitude_alimentaireId();
-                Habitude_alimentaire Hb = new Habitude_alimentaire();
-                
-                idHb.setId_Consommation(bt.getKey().getId());
-                idHb.setId_Patient(patient.getId());
-                idHb.setId_type_habitude(bt.getValue().getId());
-                
-                Hb.setId(idHb);
-                Hb.setConsommation(bt.getKey());
-                Hb.setPatient(patient);
-                Hb.setType_habitude(bt.getValue());
-                
-                habitudeAlimentaireServices.addOne(Hb);
-                
+                        tx.begin();
+                        patientServices.updateOne(patient);
+                        tx.commit();
+
+                        new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur le patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+
+                    }
+
+                    Mtm.mikiMessageInfo();
+                    patient = new Patient();
+                    
+
+                }
+            } catch (Exception ex) {
+                try {
+                    tx.rollback();
+                } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                    Logger.getLogger(PatientBean.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+                Mtm.mikiMessageError();
             }
-
-            FacesMessage msg = new FacesMessage("Successful", "Welcome :" + patient.getNomPatient());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void ajouterHabitudeAlimentaire() {
-        if(typecons == null){
-            Mtm.mikiMessageWarnSelectionner("le type consommation");
-        }else if (consommation == null) {
-            Mtm.mikiMessageWarnSelectionner("la consommation");
-        } else if (typeHabitude == null) {
-            Mtm.mikiMessageWarnSelectionner("le type habitude");
         } else {
-            if (!tamponHabitudeAlimentaire.containsKey(consommation)) {
-                tamponHabitudeAlimentaire.put(consommation, typeHabitude);
-                typecons = new TypeConsommation();
-                consommation = new Consommation();
-                typeHabitude = new TypeHabitude();
-            }
+            Mtm.mikiLog4jMessageError();
         }
 
     }
 
-    public void supprimerHabitudeAlimentaire(Consommation tampon) {
-        tamponHabitudeAlimentaire.remove(tampon);
+    public void renvoiePatient(Patient pat) {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE)) {
+           
+            patient = pat;
+            
+        } else {
+            Mtm.mikiLog4jMessageError();
+        }
+
     }
 
-    public List<Patient> getAllPatient() {
-
-        listePatient = this.daoPatient.getAll();
-        return listePatient;
+    public void annulerPatient() {
+        patient = new Patient();
+       
     }
 
-    public List<Pathologie> getAllPathologie() {
-        listePathologie = this.daoPathologie.getAll();
-        return listePathologie;
-    }
-
-    public List<Consommation> getAllConsommation() {
-        listeConsommation = this.daoConsommation.getAll();
-        return listeConsommation;
-    }
-
-    public List<TypeConsommation> getAllTypeConsommations() {
-        liteType = this.getDaotype().getAll();
-        return liteType;
-    }
-
+    
     /**
      * @return the patient
      */
@@ -184,36 +168,13 @@ public class PatientBean implements Serializable {
     /**
      * @return the pathologie
      */
-    public Pathologie getPathologie() {
-        return pathologie;
-    }
-
-    /**
-     * @param pathologie the pathologie to set
-     */
-    public void setPathologie(Pathologie pathologie) {
-        this.pathologie = pathologie;
-    }
-
-    /**
-     * @return the consommation
-     */
-    public Consommation getConsommation() {
-        return consommation;
-    }
-
-    /**
-     * @param consommation the consommation to set
-     */
-    public void setConsommation(Consommation consommation) {
-        this.consommation = consommation;
-    }
+    
 
     /**
      * @return the listePatient
      */
     public List<Patient> getListePatient() {
-        return listePatient;
+        return patientServices.getAll("nomPatient", true);
     }
 
     /**
@@ -223,152 +184,13 @@ public class PatientBean implements Serializable {
         this.listePatient = listePatient;
     }
 
-    /**
-     * @return the listePathologie
-     */
-    public List<Pathologie> getListePathologie() {
-        return listePathologie;
+    public PatientServiceBeanLocal getPatientServices() {
+        return patientServices;
     }
 
-    /**
-     * @param listePathologie the listePathologie to set
-     */
-    public void setListePathologie(List<Pathologie> listePathologie) {
-        this.listePathologie = listePathologie;
+    public void setPatientServices(PatientServiceBeanLocal patientServices) {
+        this.patientServices = patientServices;
     }
 
-    /**
-     * @return the listeConsommation
-     */
-    public List<Consommation> getListeConsommation() {
-        return daoConsommation.getBy("type_consommation", typecons);
-    }
-
-    /**
-     * @param listeConsommation the listeConsommation to set
-     */
-    public void setListeConsommation(List<Consommation> listeConsommation) {
-        this.listeConsommation = listeConsommation;
-    }
-
-    /**
-     * @return the daoPatient
-     */
-    public PatientDaoBeanLocal getDaoPatient() {
-        return daoPatient;
-    }
-
-    /**
-     * @param daoPatient the daoPatient to set
-     */
-    public void setDaoPatient(PatientDaoBeanLocal daoPatient) {
-        this.daoPatient = daoPatient;
-    }
-
-    /**
-     * @return the daoPathologie
-     */
-    public PathologieDaoBeanLocal getDaoPathologie() {
-        return daoPathologie;
-    }
-
-    /**
-     * @param daoPathologie the daoPathologie to set
-     */
-    public void setDaoPathologie(PathologieDaoBeanLocal daoPathologie) {
-        this.daoPathologie = daoPathologie;
-    }
-
-    /**
-     * @return the daoConsommation
-     */
-    public ConsommationDaoBeanLocal getDaoConsommation() {
-        return daoConsommation;
-    }
-
-    /**
-     * @param daoConsommation the daoConsommation to set
-     */
-    public void setDaoConsommation(ConsommationDaoBeanLocal daoConsommation) {
-        this.daoConsommation = daoConsommation;
-    }
-
-    /**
-     * @return the typecons
-     */
-    public TypeConsommation getTypecons() {
-        return typecons;
-    }
-
-    /**
-     * @param typecons the typecons to set
-     */
-    public void setTypecons(TypeConsommation typecons) {
-        this.typecons = typecons;
-    }
-
-    /**
-     * @return the daotype
-     */
-    public TypeConsommationDaoBeanLocal getDaotype() {
-        return daotype;
-    }
-
-    /**
-     * @param daotype the daotype to set
-     */
-    public void setDaotype(TypeConsommationDaoBeanLocal daotype) {
-        this.daotype = daotype;
-    }
-
-    public List<TypeConsommation> getLiteType() {
-        return liteType;
-    }
-
-    public void setLiteType(List<TypeConsommation> liteType) {
-        this.liteType = liteType;
-    }
-
-    public TypeHabitudeServiceBeanLocal getTypeHabitudeServices() {
-        return typeHabitudeServices;
-    }
-
-    public void setTypeHabitudeServices(TypeHabitudeServiceBeanLocal typeHabitudeServices) {
-        this.typeHabitudeServices = typeHabitudeServices;
-    }
-
-    public List<TypeHabitude> getListeTypeHabitude() {
-        return typeHabitudeServices.getBy("type_consommation", typecons);
-    }
-
-    public void setListeTypeHabitude(List<TypeHabitude> listeTypeHabitude) {
-        this.listeTypeHabitude = listeTypeHabitude;
-    }
-
-    public Map<Consommation, TypeHabitude> getTamponHabitudeAlimentaire() {
-        return tamponHabitudeAlimentaire;
-    }
-
-    public void setTamponHabitudeAlimentaire(Map<Consommation, TypeHabitude> tamponHabitudeAlimentaire) {
-        this.tamponHabitudeAlimentaire = tamponHabitudeAlimentaire;
-    }
-
-    public TypeHabitude getTypeHabitude() {
-        return typeHabitude;
-    }
-
-    public void setTypeHabitude(TypeHabitude typeHabitude) {
-        this.typeHabitude = typeHabitude;
-    }
-
-    public Habitude_alimentaireDaoBeanLocal getHabitudeAlimentaireServices() {
-        return habitudeAlimentaireServices;
-    }
-
-    public void setHabitudeAlimentaireServices(Habitude_alimentaireDaoBeanLocal habitudeAlimentaireServices) {
-        this.habitudeAlimentaireServices = habitudeAlimentaireServices;
-    }
     
-    
-
 }

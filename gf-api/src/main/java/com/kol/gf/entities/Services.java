@@ -6,22 +6,18 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
  * @author kol
- * @param id l'id du service
- * @param code code du service
- * @param nomservice nom du service
+ * 
  */
 @Entity
 @Table(name = "Services")
@@ -32,9 +28,11 @@ public class Services implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    
     @Column(name = "code", nullable = false)
     private String code;
-    @Column(name = "nomService")
+    
+    @Column(name = "nomService", nullable = false)
     private String nomService;
     
 

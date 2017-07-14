@@ -8,13 +8,11 @@ package com.kol.gf.bean;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.miki.securite.Service.DroitSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.PossederSessionBeanLocal;
-import com.miki.webapp.miki.securite.Service.PosteSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.ProfilSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.UtilisateurSessionBeanLocal;
 import com.miki.webapp.miki.securite.entities.Droit;
 import com.miki.webapp.miki.securite.entities.Posseder;
 import com.miki.webapp.miki.securite.entities.PossederId;
-import com.miki.webapp.miki.securite.entities.Poste;
 import com.miki.webapp.miki.securite.entities.Profil;
 import com.miki.webapp.miki.securite.entities.Utilisateur;
 import com.miki.webapp.shiro.utils.constante;
@@ -57,10 +55,8 @@ public class ConnexionManagedBean implements Serializable {
     private Posseder posseder;
     private PossederId possederId;
     private List<Droit> droitUtilisateurs2;
-    private List<Poste> postes;
     private List<Profil> profilList;
     private List<Utilisateur> users;
-    private Poste poste;
     private String tofProfil;
     private String userProfil;
     private String userLogin;
@@ -80,8 +76,7 @@ public class ConnexionManagedBean implements Serializable {
     private PossederSessionBeanLocal possederServices;
     @EJB
     private ProfilSessionBeanLocal profilUtilisateurServices;
-    @EJB
-    private PosteSessionBeanLocal posteServices;
+    
 //    @EJB
 //    private JournalSessionBeanLocal journalServices;
 
@@ -97,10 +92,8 @@ public class ConnexionManagedBean implements Serializable {
         droitTous = new Droit();
         droitUtilisateurs2 = new ArrayList<>();
        tofProfil = "images/tofProfilDefaut.png";
-        postes = new ArrayList<>();
         profilList = new ArrayList<>();
         users = new ArrayList<>();
-        poste = new Poste();
     }
 
     @PostConstruct
@@ -129,11 +122,6 @@ public class ConnexionManagedBean implements Serializable {
 
         }
 
-        postes = posteServices.getAll();
-        if (postes.isEmpty()) {
-            poste.setLibPoste("Administrateur");
-            posteServices.saveOne(poste);
-        }
 
         profilList = profilUtilisateurServices.getAll();
         if (profilList.isEmpty()) {
@@ -194,12 +182,10 @@ public class ConnexionManagedBean implements Serializable {
             user.setPrenom("Admin");
             user.setSexe("-");
             user.setLogin("Administrateur");
-            user.setPoste(poste);
             user.setMotDePasse(new Sha256Hash(constante.MOT_DE_PASSE_DEFAUT).toHex());
             user.setDateCreation(new Date());
             user.setReinitialiserPswd(true);
             user.setActif(true);
-            user.setPhoto(tofProfil);
             user.setProfil(profil2);
 
             this.userServices.saveOne(user);
@@ -207,7 +193,6 @@ public class ConnexionManagedBean implements Serializable {
         }
 
         user = new Utilisateur();
-        poste = new Poste();
         profilUtilisateur = new Profil();
         profil2 = new Profil();
         droitTous = new Droit();
@@ -230,8 +215,7 @@ public class ConnexionManagedBean implements Serializable {
                 context.execute("PF('dlg2').show();");
             } else {
                 userLogin = userConnexionTest.getLogin();
-                userProfil = userConnexionTest.getPhoto();
-                userPoste = userConnexionTest.getPoste().getLibPoste();
+                userProfil = userConnexionTest.getProfil().getNomProf();
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
                 Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "dashboard.xhtml");
                 new Mtm().logMikiLog4j(ConnexionManagedBean.class.getName(), Level.INFO, "Connexion à l'application");
@@ -264,8 +248,7 @@ public class ConnexionManagedBean implements Serializable {
 
             this.userServices.updateOne(userConnexionTest);
             userLogin = userConnexionTest.getLogin();
-            userProfil = userConnexionTest.getPhoto();
-            userPoste = userConnexionTest.getPoste().getLibPoste();
+            userProfil = userConnexionTest.getProfil().getNomProf();
             try {
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(Faces.getRequest());
                 Faces.redirect(savedRequest != null ? savedRequest.getRequestUrl() : "dashboard.xhtml");
@@ -345,13 +328,7 @@ public class ConnexionManagedBean implements Serializable {
         this.droitUtilisateurs2 = droitUtilisateurs2;
     }
 
-    public List<Poste> getPostes() {
-        return postes;
-    }
-
-    public void setPostes(List<Poste> postes) {
-        this.postes = postes;
-    }
+    
 
     public List<Profil> getProfilList() {
         return profilList;
@@ -369,13 +346,7 @@ public class ConnexionManagedBean implements Serializable {
         this.users = users;
     }
 
-    public Poste getPoste() {
-        return poste;
-    }
-
-    public void setPoste(Poste poste) {
-        this.poste = poste;
-    }
+    
 
     public String getTofProfil() {
         return tofProfil;
@@ -465,13 +436,7 @@ public class ConnexionManagedBean implements Serializable {
         this.profilUtilisateurServices = profilUtilisateurServices;
     }
 
-    public PosteSessionBeanLocal getPosteServices() {
-        return posteServices;
-    }
-
-    public void setPosteServices(PosteSessionBeanLocal posteServices) {
-        this.posteServices = posteServices;
-    }
+   
 
 //    public JournalSessionBeanLocal getJournalServices() {
 //        return journalServices;

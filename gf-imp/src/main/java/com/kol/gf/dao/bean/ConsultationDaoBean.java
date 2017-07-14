@@ -6,7 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Consultation;
-import com.kol.gf.entities.Patient_intervenantid;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -14,14 +14,11 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class ConsultationDaoBean extends GenericDaoBean<Consultation, Patient_intervenantid> implements ConsultationDaoBeanLocal{
+public class ConsultationDaoBean extends BaseDaoBeanImpl<Consultation, Long> implements ConsultationDaoBeanLocal{
     
     public ConsultationDaoBean(){
         super(Consultation.class);
     }
-    
-    public ConsultationDaoBean(Class<Consultation> entClass){
-        this.entityClass=entClass;
-    }
+
     
 }

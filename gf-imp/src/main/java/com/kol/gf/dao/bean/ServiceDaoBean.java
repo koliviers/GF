@@ -6,6 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Services;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -13,15 +14,12 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class ServiceDaoBean extends GenericDaoBean<Services, Long> implements ServiceDaoBeanLocal{
+public class ServiceDaoBean extends BaseDaoBeanImpl<Services, Long> implements ServiceDaoBeanLocal{
     
     
     public ServiceDaoBean(){
         super(Services.class);
     }
     
-    public ServiceDaoBean(Class<Services> entityClass)
-    {
-        this.entityClass=entityClass;
-    }
+    
 }

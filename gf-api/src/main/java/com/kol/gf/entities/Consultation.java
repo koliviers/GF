@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,11 +29,11 @@ import javax.persistence.TemporalType;
 @Table(name = "consultation")
 public class Consultation implements Serializable{
     
-    @EmbeddedId
-    private Patient_intervenantid id;
-    
-    @Column (name = "traitement")
-    private String traitement;
+    @Id
+    @SequenceGenerator(name = "consulationSeq", sequenceName = "CONSULTATION_SEQ", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "consulationSeq")
+    @Column(name = "ID",nullable = false)
+    private Long id;
     
     @Column(name = "detailConsultation")
     private String detailConsultation;
@@ -44,58 +44,39 @@ public class Consultation implements Serializable{
 
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_patient",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_patient",nullable = true)
     private Patient patient;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_intervenant",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_intervenant",nullable = true)
     private Intervenant intervenant;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pathologie",nullable = false)
-    private Pathologie pathologie;
+    @JoinColumn(name = "id_suivi",nullable = true)
+    private Suivi suivi;
+    
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_traitement",nullable = true)
+    private Traitement traitement;
+    
+    
 
     public Consultation() {
     }
 
-    public Consultation(Patient_intervenantid id, String traitement, String detailConsultation, Date dateConsultation, Patient patient, Intervenant intervenant, Pathologie pathologie) {
-        this.id = id;
-        this.traitement = traitement;
+    public Consultation(String detailConsultation, Date dateConsultation, Patient patient, Intervenant intervenant, Suivi suivi, Traitement traitement) {
         this.detailConsultation = detailConsultation;
         this.dateConsultation = dateConsultation;
         this.patient = patient;
         this.intervenant = intervenant;
-        this.pathologie = pathologie;
+        this.suivi = suivi;
+        this.traitement = traitement;
     }
 
     
-    /**
-     * @return the id
-     */
-    public Patient_intervenantid getId() {
-        return id;
-    }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Patient_intervenantid id) {
-        this.id = id;
-    }
 
-    /**
-     * @return the traitement
-     */
-    public String getTraitement() {
-        return traitement;
-    }
-
-    /**
-     * @param traitement the traitement to set
-     */
-    public void setTraitement(String traitement) {
-        this.traitement = traitement;
-    }
 
     /**
      * @return the detailConsultation
@@ -139,19 +120,35 @@ public class Consultation implements Serializable{
         this.intervenant = intervenant;
     }
 
-    /**
-     * @return the pathologie
-     */
-    public Pathologie getPathologie() {
-        return pathologie;
+    public Long getId() {
+        return id;
     }
 
-    /**
-     * @param pathologie the pathologie to set
-     */
-    public void setPathologie(Pathologie pathologie) {
-        this.pathologie = pathologie;
+    public void setId(Long id) {
+        this.id = id;
     }
+
+    public Suivi getSuivi() {
+        return suivi;
+    }
+
+    public void setSuivi(Suivi suivi) {
+        this.suivi = suivi;
+    }
+
+   
+
+    public Traitement getTraitement() {
+        return traitement;
+    }
+
+    public void setTraitement(Traitement traitement) {
+        this.traitement = traitement;
+    }
+    
+    
+
+    
 
     @Override
     public int hashCode() {
@@ -178,11 +175,6 @@ public class Consultation implements Serializable{
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Consultation{" + "id=" + id + ", traitement=" + traitement + ", detailConsultation=" + detailConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", pathologie=" + pathologie + '}';
-    }
-
     public Date getDateConsultation() {
         return dateConsultation;
     }
@@ -190,9 +182,13 @@ public class Consultation implements Serializable{
     public void setDateConsultation(Date dateConsultation) {
         this.dateConsultation = dateConsultation;
     }
-    
-        
-    
+
+    @Override
+    public String toString() {
+        return "Consultation{" + "id=" + id + ", detailConsultation=" + detailConsultation + ", dateConsultation=" + dateConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", suivi=" + suivi + ", traitement=" + traitement + '}';
+    }
+
+   
 
     
 }

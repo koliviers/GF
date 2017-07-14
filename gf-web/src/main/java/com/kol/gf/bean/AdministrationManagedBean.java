@@ -5,21 +5,24 @@
  */
 package com.kol.gf.bean;
 
+import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
+import com.kol.gf.entities.Intervenant;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.miki.securite.Service.DroitSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.PossederSessionBeanLocal;
-import com.miki.webapp.miki.securite.Service.PosteSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.ProfilSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.UtilisateurSessionBeanLocal;
 import com.miki.webapp.miki.securite.entities.Droit;
 import com.miki.webapp.miki.securite.entities.Posseder;
 import com.miki.webapp.miki.securite.entities.PossederId;
-import com.miki.webapp.miki.securite.entities.Poste;
 import com.miki.webapp.miki.securite.entities.Profil;
 import com.miki.webapp.miki.securite.entities.Utilisateur;
 import com.miki.webapp.shiro.EntityRealm;
 import com.miki.webapp.shiro.utils.constante;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,10 +35,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+import javax.servlet.ServletContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import org.apache.log4j.Priority;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
@@ -56,7 +64,7 @@ public class AdministrationManagedBean implements Serializable {
     private Profil profilTampon;
     private Posseder posseder;
     private PossederId possederId;
-    private Poste poste;
+    private Intervenant intervenant;
     private boolean disAdmin;
 
     private List<Utilisateur> utilisateurListe;
@@ -65,7 +73,6 @@ public class AdministrationManagedBean implements Serializable {
     private List<Droit> droitListeSource;
     private List<Droit> droitListeSupp;
     private List<Profil> profilListe;
-    private List<Poste> posteListe;
     private List<Posseder> possederSupp;
 
     public String tofProfil;
@@ -79,11 +86,13 @@ public class AdministrationManagedBean implements Serializable {
     @EJB
     private PossederSessionBeanLocal possederServices;
 
-    @EJB
-    private PosteSessionBeanLocal posteServices;
+   
 
     @EJB
     private DroitSessionBeanLocal droitServices;
+
+    @EJB
+    private IntervenantDaoBeanLocal intervenantServices;
 
     @ManagedProperty(value = "#{connexionManagedBean}")
     private ConnexionManagedBean connexionMngdB;
@@ -98,7 +107,7 @@ public class AdministrationManagedBean implements Serializable {
         profilTampon = new Profil();
         posseder = new Posseder();
         possederId = new PossederId();
-        poste = new Poste();
+        intervenant = new Intervenant();
 
         utilisateurListe = new ArrayList<>();
         utilisateurListeSansAdmin = new ArrayList<>();
@@ -106,54 +115,13 @@ public class AdministrationManagedBean implements Serializable {
         droitListe = new ArrayList<>();
         droitListeSource = new ArrayList<>();
         profilListe = new ArrayList<>();
-        posteListe = new ArrayList<>();
         possederSupp = new ArrayList<>();
 
         tofProfil = "images/tofProfilDefaut.png";
         disAdmin = false;
     }
 
-    public void ajouterPoste() {
-        UserTransaction tx = TransactionManager.getUserTransaction();
-        try {
-            tx.begin();
-            if (poste.getLibPoste().isEmpty()) {
-                Mtm.mikiMessageWarnSaisir("le nom du poste");
-            } else {
-                if (poste.getIdLibPoste() == null) {
-                    posteServices.saveOne(poste);
-                    tx.commit();
-                    poste = new Poste();
-                    Mtm.mikiMessageInfo();
-                } else {
-                    posteServices.updateOne(poste);
-                    tx.commit();
-                    poste = new Poste();
-                    Mtm.mikiMessageInfo();
-                }
-
-            }
-        } catch (Exception ex) {
-            try {
-                tx.rollback();
-            } catch (IllegalStateException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SecurityException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SystemException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            Mtm.mikiMessageError();
-        }
-    }
-
-    public void renvoiePoste(Poste pe) {
-        poste = pe;
-    }
-
-    public void annulerPoste() {
-        poste = new Poste();
-    }
+    
 
     public void affectationUtilisateurDroit() {
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
@@ -183,12 +151,10 @@ public class AdministrationManagedBean implements Serializable {
                 }
                 Mtm.mikiMessageError();
             }
-            
-           
+
         } else {
             Mtm.mikiLog4jMessageError();
         }
-        
 
     }
 
@@ -214,9 +180,7 @@ public class AdministrationManagedBean implements Serializable {
             UserTransaction tx = TransactionManager.getUserTransaction();
             try {
                 tx.begin();
-                if (utilisateur.getPoste() == null) {
-                    Mtm.mikiMessageWarnChoisir("le poste");
-                } else if (utilisateur.getNom().isEmpty()) {
+                 if (utilisateur.getNom().isEmpty()) {
                     Mtm.mikiMessageWarnSaisir("le nom");
                 } else if (utilisateur.getPrenom().isEmpty()) {
                     Mtm.mikiMessageWarnSaisir("le prénom");
@@ -254,8 +218,7 @@ public class AdministrationManagedBean implements Serializable {
                         tofProfil = "images/tofProfilDefaut.png";
                         Mtm.mikiMessageInfo();
                     }
-                    
-                 
+
                 }
             } catch (Exception ex) {
                 try {
@@ -267,7 +230,7 @@ public class AdministrationManagedBean implements Serializable {
                 } catch (SystemException ex1) {
                     Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
                 }
-               new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
+                new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le personnel :" + utilisateur.getNom() + " " + utilisateur.getPrenom());
                 Mtm.mikiMessageError();
             }
         } else {
@@ -289,7 +252,6 @@ public class AdministrationManagedBean implements Serializable {
                 }
             } else {
                 utilisateur = ur;
-                tofProfil = utilisateur.getPhoto();
                 utilisateurTampon = ur;
             }
         } else {
@@ -305,134 +267,130 @@ public class AdministrationManagedBean implements Serializable {
     }
 
     public void ajouterProfil() {
-    if (EntityRealm.getSubject ().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
             UserTransaction tx = TransactionManager.getUserTransaction();
-        try {
-            tx.begin();
-            if (profil.getNomProf().isEmpty()) {
-                Mtm.mikiMessageWarnSaisir("le nom du profil");
-            } else if (droitListeSource.isEmpty()) {
-                Mtm.mikiMessageWarnSelectionner("le(s) droit(s)");
-            } else {
-                if (profil.getIdProf()== null) {
-                    profil.setDateCreaProf(new Date());
-                    profilServices.saveOne(profil);
-                    tx.commit();
-
-                    List<Posseder> possederProfil;
-                    possederProfil = new ArrayList<>();
-                    for (Droit drt : droitListeSource) {
-                        tx.begin();
-                        possederId.setProfilID(profil.getIdProf());
-                        possederId.setDroitUtilID(drt.getCodeDroit());
-                        posseder.setId(possederId);
-                        posseder.setProfil(profil);
-                        posseder.setDroitUtilisateur(drt);
-
-                        this.possederServices.saveOne(posseder);
-                        tx.commit();
-
-                        possederProfil.add(posseder);
-                        posseder = new Posseder();
-                        possederId = new PossederId();
-                    }
-
-                    for (Posseder po : possederProfil) {
-                        tx.begin();
-                        profil.ajouterPosseder(po);
-                        profilServices.updateOne(profil);
-                        tx.commit();
-                    }
-
-                    new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Ajout d'un profil : " + profil.getNomProf());
-                    profil = new Profil();
-                    droitListeSource = new ArrayList<>();
-                    Mtm.mikiMessageInfo();
-                } else {
-                    profilServices.updateOne(profil);
-                    tx.commit();
-
-                    for (Posseder drt1 : possederSupp) {
-                        tx.begin();
-                        possederServices.deleteOne(drt1.getId());
-                        tx.commit();
-                    }
-
-                    List<Posseder> possederProfil3;
-                    possederProfil3 = new ArrayList<>();
-                    for (Posseder poss : profilTampon.getPosseders()) {
-                        possederProfil3.add(poss);
-                    }
-
-                    for (Posseder poss2 : possederProfil3) {
-                        tx.begin();
-                        profilTampon.supprimerPosseder(poss2);
-                        profilServices.updateOne(profilTampon);
-                        tx.commit();
-                    }
-
-                    List<Posseder> possederProfil2;
-                    possederProfil2 = new ArrayList<>();
-                    for (Droit drt3 : droitListeSource) {
-                        tx.begin();
-                        possederId.setProfilID(profil.getIdProf());
-                        possederId.setDroitUtilID(drt3.getCodeDroit());
-                        posseder.setId(possederId);
-                        posseder.setProfil(profil);
-                        posseder.setDroitUtilisateur(drt3);
-
-                        this.possederServices.saveOne(posseder);
-                        tx.commit();
-
-                        possederProfil2.add(posseder);
-                        posseder = new Posseder();
-                        possederId = new PossederId();
-                    }
-
-                    for (Posseder po : possederProfil2) {
-                        tx.begin();
-                        profil.ajouterPosseder(po);
-                        profilServices.updateOne(profil);
-                        tx.commit();
-                    }
-                    if (profil.getNomProf().equals(profilTampon.getNomProf())) {
-                        new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des droits du profil :" + profil.getNomProf());
-                    } else {
-                        new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée du profil :" + profilTampon.getNomProf() + ", par :" + profil.getNomProf());
-                    }
-                    profil = new Profil();
-                    profilTampon = new Profil();
-                    droitListeSource = new ArrayList<>();
-                    possederSupp = new ArrayList<>();
-                    Mtm.mikiMessageInfo();
-                }
-
-            }
-        } catch (Exception ex) {
             try {
-                tx.rollback();
-            } catch (IllegalStateException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SecurityException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SystemException ex1) {
-                Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                tx.begin();
+                if (profil.getNomProf().isEmpty()) {
+                    Mtm.mikiMessageWarnSaisir("le nom du profil");
+                } else if (droitListeSource.isEmpty()) {
+                    Mtm.mikiMessageWarnSelectionner("le(s) droit(s)");
+                } else {
+                    if (profil.getIdProf() == null) {
+                        profil.setDateCreaProf(new Date());
+                        profilServices.saveOne(profil);
+                        tx.commit();
+
+                        List<Posseder> possederProfil;
+                        possederProfil = new ArrayList<>();
+                        for (Droit drt : droitListeSource) {
+                            tx.begin();
+                            possederId.setProfilID(profil.getIdProf());
+                            possederId.setDroitUtilID(drt.getCodeDroit());
+                            posseder.setId(possederId);
+                            posseder.setProfil(profil);
+                            posseder.setDroitUtilisateur(drt);
+
+                            this.possederServices.saveOne(posseder);
+                            tx.commit();
+
+                            possederProfil.add(posseder);
+                            posseder = new Posseder();
+                            possederId = new PossederId();
+                        }
+
+                        for (Posseder po : possederProfil) {
+                            tx.begin();
+                            profil.ajouterPosseder(po);
+                            profilServices.updateOne(profil);
+                            tx.commit();
+                        }
+
+                        new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Ajout d'un profil : " + profil.getNomProf());
+                        profil = new Profil();
+                        droitListeSource = new ArrayList<>();
+                        Mtm.mikiMessageInfo();
+                    } else {
+                        profilServices.updateOne(profil);
+                        tx.commit();
+
+                        for (Posseder drt1 : possederSupp) {
+                            tx.begin();
+                            possederServices.deleteOne(drt1.getId());
+                            tx.commit();
+                        }
+
+                        List<Posseder> possederProfil3;
+                        possederProfil3 = new ArrayList<>();
+                        for (Posseder poss : profilTampon.getPosseders()) {
+                            possederProfil3.add(poss);
+                        }
+
+                        for (Posseder poss2 : possederProfil3) {
+                            tx.begin();
+                            profilTampon.supprimerPosseder(poss2);
+                            profilServices.updateOne(profilTampon);
+                            tx.commit();
+                        }
+
+                        List<Posseder> possederProfil2;
+                        possederProfil2 = new ArrayList<>();
+                        for (Droit drt3 : droitListeSource) {
+                            tx.begin();
+                            possederId.setProfilID(profil.getIdProf());
+                            possederId.setDroitUtilID(drt3.getCodeDroit());
+                            posseder.setId(possederId);
+                            posseder.setProfil(profil);
+                            posseder.setDroitUtilisateur(drt3);
+
+                            this.possederServices.saveOne(posseder);
+                            tx.commit();
+
+                            possederProfil2.add(posseder);
+                            posseder = new Posseder();
+                            possederId = new PossederId();
+                        }
+
+                        for (Posseder po : possederProfil2) {
+                            tx.begin();
+                            profil.ajouterPosseder(po);
+                            profilServices.updateOne(profil);
+                            tx.commit();
+                        }
+                        if (profil.getNomProf().equals(profilTampon.getNomProf())) {
+                            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification des droits du profil :" + profil.getNomProf());
+                        } else {
+                            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Modification de donnée du profil :" + profilTampon.getNomProf() + ", par :" + profil.getNomProf());
+                        }
+                        profil = new Profil();
+                        profilTampon = new Profil();
+                        droitListeSource = new ArrayList<>();
+                        possederSupp = new ArrayList<>();
+                        Mtm.mikiMessageInfo();
+                    }
+
+                }
+            } catch (Exception ex) {
+                try {
+                    tx.rollback();
+                } catch (IllegalStateException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SecurityException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SystemException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le profil:" + profil.getNomProf());
+                Mtm.mikiMessageError();
             }
-            new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors d'une opération sur le profil:" + profil.getNomProf());
-            Mtm.mikiMessageError();
-        }
-        
-       
-    }
 
-    
-        else {
+        } else {
             Mtm.mikiLog4jMessageError();
+        }
+
     }
 
-}
-
-public void renvoieProfil(Profil pl) {
+    public void renvoieProfil(Profil pl) {
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
             profil = pl;
             profilTampon = pl;
@@ -481,9 +439,9 @@ public void renvoieProfil(Profil pl) {
             tx.commit();
             new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Réinitialisation du mot de passe de l'utilisateur : " + utilisateurPswd.getLogin());
             utilisateurPswd = new Utilisateur();
-            
+
             RequestContext.getCurrentInstance().execute("PF('confDialgModal').hide();");
-            
+
             FacesMessage message3 = new FacesMessage(FacesMessage.SEVERITY_INFO, "Opération effectuée avec succès !", "");
             FacesContext.getCurrentInstance().addMessage(null, message3);
         } catch (Exception ex) {
@@ -526,12 +484,35 @@ public void renvoieProfil(Profil pl) {
         }
 
     }
+    
+//     public void handleFileUpload(FileUploadEvent event) {
+//        try {
+//            String image = String.valueOf((int) (Math.random() * 10000000));
+//            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+//            String newFileName = servletContext.getRealPath("") + File.separator + "resources" + File.separator + "images" + File.separator + image + event.getFile().getFileName();
+//            InputStream inputStream = event.getFile().getInputstream();
+//            tofProfil = "images/" + image + event.getFile().getFileName();
+//            utilisateur.setPhoto(tofProfil);
+//            ImageOutputStream out = new FileImageOutputStream(new File(newFileName));
+//            int read = 0;
+//            byte[] bytes = new byte[1024];
+//            while ((read = inputStream.read(bytes)) != -1) {
+//                out.write(bytes, 0, read);
+//            }
+//            inputStream.close();
+//            out.flush();
+//            out.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    
 
 //    public void onRowSelect(SelectEvent event) {
 //        utilisateurProfil = utilisateur2;
 //        RequestContext.getCurrentInstance().execute("jQuery('#SearchUser').modal('hide');");
 //    }
-
     public void onRowUnselect(UnselectEvent event) {
 
     }
@@ -576,13 +557,7 @@ public void renvoieProfil(Profil pl) {
         this.possederId = possederId;
     }
 
-    public Poste getPoste() {
-        return poste;
-    }
-
-    public void setPoste(Poste poste) {
-        this.poste = poste;
-    }
+    
 
     public List<Utilisateur> getUtilisateurListe() {
         return utilisateurServices.getAll("nom", true);
@@ -616,13 +591,7 @@ public void renvoieProfil(Profil pl) {
         this.profilListe = profilListe;
     }
 
-    public List<Poste> getPosteListe() {
-        return posteServices.getAll("libPoste", true);
-    }
-
-    public void setPosteListe(List<Poste> posteListe) {
-        this.posteListe = posteListe;
-    }
+    
 
     public UtilisateurSessionBeanLocal getUtilisateurServices() {
         return utilisateurServices;
@@ -648,13 +617,7 @@ public void renvoieProfil(Profil pl) {
         this.possederServices = possederServices;
     }
 
-    public PosteSessionBeanLocal getPosteServices() {
-        return posteServices;
-    }
-
-    public void setPosteServices(PosteSessionBeanLocal posteServices) {
-        this.posteServices = posteServices;
-    }
+    
 
     public DroitSessionBeanLocal getDroitServices() {
         return droitServices;
@@ -735,5 +698,31 @@ public void renvoieProfil(Profil pl) {
     public void setDisAdmin(boolean disAdmin) {
         this.disAdmin = disAdmin;
     }
+
+
+    public Intervenant getIntervenant() {
+        return intervenant;
+    }
+
+    public void setIntervenant(Intervenant intervenant) {
+        this.intervenant = intervenant;
+    }
+
+    public List<Posseder> getPossederSupp() {
+        return possederSupp;
+    }
+
+    public void setPossederSupp(List<Posseder> possederSupp) {
+        this.possederSupp = possederSupp;
+    }
+
+    public IntervenantDaoBeanLocal getIntervenantServices() {
+        return intervenantServices;
+    }
+
+    public void setIntervenantServices(IntervenantDaoBeanLocal intervenantServices) {
+        this.intervenantServices = intervenantServices;
+    }
+
 
 }

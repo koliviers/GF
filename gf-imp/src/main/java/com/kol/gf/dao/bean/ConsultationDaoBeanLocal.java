@@ -6,7 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Consultation;
-import com.kol.gf.entities.Patient_intervenantid;
+import com.miki.webapp.core.Dao.BaseDaoBean;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface ConsultationDaoBeanLocal extends GenericDAOBeanLocal<Consultation,Patient_intervenantid>{
+public interface ConsultationDaoBeanLocal extends BaseDaoBean<Consultation,Long>{
     
 }

@@ -6,9 +6,8 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
-import java.util.logging.Logger;
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
@@ -18,9 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.Fetch;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -41,357 +40,124 @@ public class Patient implements Serializable {
     @Column(name = "prenomPatient", nullable = false)
     private String prenomPatient;
 
-    @Column(name = "age")
-    private int age;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date_naissance", nullable = true)
+    private Date date_naissance;
 
-    @Column(name = "sexe")
-    private char sexe;
+    @Column(name = "sexe", nullable = false)
+    private String sexe;
 
-    @Column(name = "contact")
-    private long contact;
+    @Column(name = "contact", nullable = true)
+    private String contact;
 
-    @Column(name = "civilite")
+    @Column(name = "civilite", nullable = true)
     private String civilite;
 
-    @Column(name = "profession")
+    @Column(name = "profession", nullable = true)
     private String profession;
 
-    @Column(name = "adresse")
+    @Column(name = "adresse", nullable = true)
     private String adresse;
 
-    @Column(name = "taille")
-    private double taille;
 
-    @Column(name = "poid")
-    private double poid;
-
-    @Column(name = "tourtaille")
-    private double tourtaille;
-    
-    @Column(name = "tensiondroit")
-    private double tensiondroit;
-
-    @Column(name = "tension")
-    private double tension;
-
-    @Column(name = "sport")
-    private String sport;
-    
-    @Column(name = "fruit")
-    private String fruit;
-            
-    @Column(name = "antmed")
-    private String antMedicaux;
-
-    @Column(name = "antChir")
-    private String antChirugicaux;
-
-    @ManyToOne(fetch =FetchType.LAZY)
-    @JoinColumn(name = "pathologie",nullable = false)
-    private Pathologie pathologie;
 
     public Patient() {
     }
 
-    public Patient(Long id, String nomPatient, String prenomPatient, int age, char sexe, long contact, String civilite, String profession, String adresse, double taille, double poid, double tourtaille, double tensiondroit, double tension, String sport, String fruit, String antMedicaux, String antChirugicaux, Pathologie pathologie) {
-        this.id = id;
+    public Patient(String nomPatient, String prenomPatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse) {
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
-        this.age = age;
+        this.date_naissance = date_naissance;
         this.sexe = sexe;
         this.contact = contact;
         this.civilite = civilite;
         this.profession = profession;
         this.adresse = adresse;
-        this.taille = taille;
-        this.poid = poid;
-        this.tourtaille = tourtaille;
-        this.tensiondroit = tensiondroit;
-        this.tension = tension;
-        this.sport = sport;
-        this.fruit = fruit;
-        this.antMedicaux = antMedicaux;
-        this.antChirugicaux = antChirugicaux;
-        this.pathologie = pathologie;
     }
 
-    public double getTensiondroit() {
-        return tensiondroit;
-    }
-
-    public static Logger getLOG() {
-        return LOG;
-    }
-    
-    
     
 
-    
 
-    
-    
-    /**
-     * @return the id
-     */
+
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * @return the nomPatient
-     */
     public String getNomPatient() {
         return nomPatient;
     }
 
-    /**
-     * @param nomPatient the nomPatient to set
-     */
     public void setNomPatient(String nomPatient) {
         this.nomPatient = nomPatient;
     }
 
-    /**
-     * @return the prenomPatient
-     */
     public String getPrenomPatient() {
         return prenomPatient;
     }
 
-    /**
-     * @param prenomPatient the prenomPatient to set
-     */
     public void setPrenomPatient(String prenomPatient) {
         this.prenomPatient = prenomPatient;
     }
 
-    /**
-     * @return the age
-     */
-    public int getAge() {
-        return age;
+    public Date getDate_naissance() {
+        return date_naissance;
     }
 
-    /**
-     * @param age the age to set
-     */
-    public void setAge(int age) {
-        this.age = age;
+    public void setDate_naissance(Date date_naissance) {
+        this.date_naissance = date_naissance;
     }
 
-    /**
-     * @return the sexe
-     */
-    public char getSexe() {
+
+    public String getSexe() {
         return sexe;
     }
 
-    /**
-     * @param sexe the sexe to set
-     */
-    public void setSexe(char sexe) {
+    public void setSexe(String sexe) {
         this.sexe = sexe;
     }
 
-    /**
-     * @return the contact
-     */
-    public long getContact() {
+    public String getContact() {
         return contact;
     }
 
-    /**
-     * @param contact the contact to set
-     */
-    public void setContact(long contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 
-    /**
-     * @return the civilite
-     */
+    
+
     public String getCivilite() {
         return civilite;
     }
 
-    /**
-     * @param civilite the civilite to set
-     */
     public void setCivilite(String civilite) {
         this.civilite = civilite;
     }
 
-    /**
-     * @return the profession
-     */
     public String getProfession() {
         return profession;
     }
 
-    /**
-     * @param profession the profession to set
-     */
     public void setProfession(String profession) {
         this.profession = profession;
     }
 
-    /**
-     * @return the adresse
-     */
     public String getAdresse() {
         return adresse;
     }
 
-    /**
-     * @param adresse the adresse to set
-     */
     public void setAdresse(String adresse) {
         this.adresse = adresse;
     }
 
-    /**
-     * @return the taille
-     */
-    public double getTaille() {
-        return taille;
-    }
-
-    /**
-     * @param taille the taille to set
-     */
-    public void setTaille(double taille) {
-        this.taille = taille;
-    }
-
-    /**
-     * @return the poid
-     */
-    public double getPoid() {
-        return poid;
-    }
-
-    /**
-     * @param poid the poid to set
-     */
-    public void setPoid(double poid) {
-        this.poid = poid;
-    }
-
-    /**
-     * @return the tourtaille
-     */
-    public double getTourtaille() {
-        return tourtaille;
-    }
-
-    /**
-     * @param tourtaille the tourtaille to set
-     */
-    public void setTourtaille(double tourtaille) {
-        this.tourtaille = tourtaille;
-    }
-
-    /**
-     * @return the tension
-     */
-    public double getTension() {
-        return tension;
-    }
-
-    /**
-     * @param tension the tension to set
-     */
-    public void setTension(double tension) {
-        this.tension = tension;
-    }
-
-    /**
-     * @return the sport
-     */
-    public String getSport() {
-        return sport;
-    }
-
-    /**
-     * @param sport the sport to set
-     */
-    public void setSport(String sport) {
-        this.sport = sport;
-    }
-
-    /**
-     * @return the fruit
-     */
-    public String getFruit() {
-        return fruit;
-    }
-
-    /**
-     * @param fruit the fruit to set
-     */
-    public void setFruit(String fruit) {
-        this.fruit = fruit;
-    }
-
-    /**
-     * @return the antMedicaux
-     */
-    public String getAntMedicaux() {
-        return antMedicaux;
-    }
-
-    /**
-     * @param antMedicaux the antMedicaux to set
-     */
-    public void setAntMedicaux(String antMedicaux) {
-        this.antMedicaux = antMedicaux;
-    }
-
-    /**
-     * @return the antChirugicaux
-     */
-    public String getAntChirugicaux() {
-        return antChirugicaux;
-    }
-
-    /**
-     * @param antChirugicaux the antChirugicaux to set
-     */
-    public void setAntChirugicaux(String antChirugicaux) {
-        this.antChirugicaux = antChirugicaux;
-    }
-
-    /**
-     * @return the pathologie
-     */
-    public Pathologie getPathologie() {
-        return pathologie;
-    }
-
-    /**
-     * @param pathologie the pathologie to set
-     */
-    public void setPathologie(Pathologie pathologie) {
-        this.pathologie = pathologie;
-    }
-
-    /**
-     * @return the consommation
-     */
-    
-    
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -412,28 +178,12 @@ public class Patient implements Serializable {
         }
         return true;
     }
-    private static final Logger LOG = Logger.getLogger(Patient.class.getName());
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", age=" + age + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poid=" + poid + ", tourtaille=" + tourtaille + ", tension=" + tension + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", pathologie=" + pathologie + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + '}';
     }
 
    
-
-    public double calculMasse(){
-        
-        
-        double m=0;
-        
-        m=((this.poid)/(this.taille*this.taille));
-        
-        return m;
-    }
-
-    public void setTensiondroit(double tensiondroit) {
-        this.tensiondroit = tensiondroit;
-    }
-   
-
+  
 }

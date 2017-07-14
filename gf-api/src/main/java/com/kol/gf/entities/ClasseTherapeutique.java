@@ -8,9 +8,12 @@ package com.kol.gf.entities;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,34 +21,43 @@ import javax.persistence.Table;
  * @author koliviers
  */
 @Entity
-@Table(name = "classetherapeutique")
+@Table(name = "Classetherapeutique")
 public class ClasseTherapeutique implements Serializable{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
-    @Column(name = "label")
+    private Long id;
+    
+    @Column(name = "label", nullable = false)
     private String label;
+    
+    
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "id_traitement",nullable = false)
+    private Traitement traitement;
 
     public ClasseTherapeutique() {
     }
 
-    public ClasseTherapeutique(long id, String label) {
-        this.id = id;
+    public ClasseTherapeutique(String label, Traitement traitement) {
         this.label = label;
+        this.traitement = traitement;
     }
+
+   
 
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -62,6 +74,16 @@ public class ClasseTherapeutique implements Serializable{
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public Traitement getTraitement() {
+        return traitement;
+    }
+
+    public void setTraitement(Traitement traitement) {
+        this.traitement = traitement;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -90,13 +112,9 @@ public class ClasseTherapeutique implements Serializable{
 
     @Override
     public String toString() {
-        return "ClasseTherapeutique{" + "id=" + id + ", label=" + label + '}';
+        return "ClasseTherapeutique{" + "id=" + id + ", label=" + label + ", traitement=" + traitement + '}';
     }
-    
-    
-    
-    
-    
+
     
     
     

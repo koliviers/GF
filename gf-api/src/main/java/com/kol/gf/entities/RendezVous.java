@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "rendez_vous")
 public class RendezVous implements Serializable{
+    
     @EmbeddedId
     private Patient_intervenantid id;
 

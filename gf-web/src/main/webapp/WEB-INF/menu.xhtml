@@ -53,19 +53,36 @@
 
                         <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
 
+                        <p:submenu id="um_traite" label="Traitement" icon="&#xE896;">
+                            <p:menuitem id="ttr" value="Traitement" icon="&#xE061;" url="/gf/Traitement/gestion.xhtml?faces-redirect=true"/>
+                            <p:menuitem id="clsT" value="Classe therapeutique" icon="&#xE061;" url="/gf/Classe_therapeutique/gestion.xhtml?faces-redirect=true" />
+                        </p:submenu>
+                        
+                        
                         <p:submenu id="um_service" label="Service" icon="&#xE896;">
-                            <p:menuitem id="servnouveau" value="Nouveau Service" icon="&#xE061;" url="/gf/service/newService.xhtml?faces-redirect=true"/>
-                            <p:menuitem id="servlist" value="Liste des Service" icon="&#xE061;" url="/gf/service/listService.xhtml?faces-redirect=true" />
+                            <p:menuitem id="servnouveau" value="Gestion" icon="&#xE061;" url="/gf/service/gestion.xhtml?faces-redirect=true"/>
+                            
                         </p:submenu>
 
                         <p:submenu id="um_intervenant" label="Intervenant" icon="&#xE896;">
-                            <p:menuitem id="internew" value="Intervenant" icon="&#xE061;" url="/gf/intervenant/newIntervenant.xhtml?faces-redirect=true" />
-                            <p:menuitem id="interlist" value="Liste des Intervenants" url="/gf/intervenant/listIntervenant.xhtml?faces-redirect=true" icon="&#xE061;" />
+                            <p:menuitem id="internew" value="Gestion" icon="&#xE061;" url="/gf/intervenant/gestion.xhtml?faces-redirect=true" />
+                        </p:submenu>
+                        
+                        
+                        <p:submenu id="um_patho" label="Pathologie" icon="&#xE896;">
+                            <p:menuitem id="pathoId" value="Gestion" icon="&#xE061;" url="/gf/Pathologie/gestion.xhtml?faces-redirect=true" />
                         </p:submenu>
 
 
+                        <p:submenu id="um_conso" label="Consommation" icon="&#xE896;">
+                            <p:menuitem id="typCons" value="Type consommation" icon="&#xE061;" url="/gf/Type_consommation/gestion.xhtml?faces-redirect=true" />
+                            <p:menuitem id="Consom" value="Consommation" icon="&#xE061;"  url="/gf/Consommation/gestion.xhtml?faces-redirect=true"/>
+                            <p:menuitem id="typeHb" value="Type habitude" icon="&#xE061;"  url="/gf/Type_habitude/gestion.xhtml?faces-redirect=true"/>
+                        </p:submenu>
+                        
+                        
                         <p:submenu id="um_patient" label="Patient" icon="&#xE896;">
-                            <p:menuitem id="patnew" value="Nouveau patient" icon="&#xE061;" url="/gf/patient/newPatient.xhtml?faces-redirect=true" />
+                            <p:menuitem id="patnew" value="Nouveau patient" icon="&#xE061;" url="/gf/patient/gestion.xhtml?faces-redirect=true" />
                             <p:menuitem id="patlist" value="Liste des Patients" icon="&#xE061;"  url="/gf/patient/listPatient.xhtml?faces-redirect=true"/>
                             <p:menuitem id="patdeces" value="Patients Decédé" icon="&#xE061;"  url="/gf/patient/deces.xhtml?faces-redirect=true"/>
                         </p:submenu>
@@ -76,7 +93,7 @@
 
 
                         <p:submenu id="um_cons" label="Consultation" icon="&#xE896;">
-                            <p:menuitem id="consnew" value="Nouveau Consultation" icon="&#xE061;" url="/gf/consultation/newConsultation.xhtml?faces-redirect=true"/>
+                            <p:menuitem id="consnew" value="Nouveau Consultation" icon="&#xE061;" url="/gf/consultation/gestion.xhtml?faces-redirect=true"/>
                         </p:submenu>
 
 

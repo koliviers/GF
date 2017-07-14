@@ -6,18 +6,25 @@
 package com.kol.gf.bean;
 
 import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
-import com.kol.gf.dao.bean.PatientDaoBeanLocal;
-import com.kol.gf.dao.bean.RendezVousDaoBeanLocal;
 import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
+import com.kol.gf.service.PatientServiceBeanLocal;
+import com.kol.gf.service.RendezVousServiceBeanLocal;
+import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.core.Utils.Mtm;
+import com.miki.webapp.miki.securite.Service.UtilisateurSessionBeanLocal;
+import com.miki.webapp.miki.securite.entities.Utilisateur;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -27,246 +34,212 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class RendezVousBean implements Serializable {
 
-    private RendezVous rdvselect;
     private RendezVous rdv;
-    private Intervenant intervenant;
     private Patient patient;
+    private Date dateRdv;
+    private boolean ajout;
+    private Utilisateur utilisateur;
+    private Intervenant intervenant;
     private Patient_intervenantid id;
-    private List<Intervenant> listintervenant;
     private List<Patient> listePatient;
     private List<RendezVous> listeRdv;
 
-    @EJB
-    private PatientDaoBeanLocal daoPatient;
+    @ManagedProperty(value = "#{connexionManagedBean}")
+    private ConnexionManagedBean connexionMngdB;
 
     @EJB
-    private IntervenantDaoBeanLocal daoIntervenant;
+    private RendezVousServiceBeanLocal daoRdv;
 
     @EJB
-    private RendezVousDaoBeanLocal daoRdv;
+    private PatientServiceBeanLocal patientServices;
+    
+    @EJB
+    private UtilisateurSessionBeanLocal utilisateurServices;
+    
+    @EJB
+    private IntervenantDaoBeanLocal intervenantServices;
 
     public RendezVousBean() {
-
-        rdv = new RendezVous();
+        
+        utilisateur = new Utilisateur();
         intervenant = new Intervenant();
+        rdv = new RendezVous();
         patient = new Patient();
         listePatient = new ArrayList<Patient>();
         listeRdv = new ArrayList<RendezVous>();
-        listintervenant = new ArrayList<Intervenant>();
-        rdvselect = new RendezVous();
         id = new Patient_intervenantid();
+        dateRdv = null;
+        ajout = true;
 
     }
 
     /**
      * @return the rdv
      */
-    public void addRdv() {
-
+    public void gestionRdv() {
+        UserTransaction tx = TransactionManager.getUserTransaction();
         try {
-            getId().setId_intervenant(rdv.getIntervenant().getId());
-            getId().setId_patient(rdv.getPatient().getId());
-            rdv.setId(getId());
-            System.out.println("" + rdv.getId().getId_intervenant());
-            System.out.println("tste de lidee" + rdv.getId().getId_intervenant() + " " + rdv.getId().getId_patient());
-            System.out.println("le patient " + rdv.getPatient().getNomPatient());
-            System.out.println("l'intervenant " + rdv.getIntervenant().getNomIntervenant());
+            if (patient == null) {
+                Mtm.mikiMessageWarnSelectionner("le patient");
+            } else if (dateRdv == null) {
+                Mtm.mikiMessageWarnSaisir("la date du rendez-vous");
+            } else {
+                if (ajout) {
+                    tx.begin();
+                    id.setId_patient(patient.getId());
 
-            this.daoRdv.addOne(rdv);
-            rdv=new RendezVous();
+                } else {
+
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    
-    public void deleteRdv(){
-        
+
+    public void deleteOneRdv(Patient_intervenantid idRDV) {
+
         try {
-            this.daoRdv.deleteOne(rdvselect);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void deleteOneRdv(){
-        
-        try {
-            this.daoRdv.deleteOne(id);
-            
+            this.daoRdv.deleteOne(idRDV);
+
         } catch (Exception e) {
         }
-        
+
     }
 
     public List<RendezVous> getAllRdv() {
 
-        listeRdv = this.daoRdv.getAll();
+        listeRdv = daoRdv.getAll("dateRdv", false);
         return listeRdv;
     }
 
-    public List<Patient> getAllPatient() {
-
-        listePatient = this.daoPatient.getAll();
-        return listePatient;
-    }
-
-    public List<Intervenant> getAllIntervenant() {
-        listintervenant = this.daoIntervenant.getAll();
-        return listintervenant;
+    public List<RendezVous> getRdvFiltreIntervenant() {
+        Utilisateur utilisateurTampon = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
+        Intervenant intervenantTampon = intervenantServices.getOneBy("utilisateur", utilisateurTampon);
+        
+        if(intervenantTampon == null){
+            listeRdv = daoRdv.getAll("dateRdv", false);
+        }else{
+            listeRdv = daoRdv.getBy("intervenant", intervenantTampon);
+        }
+        
+        return listeRdv;
+        
     }
 
     public RendezVous getRdv() {
         return rdv;
     }
 
-    /**
-     * @param rdv the rdv to set
-     */
     public void setRdv(RendezVous rdv) {
         this.rdv = rdv;
     }
 
-    /**
-     * @return the intervenant
-     */
-    public Intervenant getIntervenant() {
-        return intervenant;
-    }
-
-    /**
-     * @param intervenant the intervenant to set
-     */
-    public void setIntervenant(Intervenant intervenant) {
-        this.intervenant = intervenant;
-    }
-
-    /**
-     * @return the patient
-     */
-    public Patient getPatient() {
-        return patient;
-    }
-
-    /**
-     * @param patient the patient to set
-     */
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    /**
-     * @return the listintervenant
-     */
-    public List<Intervenant> getListintervenant() {
-        return listintervenant;
-    }
-
-    /**
-     * @param listintervenant the listintervenant to set
-     */
-    public void setListintervenant(List<Intervenant> listintervenant) {
-        this.listintervenant = listintervenant;
-    }
-
-    /**
-     * @return the listePatient
-     */
-    public List<Patient> getListePatient() {
-        return listePatient;
-    }
-
-    /**
-     * @param listePatient the listePatient to set
-     */
-    public void setListePatient(List<Patient> listePatient) {
-        this.listePatient = listePatient;
-    }
-
-    /**
-     * @return the listeRdv
-     */
-    public List<RendezVous> getListeRdv() {
-        return listeRdv;
-    }
-
-    /**
-     * @param listeRdv the listeRdv to set
-     */
-    public void setListeRdv(List<RendezVous> listeRdv) {
-        this.listeRdv = listeRdv;
-    }
-
-    /**
-     * @return the daoPatient
-     */
-    public PatientDaoBeanLocal getDaoPatient() {
-        return daoPatient;
-    }
-
-    /**
-     * @param daoPatient the daoPatient to set
-     */
-    public void setDaoPatient(PatientDaoBeanLocal daoPatient) {
-        this.daoPatient = daoPatient;
-    }
-
-    /**
-     * @return the daoIntervenant
-     */
-    public IntervenantDaoBeanLocal getDaoIntervenant() {
-        return daoIntervenant;
-    }
-
-    /**
-     * @param daoIntervenant the daoIntervenant to set
-     */
-    public void setDaoIntervenant(IntervenantDaoBeanLocal daoIntervenant) {
-        this.daoIntervenant = daoIntervenant;
-    }
-
-    /**
-     * @return the daoRdv
-     */
-    public RendezVousDaoBeanLocal getDaoRdv() {
-        return daoRdv;
-    }
-
-    /**
-     * @param daoRdv the daoRdv to set
-     */
-    public void setDaoRdv(RendezVousDaoBeanLocal daoRdv) {
-        this.daoRdv = daoRdv;
-    }
-
-    /**
-     * @return the rdvselect
-     */
-    public RendezVous getRdvselect() {
-        return rdvselect;
-    }
-
-    /**
-     * @param rdvselect the rdvselect to set
-     */
-    public void setRdvselect(RendezVous rdvselect) {
-        this.rdvselect = rdvselect;
-    }
-
-    /**
-     * @return the id
-     */
     public Patient_intervenantid getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Patient_intervenantid id) {
         this.id = id;
     }
+
+    public List<Patient> getListePatient() {
+        return patientServices.getAll("nomPatient", true);
+    }
+
+    public void setListePatient(List<Patient> listePatient) {
+        this.listePatient = listePatient;
+    }
+
+    public List<RendezVous> getListeRdv() {
+        return listeRdv;
+    }
+
+    public void setListeRdv(List<RendezVous> listeRdv) {
+        this.listeRdv = listeRdv;
+    }
+
+    public RendezVousServiceBeanLocal getDaoRdv() {
+        return daoRdv;
+    }
+
+    public void setDaoRdv(RendezVousServiceBeanLocal daoRdv) {
+        this.daoRdv = daoRdv;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public PatientServiceBeanLocal getPatientServices() {
+        return patientServices;
+    }
+
+    public void setPatientServices(PatientServiceBeanLocal patientServices) {
+        this.patientServices = patientServices;
+    }
+
+    public Date getDateRdv() {
+        return dateRdv;
+    }
+
+    public void setDateRdv(Date dateRdv) {
+        this.dateRdv = dateRdv;
+    }
+
+    public boolean isAjout() {
+        return ajout;
+    }
+
+    public void setAjout(boolean ajout) {
+        this.ajout = ajout;
+    }
+
+    public ConnexionManagedBean getConnexionMngdB() {
+        return connexionMngdB;
+    }
+
+    public void setConnexionMngdB(ConnexionManagedBean connexionMngdB) {
+        this.connexionMngdB = connexionMngdB;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public Intervenant getIntervenant() {
+        return intervenant;
+    }
+
+    public void setIntervenant(Intervenant intervenant) {
+        this.intervenant = intervenant;
+    }
+
+    public UtilisateurSessionBeanLocal getUtilisateurServices() {
+        return utilisateurServices;
+    }
+
+    public void setUtilisateurServices(UtilisateurSessionBeanLocal utilisateurServices) {
+        this.utilisateurServices = utilisateurServices;
+    }
+
+    public IntervenantDaoBeanLocal getIntervenantServices() {
+        return intervenantServices;
+    }
+
+    public void setIntervenantServices(IntervenantDaoBeanLocal intervenantServices) {
+        this.intervenantServices = intervenantServices;
+    }
+    
+    
 
 }

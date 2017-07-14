@@ -19,15 +19,15 @@ import javax.ejb.Stateless;
  * @author koliviers
  */
 @Stateless
-public class TraitementServiceBean extends BaseServiceBeanImpl<Traitement, Long> implements TraitementServiceBeanLocal{
+public class TraitementServiceBean extends BaseServiceBeanImpl<Traitement, Long> implements TraitementServiceBeanLocal {
 
-   @EJB
-   private TraitementDaoBeanLocal dao;
-    
+    @EJB
+    private TraitementDaoBeanLocal dao;
+
     @Override
     protected BaseDaoBean<Traitement, Long> getDao() {
-return this.dao;
+        return this.dao;
 
     }
-    
+
 }

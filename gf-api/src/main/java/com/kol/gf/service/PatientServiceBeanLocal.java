@@ -6,6 +6,7 @@
 package com.kol.gf.service;
 
 import com.kol.gf.entities.Patient;
+import com.miki.webapp.core.Service.BaseServiceBean;
 import javax.ejb.Local;
 
 /**
@@ -13,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface PatientServiceBeanLocal extends GenericServiceBeanLocal<Patient, Long>{
+public interface PatientServiceBeanLocal extends BaseServiceBean<Patient, Long>{
     
 }

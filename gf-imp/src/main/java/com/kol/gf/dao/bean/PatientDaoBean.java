@@ -6,6 +6,7 @@
 package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Patient;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -13,16 +14,11 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class PatientDaoBean extends GenericDaoBean<Patient, Long> implements PatientDaoBeanLocal{
+public class PatientDaoBean extends BaseDaoBeanImpl<Patient, Long> implements PatientDaoBeanLocal{
 
     public PatientDaoBean() {
         
         super(Patient.class);
-    }
-    
-    public PatientDaoBean(Class<Patient> entity){
-        this.entityClass=entity;
-    
     }
     
     

@@ -21,15 +21,17 @@ import javax.persistence.Table;
  * @author kol
  */
 @Entity
-@Table(name = "type_consommation")
+@Table(name = "Type_consommation")
 public class TypeConsommation implements Serializable{
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column (name = "label")
+    
+    @Column (name = "label", nullable = true)
     private String label;
-    @Column (name = "description")
+    
+    @Column (name = "description", nullable = true)
     private String description;
    
    

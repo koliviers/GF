@@ -7,6 +7,7 @@ package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Habitude_alimentaireId;
+import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
 /**
@@ -14,15 +15,13 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class Habitude_alimentaireDaoBean extends GenericDaoBean<Habitude_alimentaire, Habitude_alimentaireId> implements Habitude_alimentaireDaoBeanLocal{
+public class Habitude_alimentaireDaoBean extends BaseDaoBeanImpl<Habitude_alimentaire, Habitude_alimentaireId> implements Habitude_alimentaireDaoBeanLocal{
   
     public Habitude_alimentaireDaoBean(){
         
         super(Habitude_alimentaire.class);
     }
     
-    public Habitude_alimentaireDaoBean(Class<Habitude_alimentaire> enity){
-        this.entityClass=enity;
-    }
+   
     
 }

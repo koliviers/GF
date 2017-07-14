@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+
+
+    <ui:define name="content">
+
+        <h:form id="form">
+            <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
+            <p:growl id="growl" showDetail="true" sticky="true" />
+        </h:form>
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <p:accordionPanel widgetVar="accordPanel">
+                            <p:tab title="Intervenant" >
+                                <h:form id="intform" >
+                                    
+                                    <h:inputHidden value="#{interbean.intervenant.id}" />
+                                    <h:inputHidden value="#{interbean.utilisateurIntervenant.id}"/>
+
+                                    <br/>
+
+                                    <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                        <p:outputLabel for="nomint" value="Nom *"/>
+                                        <p:inputText id="nomint"  value="#{interbean.intervenant.nomIntervenant}">
+                                            <f:validateLength minimum="2"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel for="preint" value="Prenom *"/>
+                                        <p:inputText id="preint"  value="#{interbean.intervenant.prenomIntervenant}">
+                                            <f:validateLength minimum="2"/>
+                                        </p:inputText>
+                                        
+                                        <p:outputLabel for="Sexe" value="Sexe"/>
+                                        <p:selectOneMenu id="Sexe"  value="#{interbean.intervenant.sexeIntervenant}">
+                                            <f:selectItem itemValue="M" itemLabel="M" />
+                                            <f:selectItem itemValue="F" itemLabel="F" />
+                                        </p:selectOneMenu>
+
+
+                                        <p:outputLabel for="contint" value="Contact "/>
+                                        <p:inputNumber id="contint"  value="#{interbean.intervenant.contact}" decimalPlaces="0" />                                                    
+
+
+                                        <h:outputText  value="Service *" />
+                                        <p:selectOneMenu id="intser"  style="margin-bottom:10px;" value="#{interbean.intervenant.services}"   converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem  itemLabel="Selectionner un service" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems value="#{interbean.listeservice}" var="intser" itemLabel="#{intser.nomService}" itemValue="#{intser}"/>
+                                        </p:selectOneMenu>
+
+                                        
+                                        <h:outputText  value="Type Intervenant *" />
+                                        <h:panelGroup>
+                                            <p:selectOneMenu id="intype" widgetVar="selectTpInt" value="#{interbean.intervenant.type_intervenant}"   converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem  itemLabel="Selectionner un type intervenant" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems value="#{interbean.listetypeIntervenant}" var="intyp" itemLabel="#{intyp.libelletype}" itemValue="#{intyp}"/>
+                                            </p:selectOneMenu>
+                                            <br/>
+                                            <center><p:commandButton type="button" onclick="PF('typeIntervenantWV').show()" icon="ui-icon-add" /></center>
+                                        </h:panelGroup>
+                                        
+                                        <p:outputLabel  value="Nom d'utilisateur *"/>
+                                        <p:inputText  value="#{interbean.utilisateurIntervenant.login}">
+                                            <f:validateLength minimum="2"/>
+                                        </p:inputText>
+
+                                        <h:outputText value="Actif"/>
+                                        <p:inputSwitch value="#{interbean.intervenant.active}" onLabel="true" offLabel="false"/>
+
+                                    </p:panelGrid>
+
+                                    <br/>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{interbean.annuler()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{interbean.gestionIntervenant()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    </div>
+
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
+
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <h:form id="intformDataTable">
+                            <center>   <h1>Liste des Intervenants</h1> </center>
+                            <p:dataTable id="intervenantDT" var="int" value="#{interbean.listeIntervenant}" 
+                                         widgetVar="intervenantWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste d'intervenant est vide" reflow="true" rows="10" paginator="true">
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Rechercher Intervenant:" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Nom" sortBy="#{int.nomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.nomIntervenant}">
+                                    <h:outputText value="#{int.nomIntervenant}" />
+                                </p:column>
+                                <p:column headerText="Prenom" sortBy="#{int.prenomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.prenomIntervenant}">
+                                    <h:outputText value="#{int.prenomIntervenant}" />
+                                </p:column>
+                                <p:column headerText="Contact" sortBy="#{int.contact}"
+                                          filterMatchMode="contains" filterBy="#{int.contact}">
+                                    <h:outputText value="#{int.contact}" />
+                                </p:column>
+
+                                <p:column filterBy="#{int.services}" headerText="Service" filterMatchMode="exact"> 
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('intervenantWV').filter()" >
+                                            <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems var="ser" value="#{interbean.listeservice}" itemValue="#{ser}" itemLabel="#{ser.nomService}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{int.services.nomService}" />          
+                                </p:column>
+
+                                <p:column filterBy="#{int.type_intervenant}" headerText="Type intervenant" filterMatchMode="exact"> 
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('intervenantWV').filter()" >
+                                            <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems var="interT" value="#{interbean.listetypeIntervenant}" itemValue="#{interT}" itemLabel="#{interT.libelletype}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{int.type_intervenant.libelletype}" />          
+                                </p:column>
+
+                                <p:column filterBy="#{int.active}" headerText="Actif" filterMatchMode="exact"> 
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('intervenantWV').filter()" >
+                                            <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="Non" itemValue="#{false}"/>
+                                            <f:selectItem itemLabel="Oui" itemValue="#{true}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{interbean.actifString(int.active)}" />          
+                                </p:column>
+                                
+                                <p:column headerText="Nom Utilisateur" sortBy="#{int.utilisateur.login}"
+                                          filterMatchMode="contains" filterBy="#{int.utilisateur.login}">
+                                    <h:outputText value="#{int.utilisateur.login}" />
+                                </p:column>
+
+                                <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Modifier" action="#{interbean.renvoieIntendant(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+
+                    </div> 
+
+                </div>
+            </div>
+        </div>
+
+
+        <p:dialog header="Type Intervenant" widgetVar="typeIntervenantWV" modal="true" width="800" closable="true" responsive="true">
+            <h:form id="jnlModal">
+                <div class="ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <h:inputHidden value="#{interbean.typeintervenantModal.id}"/>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel value="Libelle *" />
+                                <h:inputText  value="#{interbean.typeintervenantModal.libelletype}"/>
+                            </p:panelGrid>
+
+                            <br/>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <center><p:commandButton value="Annuler" action="#{interbean.annulerTypeIntervenant()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <center><p:commandButton value="Valider" action="#{interbean.gestionTypeIntervenant()}" update="@form,:form:growl,@widgetVar(selectTpInt)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                            </div> 
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <p:dataTable var="typ" value="#{interbean.listetypeIntervenantModal}" 
+                                         widgetVar="typWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste de type intervenant est vide" reflow="true" rows="10" paginator="true">
+
+
+                                <p:column headerText="Libelle" sortBy="#{typ.libelletype}"
+                                          filterMatchMode="contains" filterBy="#{typ.libelletype}">
+                                    <h:outputText value="#{typ.libelletype}" />
+                                </p:column>
+
+
+                                <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Modifier" action="#{interbean.renvoieTypeIntervenant(typ)}" styleClass="purple-btn flat" style="width: auto;" update="@form"/></center>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

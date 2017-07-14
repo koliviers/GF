@@ -21,41 +21,37 @@ import javax.persistence.Table;
  * @author koliviers
  */
 @Entity
-@Table(name = "traitement")
+@Table(name = "Traitement")
 public class Traitement implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
     
-    @Column(name = "label")
+    @Column(name = "label", nullable = false)
     private String label;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classtherapeutique")
-    private ClasseTherapeutique classeTherapeutique;
-    
     public Traitement() {
     }
 
-    public Traitement(long id, String label, ClasseTherapeutique classeTherapeutique) {
-        this.id = id;
+    public Traitement(String label) {
         this.label = label;
-        this.classeTherapeutique = classeTherapeutique;
     }
+
+   
 
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,16 +72,7 @@ public class Traitement implements Serializable{
     /**
      * @return the classeTherapeutique
      */
-    public ClasseTherapeutique getClasseTherapeutique() {
-        return classeTherapeutique;
-    }
-
-    /**
-     * @param classeTherapeutique the classeTherapeutique to set
-     */
-    public void setClasseTherapeutique(ClasseTherapeutique classeTherapeutique) {
-        this.classeTherapeutique = classeTherapeutique;
-    }
+    
 
     @Override
     public int hashCode() {
@@ -114,13 +101,9 @@ public class Traitement implements Serializable{
 
     @Override
     public String toString() {
-        return "Traitement{" + "id=" + id + ", label=" + label + ", classeTherapeutique=" + classeTherapeutique + '}';
+        return "Traitement{" + "id=" + id + ", label=" + label + '}';
     }
 
-    
-    
-   
-   
     
     
     

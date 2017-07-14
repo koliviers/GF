@@ -9,6 +9,8 @@ import com.kol.gf.dao.bean.GenericDAOBeanLocal;
 import com.kol.gf.dao.bean.PathologieDaoBeanLocal;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.service.PathologieServiceBeanLocal;
+import com.miki.webapp.core.Dao.BaseDaoBean;
+import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -17,20 +19,15 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class PathologieServiceBean extends GenericServiceBean<Pathologie, Long> implements PathologieServiceBeanLocal {
+public class PathologieServiceBean extends BaseServiceBeanImpl<Pathologie, Long> implements PathologieServiceBeanLocal {
 
     @EJB
     private PathologieDaoBeanLocal dao;
 
     @Override
-    protected GenericDAOBeanLocal<Pathologie, Long> getDAO() {
-
-        return this.dao;
+    protected BaseDaoBean<Pathologie, Long> getDao() {
+        return dao;
     }
 
-    @Override
-    public Long getId(Pathologie e) {
-        return e.getId();
-    }
 
 }

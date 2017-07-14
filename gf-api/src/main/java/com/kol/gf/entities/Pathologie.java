@@ -21,32 +21,23 @@ import javax.persistence.Table;
  * @author kol
  */
 @Entity
-@Table(name = "pathologie")
-public class Pathologie implements Serializable{
-    
-     @Id
+@Table(name = "Pathologie")
+public class Pathologie implements Serializable {
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "nomPathologie")
+    
+    @Column(name = "nomPathologie", nullable = false)
     private String nomPathologie;
-    
-    @OneToMany(mappedBy = "pathologie")
-    private List<Patient> listpatient;
-    
-    @OneToMany(mappedBy = "pathologie")
-    private List<Consultation> listconsultation;
 
     public Pathologie() {
     }
 
-    public Pathologie(String nomPathologie, List<Patient> listpatient, List<Consultation> listconsultation) {
+    public Pathologie(String nomPathologie) {
         this.nomPathologie = nomPathologie;
-        this.listpatient = listpatient;
-        this.listconsultation = listconsultation;
     }
-    
-    
 
     /**
      * @return the id
@@ -79,17 +70,6 @@ public class Pathologie implements Serializable{
     /**
      * @return the listpatient
      */
-    public List<Patient> getListpatient() {
-        return listpatient;
-    }
-
-    /**
-     * @param listpatient the listpatient to set
-     */
-    public void setListpatient(List<Patient> listpatient) {
-        this.listpatient = listpatient;
-    }
-
     @Override
     public int hashCode() {
         int hash = 5;
@@ -117,23 +97,7 @@ public class Pathologie implements Serializable{
 
     @Override
     public String toString() {
-        return "Pathologie{" + "id=" + id + ", nomPathologie=" + nomPathologie + ", listpatient=" + listpatient + '}';
+        return "Pathologie{" + "id=" + id + ", nomPathologie=" + nomPathologie + '}';
     }
 
-    /**
-     * @return the listconsultation
-     */
-    public List<Consultation> getListconsultation() {
-        return listconsultation;
-    }
-
-    /**
-     * @param listconsultation the listconsultation to set
-     */
-    public void setListconsultation(List<Consultation> listconsultation) {
-        this.listconsultation = listconsultation;
-    }
-
-    
-    
 }

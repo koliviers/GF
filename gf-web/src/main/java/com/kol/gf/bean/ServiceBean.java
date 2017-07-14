@@ -7,30 +7,30 @@ package com.kol.gf.bean;
 
 import com.kol.gf.dao.bean.ServiceDaoBeanLocal;
 import com.kol.gf.entities.Services;
-import java.io.IOException;
+import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.core.Utils.Mtm;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import org.eclipse.persistence.exceptions.EntityManagerSetupException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  *
  * @author kol
  */
-@ManagedBean(name = "serbean")
+@ManagedBean
 @ViewScoped
 public class ServiceBean implements Serializable {
 
     private Services service;
 
     private List<Services> listServices;
-    private Services serviceSelect;
 
     @EJB
     private ServiceDaoBeanLocal daoService;
@@ -38,50 +38,63 @@ public class ServiceBean implements Serializable {
     public ServiceBean() {
 
         service = new Services();
-        listServices = new ArrayList<Services>();
-        this.serviceSelect = new Services();
+        listServices = new ArrayList<>();
 
     }
 
-    @PostConstruct
-    public void init() {
-        this.service = new Services();
-        this.serviceSelect=new Services();
-
-    }
-
-    public void addService() {
-
-        try {
-
-            this.getDaoService().addOne(getService());
-            System.out.println("operation reussi");
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Enregistrement avec succes "));
-            service = new Services();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+   public void gestionService(){
+       UserTransaction tx = TransactionManager.getUserTransaction();
+       
+       try {
+           if(service.getCode().trim().isEmpty()){
+               Mtm.mikiMessageWarnSaisir("le code du service");
+           }else if(service.getNomService().trim().isEmpty()){
+               Mtm.mikiMessageWarnSaisir("le nom du service");
+           }else{
+               if(service.getId() == null){
+                   
+                   tx.begin();
+                   daoService.saveOne(service);
+                   tx.commit();
+                   
+                   Mtm.mikiMessageInfo();
+                   service = new Services();
+                   
+               }else{
+                   
+                   tx.begin();
+                   daoService.updateOne(service);
+                   tx.commit();
+                   
+                   Mtm.mikiMessageInfo();
+                   service = new Services();
+                   
+               }
+           }
+       } catch (Exception ex) {
+            try {
+                tx.rollback();
+            } catch (IllegalStateException ex1) {
+                Logger.getLogger(ServiceBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SecurityException ex1) {
+                Logger.getLogger(ServiceBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SystemException ex1) {
+                Logger.getLogger(ServiceBean.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Mtm.mikiMessageError();
         }
-
-    }
-
-    public void updateService() {
-        try {
-            this.daoService.updateOne(serviceSelect);
-            FacesContext.getCurrentInstance().addMessage(null,
-             new FacesMessage("Mise a jour Reussi "));
-            serviceSelect = new Services();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<Services> getAllService() {
-        setListServices(this.getDaoService().getAll());
-        return getListServices();
-    }
+   }
+   
+   public void renvoieService(Services sr){
+       service = sr;
+   }
+   
+   public void annulerService(){
+       service = new Services();
+   }
+   
+   
+   
 
     /**
      * @return the service
@@ -101,7 +114,7 @@ public class ServiceBean implements Serializable {
      * @return the listServices
      */
     public List<Services> getListServices() {
-        return listServices;
+        return daoService.getAll("code", true);
     }
 
     /**
@@ -125,18 +138,6 @@ public class ServiceBean implements Serializable {
         this.daoService = daoService;
     }
 
-    /**
-     * @return the serviceSelect
-     */
-    public Services getServiceSelect() {
-        return serviceSelect;
-    }
-
-    /**
-     * @param serviceSelect the serviceSelect to set
-     */
-    public void setServiceSelect(Services serviceSelect) {
-        this.serviceSelect = serviceSelect;
-    }
+    
 
 }

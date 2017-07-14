@@ -7,7 +7,6 @@ package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.ClasseTherapeutique;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
-import java.io.Serializable;
 import javax.ejb.Stateless;
 
 /**

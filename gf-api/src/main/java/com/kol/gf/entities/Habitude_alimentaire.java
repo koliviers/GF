@@ -30,11 +30,11 @@ public class Habitude_alimentaire implements Serializable{
     private Integer quantite;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Patient", nullable = false,insertable = false,updatable = false)
-    private Patient patient;
+    @JoinColumn(name = "id_consultation", nullable = false,insertable = false,updatable = false)
+    private Consultation consultation;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Consommation", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_consommation", nullable = false, insertable = false, updatable = false)
     private Consommation consommation;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,12 +44,15 @@ public class Habitude_alimentaire implements Serializable{
     public Habitude_alimentaire() {
     }
 
-    public Habitude_alimentaire(Habitude_alimentaireId id, Integer quantite, Patient patient, Consommation consommation) {
+    public Habitude_alimentaire(Habitude_alimentaireId id, Integer quantite, Consultation consultation, Consommation consommation, TypeHabitude type_habitude) {
         this.id = id;
         this.quantite = quantite;
-        this.patient = patient;
+        this.consultation = consultation;
         this.consommation = consommation;
+        this.type_habitude = type_habitude;
     }
+
+    
 
     public Habitude_alimentaireId getId() {
         return id;
@@ -67,13 +70,15 @@ public class Habitude_alimentaire implements Serializable{
         this.quantite = quantite;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public Consultation getConsultation() {
+        return consultation;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
     }
+
+    
 
     public Consommation getConsommation() {
         return consommation;
@@ -120,9 +125,9 @@ public class Habitude_alimentaire implements Serializable{
 
     @Override
     public String toString() {
-        return "Habitude_alimentaire{" + "id=" + id + ", quantite=" + quantite + ", patient=" + patient + ", consommation=" + consommation + '}';
+        return "Habitude_alimentaire{" + "id=" + id + ", quantite=" + quantite + ", consultation=" + consultation + ", consommation=" + consommation + ", type_habitude=" + type_habitude + '}';
     }
-    
-    
+
+   
     
 }

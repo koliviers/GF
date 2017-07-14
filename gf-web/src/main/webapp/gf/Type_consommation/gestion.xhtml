@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="head">
+        <title>Type consommation</title>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <h:form id="form">
+            <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
+            <p:growl id="growl" showDetail="true" sticky="true" />
+        </h:form>
+
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:accordionPanel widgetVar="accordPanel">
+                            <p:tab title="Type consommation" >
+                                <h:form  >
+
+                                    <h:inputHidden value="#{typeConsommationManagedBean.typeConsommation.id}" />
+
+                                    <br/>
+
+                                    <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                        <p:outputLabel for="nomint" value="Libelle *"/>
+                                        <p:inputText id="nomint"  value="#{typeConsommationManagedBean.typeConsommation.label}">
+                                            <f:validateLength minimum="2"/>
+                                        </p:inputText>
+
+                                    </p:panelGrid>
+
+                                    <br/>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{typeConsommationManagedBean.annulerTypeConsommation()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{typeConsommationManagedBean.gestionTypeConsommation()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    </div>
+
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <h:form id="intformDataTable">
+                            <center>   <h1>Liste des type consommation</h1> </center>
+                            <p:dataTable id="intervenantDT" var="int" value="#{typeConsommationManagedBean.typeConsommationListe}" 
+                                         widgetVar="intervenantWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste de type consommation est vide" reflow="true" rows="10" paginator="true">
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Rechercher :" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Libelle" sortBy="#{int.label}"
+                                          filterMatchMode="contains" filterBy="#{int.label}">
+                                    <center><h:outputText value="#{int.label}" /></center>
+                                </p:column>
+
+                                <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Modifier" action="#{typeConsommationManagedBean.renvoieTypeConsommation(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+
+                    </div> 
+
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

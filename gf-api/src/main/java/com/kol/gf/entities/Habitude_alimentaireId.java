@@ -14,28 +14,27 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class Habitude_alimentaireId implements Serializable{
-    private long id_Patient;
+    private long id_consultation;
     private long id_Consommation;
     private long id_type_habitude;
 
     public Habitude_alimentaireId() {
     }
 
-    public Habitude_alimentaireId(long id_Patient, long id_Consommation, long id_type_habitude) {
-        this.id_Patient = id_Patient;
+    public Habitude_alimentaireId(long id_consultation, long id_Consommation, long id_type_habitude) {
+        this.id_consultation = id_consultation;
         this.id_Consommation = id_Consommation;
         this.id_type_habitude = id_type_habitude;
     }
 
-    
-
-    public long getId_Patient() {
-        return id_Patient;
+    public long getId_consultation() {
+        return id_consultation;
     }
 
-    public void setId_Patient(long id_Patient) {
-        this.id_Patient = id_Patient;
+    public void setId_consultation(long id_consultation) {
+        this.id_consultation = id_consultation;
     }
+
 
     public long getId_Consommation() {
         return id_Consommation;
@@ -52,15 +51,13 @@ public class Habitude_alimentaireId implements Serializable{
     public void setId_type_habitude(long id_type_habitude) {
         this.id_type_habitude = id_type_habitude;
     }
-    
-    
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + (int) (this.id_Patient ^ (this.id_Patient >>> 32));
-        hash = 37 * hash + (int) (this.id_Consommation ^ (this.id_Consommation >>> 32));
-        hash = 37 * hash + (int) (this.id_type_habitude ^ (this.id_type_habitude >>> 32));
+        hash = 89 * hash + (int) (this.id_consultation ^ (this.id_consultation >>> 32));
+        hash = 89 * hash + (int) (this.id_Consommation ^ (this.id_Consommation >>> 32));
+        hash = 89 * hash + (int) (this.id_type_habitude ^ (this.id_type_habitude >>> 32));
         return hash;
     }
 
@@ -76,7 +73,7 @@ public class Habitude_alimentaireId implements Serializable{
             return false;
         }
         final Habitude_alimentaireId other = (Habitude_alimentaireId) obj;
-        if (this.id_Patient != other.id_Patient) {
+        if (this.id_consultation != other.id_consultation) {
             return false;
         }
         if (this.id_Consommation != other.id_Consommation) {
@@ -90,12 +87,10 @@ public class Habitude_alimentaireId implements Serializable{
 
     @Override
     public String toString() {
-        return "Habitude_alimentaireId{" + "id_Patient=" + id_Patient + ", id_Consommation=" + id_Consommation + ", id_type_habitude=" + id_type_habitude + '}';
+        return "Habitude_alimentaireId{" + "id_consultation=" + id_consultation + ", id_Consommation=" + id_Consommation + ", id_type_habitude=" + id_type_habitude + '}';
     }
-    
-    
 
     
-    
+
     
 }
