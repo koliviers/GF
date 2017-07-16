@@ -6,7 +6,6 @@
 package com.kol.gf.imp.service;
 
 import com.kol.gf.dao.bean.RendezVousDaoBeanLocal;
-import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
@@ -19,13 +18,13 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class RendezVousServiceBean extends BaseServiceBeanImpl<RendezVous, Patient_intervenantid> implements RendezVousServiceBeanLocal {
+public class RendezVousServiceBean extends BaseServiceBeanImpl<RendezVous, Long> implements RendezVousServiceBeanLocal {
 
     @EJB
     private RendezVousDaoBeanLocal dao;
 
     @Override
-    protected BaseDaoBean<RendezVous, Patient_intervenantid> getDao() {
+    protected BaseDaoBean<RendezVous, Long> getDao() {
         return dao;
     }
 

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
+import com.kol.gf.dao.bean.IAntecedent_FamilialDAO;
 import com.kol.gf.entities.Antecedent_familial;
 import com.kol.gf.entities.Antecedent_familial_Id;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;

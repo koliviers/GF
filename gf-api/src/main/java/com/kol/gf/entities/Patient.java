@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  * @author kol
  */
 @Entity
-@Table(name = "patient")
+@Table(name = "Patient")
 public class Patient implements Serializable {
 
     @Id

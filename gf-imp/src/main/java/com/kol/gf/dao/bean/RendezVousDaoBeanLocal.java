@@ -5,7 +5,6 @@
  */
 package com.kol.gf.dao.bean;
 
-import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import javax.ejb.Local;
@@ -15,6 +14,6 @@ import javax.ejb.Local;
  * @author kol
  */
 @Local
-public interface RendezVousDaoBeanLocal extends BaseDaoBean<RendezVous, Patient_intervenantid>{
+public interface RendezVousDaoBeanLocal extends BaseDaoBean<RendezVous, Long>{
     
 }

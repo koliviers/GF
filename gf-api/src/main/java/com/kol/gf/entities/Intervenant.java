@@ -25,7 +25,7 @@ import javax.persistence.Table;
  * @author kol
  */
 @Entity
-@Table(name = "intervenant")
+@Table(name = "Intervenant")
 public class Intervenant implements Serializable {
 
     @Id

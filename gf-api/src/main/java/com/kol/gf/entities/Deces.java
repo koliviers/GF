@@ -24,12 +24,12 @@ import javax.persistence.TemporalType;
  * @author koliviers
  */
 @Entity
-@Table(name = "deces")
+@Table(name = "Deces")
 public class Deces implements  Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_patient", nullable = false)
@@ -44,7 +44,7 @@ public class Deces implements  Serializable{
     public Deces() {
     }
 
-    public Deces(long id, Patient patient, Date datedeces) {
+    public Deces(Long id, Patient patient, Date datedeces) {
         this.id = id;
         this.patient = patient;
         this.datedeces = datedeces;
@@ -53,14 +53,14 @@ public class Deces implements  Serializable{
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -92,11 +92,7 @@ public class Deces implements  Serializable{
         this.datedeces = datedeces;
     }
 
-    @Override
-    public String toString() {
-        return "Deces{" + "id=" + id + ", patient=" + patient + ", datedeces=" + datedeces + '}';
-    }
-
+  
     @Override
     public int hashCode() {
         int hash = 7;
@@ -122,7 +118,10 @@ public class Deces implements  Serializable{
         return true;
     }
     
-    
+     @Override
+    public String toString() {
+        return "Deces{" + "id=" + id + ", patient=" + patient + ", datedeces=" + datedeces + '}';
+    }
     
     
 }

@@ -3,23 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
-import com.kol.gf.entities.Traitement;
+import com.kol.gf.dao.bean.ISuiviDAO;
+import com.kol.gf.entities.Suivi;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import java.io.Serializable;
 import javax.ejb.Stateless;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Stateless
-public class TraitementDaoBean extends BaseDaoBeanImpl<Traitement, Long> implements TraitementDaoBeanLocal{
+public class SuiviDAO extends BaseDaoBeanImpl<Suivi, Long> implements ISuiviDAO{
     
-    
-    public TraitementDaoBean(){
-        super(Traitement.class);
+    public SuiviDAO(){
+        super(Suivi.class);
     }
-    
 }

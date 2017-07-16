@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
-import com.kol.gf.entities.Patient_intervenantid;
-import com.kol.gf.entities.RendezVous;
+import com.kol.gf.dao.bean.PatientDaoBeanLocal;
+import com.kol.gf.entities.Patient;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
@@ -15,12 +15,13 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class RendezVousDaoBean extends BaseDaoBeanImpl<RendezVous, Patient_intervenantid> implements RendezVousDaoBeanLocal{
+public class PatientDaoBean extends BaseDaoBeanImpl<Patient, Long> implements PatientDaoBeanLocal{
 
-    public RendezVousDaoBean() {
+    public PatientDaoBean() {
         
-        super(RendezVous.class);
+        super(Patient.class);
     }
-  
+    
+    
     
 }

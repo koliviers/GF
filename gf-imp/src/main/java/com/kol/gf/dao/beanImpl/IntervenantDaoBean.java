@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
-import com.kol.gf.entities.TypeHabitude;
+import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
+import com.kol.gf.entities.Intervenant;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
@@ -14,10 +15,12 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeHabitudeDaoBean extends BaseDaoBeanImpl<TypeHabitude, Long> implements TypeHabitudeDaoBeanLocal{
+public class IntervenantDaoBean extends BaseDaoBeanImpl<Intervenant, Long> implements IntervenantDaoBeanLocal{
     
-public TypeHabitudeDaoBean(){
-    super(TypeHabitude.class);
-}    
     
+    public IntervenantDaoBean(){
+        
+        super(Intervenant.class);
+    }
+   
 }

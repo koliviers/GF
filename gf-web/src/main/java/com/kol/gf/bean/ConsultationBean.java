@@ -23,7 +23,6 @@ import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
-import com.kol.gf.entities.Patient_intervenantid;
 import com.kol.gf.entities.RendezVous;
 import com.kol.gf.entities.Suivi;
 import com.kol.gf.entities.Traitement;
@@ -230,11 +229,8 @@ public class ConsultationBean implements Serializable {
 
                             if (rdv.getDateRdv() != null) {
                                 tx.begin();
-                                Patient_intervenantid idRdv = new Patient_intervenantid();
-                                idRdv.setId_intervenant(consultation.getIntervenant().getId());
-                                idRdv.setId_patient(consultation.getPatient().getId());
-                                rdv.setId(idRdv);
                                 rdv.setIntervenant(consultation.getIntervenant());
+                                rdv.setDateRdvFiltre(rdv.getDateRdv());
                                 rdv.setPatient(consultation.getPatient());
                                 tx.commit();
                             }
@@ -302,22 +298,7 @@ public class ConsultationBean implements Serializable {
                         tx.begin();
                         consultation.setSuivi(suivi);
                         consultationServices.updateOne(consultation);
-                        tx.commit();
-
-                        if (rdv.getDateRdv() != null) {
-                            tx.begin();
-                            rdvServices.deleteOne(rdvTampon.getId());
-                            tx.commit();
-
-                            tx.begin();
-                            Patient_intervenantid idRdv = new Patient_intervenantid();
-                            idRdv.setId_intervenant(consultation.getIntervenant().getId());
-                            idRdv.setId_patient(consultation.getPatient().getId());
-                            rdv.setId(idRdv);
-                            rdv.setIntervenant(consultation.getIntervenant());
-                            rdv.setPatient(consultation.getPatient());
-                            tx.commit();
-                        }
+                        tx.commit();                    
 
                         for (Antecedent_familial antC : antecedentFamilialListe) {
 

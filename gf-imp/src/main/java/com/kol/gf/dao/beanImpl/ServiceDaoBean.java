@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
-import com.kol.gf.entities.Pathologie;
+import com.kol.gf.dao.bean.ServiceDaoBeanLocal;
+import com.kol.gf.entities.Services;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
@@ -14,10 +15,12 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class PathologieDaoBean extends BaseDaoBeanImpl<Pathologie, Long> implements PathologieDaoBeanLocal{
+public class ServiceDaoBean extends BaseDaoBeanImpl<Services, Long> implements ServiceDaoBeanLocal{
     
-    public PathologieDaoBean(){
-        super(Pathologie.class);
+    
+    public ServiceDaoBean(){
+        super(Services.class);
     }
+    
     
 }

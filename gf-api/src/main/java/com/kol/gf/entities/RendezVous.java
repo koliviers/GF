@@ -12,6 +12,9 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -23,53 +26,55 @@ import javax.persistence.TemporalType;
  * @author kol
  */
 @Entity
-@Table(name = "rendez_vous")
-public class RendezVous implements Serializable{
-    
-    @EmbeddedId
-    private Patient_intervenantid id;
+@Table(name = "Rendez_vous")
+public class RendezVous implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "dateRdv")
+    @Column(name = "dateRdv", nullable = true)
     private Date dateRdv;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "dateRdvFiltre", nullable = true)
+    private Date dateRdvFiltre;
 
     @Column(name = "motifrdv")
     private String motifRdv;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_patient",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_patient", nullable = false)
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_intervenant",nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "id_intervenant", nullable = false)
     private Intervenant intervenant;
 
     public RendezVous() {
     }
 
-    public RendezVous(Patient_intervenantid id, Date dateRdv, String motifRdv, Patient patient, Intervenant intervenant) {
-        this.id = id;
+    public RendezVous(Date dateRdv, Date dateRdvFiltre, String motifRdv, Patient patient, Intervenant intervenant) {
         this.dateRdv = dateRdv;
+        this.dateRdvFiltre = dateRdvFiltre;
         this.motifRdv = motifRdv;
         this.patient = patient;
         this.intervenant = intervenant;
     }
-    
+
     
 
-    /**
-     * @return the id
-     */
-    public Patient_intervenantid getId() {
+    public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Patient_intervenantid id) {
+    public void setId(Long id) {
         this.id = id;
     }
+
+    
 
     /**
      * @return the dateRdv
@@ -127,6 +132,16 @@ public class RendezVous implements Serializable{
         this.intervenant = intervenant;
     }
 
+    public Date getDateRdvFiltre() {
+        return dateRdvFiltre;
+    }
+
+    public void setDateRdvFiltre(Date dateRdvFiltre) {
+        this.dateRdvFiltre = dateRdvFiltre;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -154,11 +169,9 @@ public class RendezVous implements Serializable{
 
     @Override
     public String toString() {
-        return "RendezVous{" + "id=" + id + ", dateRdv=" + dateRdv + ", motifRdv=" + motifRdv + ", patient=" + patient + ", intervenant=" + intervenant + '}';
+        return "RendezVous{" + "id=" + id + ", dateRdv=" + dateRdv + ", dateRdvFiltre=" + dateRdvFiltre + ", motifRdv=" + motifRdv + ", patient=" + patient + ", intervenant=" + intervenant + '}';
     }
-    
-    
 
     
-    
+
 }

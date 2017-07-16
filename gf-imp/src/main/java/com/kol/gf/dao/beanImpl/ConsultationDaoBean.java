@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kol.gf.dao.bean;
+package com.kol.gf.dao.beanImpl;
 
-import com.kol.gf.entities.TypeConsommation;
+import com.kol.gf.dao.bean.ConsultationDaoBeanLocal;
+import com.kol.gf.entities.Consultation;
 import com.miki.webapp.core.DaoImpl.BaseDaoBeanImpl;
 import javax.ejb.Stateless;
 
@@ -14,11 +15,11 @@ import javax.ejb.Stateless;
  * @author kol
  */
 @Stateless
-public class TypeConsommationDaoBean extends BaseDaoBeanImpl<TypeConsommation, Long> implements TypeConsommationDaoBeanLocal{
+public class ConsultationDaoBean extends BaseDaoBeanImpl<Consultation, Long> implements ConsultationDaoBeanLocal{
     
-    
-    public TypeConsommationDaoBean(){
-        super(TypeConsommation.class);
+    public ConsultationDaoBean(){
+        super(Consultation.class);
     }
+
     
 }
