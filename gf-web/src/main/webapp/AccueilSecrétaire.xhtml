@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+           <script type="text/javascript">
+               //<![CDATA[
+               function skinChart() {
+                   this.cfg.shadow = false;
+                   this.cfg.title = '';
+                   this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                   this.cfg.grid = {
+                       background: '#ffffff',
+                       borderColor: '#ffffff',
+                       gridLineColor: '#EEEEEE',
+                       shadow: false
+                   };
+                   this.cfg.axesDefaults = {
+                       rendererOptions: {
+                           textColor: '#212121'
+                       }
+                   };
+                   this.cfg.seriesDefaults = {
+                       shadow: false,
+                       lineWidth: 1,
+                       markerOptions: {
+                           shadow: false,
+                           size: 7,
+                           style: 'circle'
+                       }
+                   }
+               }
+               //]]>  
+           </script>
+           <style type="text/css">
+               .main-content {
+                   padding: 0;
+               }
+           </style>
+           
+           <title>Accueil</title>
+           
+           
+       </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <h:form >
+                            <center>   <h1>Liste des rendez - vous du jour</h1> </center>
+                            <p:dataTable id="id1" var="int" value="#{rdvbean.getRdvFiltreIntervenantDuJour()}" 
+                                         widgetVar="intervenantWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true">
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Rechercher :" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Patient" sortBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}"
+                                          filterMatchMode="contains" filterBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}">
+                                    <center><h:outputText value="#{int.patient.nomPatient} #{int.patient.prenomPatient}" /></center>
+                                </p:column>
+                                <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
+                                    <center><h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" /></center>
+                                </p:column>
+                                <p:column headerText="Motif" sortBy="#{int.motifRdv}"
+                                          filterMatchMode="contains" filterBy="#{int.motifRdv}">
+                                    <center><h:outputText value="#{int.motifRdv}" /></center>
+                                </p:column>
+                                <p:column headerText="Date et heure" sortBy="#{rdvbean.dateFormatRdv(int.dateRdv)}"
+                                          filterMatchMode="contains" filterBy="#{rdvbean.dateFormatRdv(int.dateRdv)}">
+                                    <center><h:outputText value="#{rdvbean.dateFormatRdv(int.dateRdv)}" /></center>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+
+                    </div> 
+
+                </div>
+                
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <h:form >
+                            <center>   <h1>Liste de tous les rendez - vous</h1> </center>
+                            <p:dataTable id="id2" var="int" value="#{rdvbean.getAllRdv()}" 
+                                         widgetVar="intervenantWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true">
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Rechercher :" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Patient" sortBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}"
+                                          filterMatchMode="contains" filterBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}">
+                                    <center><h:outputText value="#{int.patient.nomPatient} #{int.patient.prenomPatient}" /></center>
+                                </p:column>
+                                <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
+                                    <center><h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" /></center>
+                                </p:column>
+                                <p:column headerText="Motif" sortBy="#{int.motifRdv}"
+                                          filterMatchMode="contains" filterBy="#{int.motifRdv}">
+                                    <center><h:outputText value="#{int.motifRdv}" /></center>
+                                </p:column>
+                                <p:column headerText="Date et heure" sortBy="#{rdvbean.dateFormatRdv(int.dateRdv)}"
+                                          filterMatchMode="contains" filterBy="#{rdvbean.dateFormatRdv(int.dateRdv)}">
+                                    <center><h:outputText value="#{rdvbean.dateFormatRdv(int.dateRdv)}" /></center>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+
+                    </div> 
+
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

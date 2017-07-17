@@ -6,10 +6,13 @@
 package com.kol.gf.imp.service;
 
 import com.kol.gf.dao.bean.RendezVousDaoBeanLocal;
+import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.RendezVous;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
+import java.util.Date;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -26,6 +29,11 @@ public class RendezVousServiceBean extends BaseServiceBeanImpl<RendezVous, Long>
     @Override
     protected BaseDaoBean<RendezVous, Long> getDao() {
         return dao;
+    }
+
+    @Override
+    public Map<Date, Integer> getSchedulerInfo(Intervenant intervenant) {
+        return dao.getSchedulerInfo(intervenant);
     }
 
    

@@ -21,16 +21,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleModel;
 
 /**
  *
@@ -46,6 +51,8 @@ public class RendezVousBean implements Serializable {
     private List<Patient> listePatient;
     private List<Intervenant> intervenantListe;
     private List<RendezVous> listeRdv;
+    private ScheduleModel eventModel;
+    private Long idRDV;
 
     @ManagedProperty(value = "#{connexionManagedBean}")
     private ConnexionManagedBean connexionMngdB;
@@ -72,6 +79,23 @@ public class RendezVousBean implements Serializable {
 
     }
 
+    @PostConstruct
+    public void init() {
+        Utilisateur utilisateurTampon = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
+        Intervenant intervenantTampon = intervenantServices.getOneBy("utilisateur", utilisateurTampon);
+
+        eventModel = new DefaultScheduleModel();
+
+        if (intervenantTampon != null) {
+            Map<Date, Integer> rdvSchedule = daoRdv.getSchedulerInfo(intervenantTampon);
+
+            for (Map.Entry<Date, Integer> mp : rdvSchedule.entrySet()) {
+                eventModel.addEvent(new DefaultScheduleEvent("Rendez-vous : "+mp.getValue(), mp.getKey(), mp.getKey()));
+            }
+        }
+
+    }
+
     public void gestionRdv() {
         UserTransaction tx = TransactionManager.getUserTransaction();
         try {
@@ -85,7 +109,7 @@ public class RendezVousBean implements Serializable {
                 Mtm.mikiMessageWarn("La date ou l'heure saisie est incorrecte, veuillez entrer une date ou heure supérieure à la date ou heure actuelle svp !");
             } else {
                 if (rdv.getId() == null) {
-                    if (!daoRdv.getBy("dateRdv", rdv.getDateRdv()).isEmpty()) {
+                    if (!daoRdv.getBy("dateRdv", "intervenant", rdv.getDateRdv(), rdv.getIntervenant()).isEmpty()) {
                         Mtm.mikiMessageWarn("Attention : vous avez déjà un autre rendez-vous à cette date et heure !, veuillez revoir la date ou l'heure saisie svp !");
                     } else {
                         tx.begin();
@@ -98,7 +122,7 @@ public class RendezVousBean implements Serializable {
                     }
 
                 } else {
-                    if (!daoRdv.getBy("dateRdv", rdv.getDateRdv()).isEmpty()) {
+                    if (!daoRdv.getBy("dateRdv", "intervenant", rdv.getDateRdv(), rdv.getIntervenant()).isEmpty()) {
                         if (!Objects.equals(daoRdv.getBy("dateRdv", rdv.getDateRdv()).get(0).getId(), rdv.getId())) {
                             Mtm.mikiMessageWarn("Attention : vous avez déjà un autre rendez-vous à cette date et heure !, veuillez revoir la date ou l'heure saisie svp !");
                         } else {
@@ -142,12 +166,16 @@ public class RendezVousBean implements Serializable {
     public void annulerRdv() {
         rdv = new RendezVous();
     }
+    
+    public void selectRdvSupprimer(Long id){
+        idRDV = id;
+    }
 
-    public void deleteOneRdv(Long idRDV) {
+    public void deleteOneRdv() {
 
         try {
             this.daoRdv.deleteOne(idRDV);
-
+            Mtm.mikiMessageInfo();
         } catch (Exception e) {
             e.printStackTrace();
             Mtm.mikiMessageError();
@@ -166,6 +194,8 @@ public class RendezVousBean implements Serializable {
         try {
             if (dateRdv.before(new Date())) {
                 Mtm.mikiMessageWarn("La date ou l'heure saisie est incorrecte, veuillez entrer une date ou heure supérieure à la date ou heure actuelle svp !");
+            } else if (!daoRdv.getBy("dateRdv", "intervenant", dateRdv, rdv.getIntervenant()).isEmpty()) {
+                Mtm.mikiMessageWarn("Attention : vous avez déjà un autre rendez-vous à cette date et heure !, veuillez revoir la date ou l'heure saisie svp !");
             } else {
                 tx.begin();
                 rdvTampon.setDateRdvFiltre(dateRdv);
@@ -320,5 +350,23 @@ public class RendezVousBean implements Serializable {
     public void setIntervenantListe(List<Intervenant> intervenantListe) {
         this.intervenantListe = intervenantListe;
     }
+
+    public ScheduleModel getEventModel() {
+        return eventModel;
+    }
+
+    public void setEventModel(ScheduleModel eventModel) {
+        this.eventModel = eventModel;
+    }
+
+    public Long getIdRDV() {
+        return idRDV;
+    }
+
+    public void setIdRDV(Long idRDV) {
+        this.idRDV = idRDV;
+    }
+    
+    
 
 }

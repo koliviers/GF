@@ -28,7 +28,7 @@
                                 <h:form>
                                     <br/>
                                     <h:inputHidden value="#{rdvbean.rdv.id}"/>
-                                    
+
                                     <p:panelGrid  columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                         <h:outputText  value="Patient *" />
@@ -36,7 +36,7 @@
                                             <f:selectItem  itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{rdvbean.listePatient}" var="intser" itemLabel="#{intser.nomPatient} #{intser.prenomPatient}" itemValue="#{intser}"/>
                                         </p:selectOneMenu>
-                                        
+
                                         <h:outputText  value="Intervenant *" />
                                         <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.intervenant}"   converter="omnifaces.SelectItemsConverter">
                                             <f:selectItem  itemLabel="Selectionner un intervenant" itemValue="#{null}" noSelectionOption="true"/>
@@ -66,7 +66,7 @@
                         </p:accordionPanel>
                     </div>
                 </div>
-                
+
                 <div class="ui-g-12">
 
                     <div class="card card-w-title">
@@ -105,7 +105,22 @@
                                     <center><p:commandButton value="Modifier" action="#{rdvbean.renvoieRdv(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
                                 </p:column>
 
+                                <p:column>                           
+                                    <center><p:commandButton value="Supprimer" action="#{rdvbean.selectRdvSupprimer(int.id)}"  onclick="PF('ConfWV').show();" styleClass="red-btn" style="width: auto;"/></center>
+                                </p:column>
+
                             </p:dataTable>
+
+                            <p:dialog header="Confirmation" widgetVar="ConfWV" modal="true" width="350" showEffect="fade" hideEffect="fade"  responsive="true">
+                                <h:outputText value="Voulez vous supprimer ce rendez-vous ?" />
+                                <f:facet name="footer">
+                                    <center>
+                                        <p:commandButton value="Oui" action="#{rdvbean.deleteOneRdv()}" onclick="PF('ConfWV').hide();" update="@form,:form:growl" styleClass="ui-confirmdialog-yes GreenButton" icon="ui-icon-check" />
+                                        <p:spacer/>
+                                        <p:commandButton value="Non" type="button" onclick="PF('ConfWV').hide();" styleClass="ui-confirmdialog-no RedButton" icon="ui-icon-close" />
+                                    </center>
+                                </f:facet>
+                            </p:dialog> 
                         </h:form>
 
                     </div> 

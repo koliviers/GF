@@ -5,8 +5,11 @@
  */
 package com.kol.gf.service;
 
+import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.RendezVous;
 import com.miki.webapp.core.Service.BaseServiceBean;
+import java.util.Date;
+import java.util.Map;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +18,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface RendezVousServiceBeanLocal extends BaseServiceBean<RendezVous, Long>{
-    
+    public Map<Date,Integer> getSchedulerInfo(Intervenant intervenant);
 }
