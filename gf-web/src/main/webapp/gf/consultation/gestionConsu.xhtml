@@ -64,16 +64,6 @@
                                         <p:inputNumber id="tensiondroit" value="#{consBean.suivi.tensiondroit}" />
 
 
-
-                                        <p:outputLabel for="spt" value="Sport effectué" />
-                                        <p:selectOneRadio  id="spt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.suivi.sport}">
-                                            <f:selectItem itemLabel="Intense(7/7j)" itemValue="normal"  />
-                                            <f:selectItem itemLabel="Moderé(5/7j)" itemValue="Aucun" />   
-                                            <f:selectItem itemLabel="Faible (3/7j" itemValue="Aucun" /> 
-                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
-
-                                        </p:selectOneRadio>
-
                                     </p:panelGrid>
 
                                     <!--</p:panel>-->
@@ -139,7 +129,16 @@
                                     <!--<p:panel style="height: 500px">-->
 
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+                                        
+                                        <p:outputLabel for="spt" value="Sport effectué" />
+                                        <p:selectOneRadio  id="spt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.suivi.sport}">
+                                            <f:selectItem itemLabel="Intense(7/7j)" itemValue="normal"  />
+                                            <f:selectItem itemLabel="Moderé(5/7j)" itemValue="Aucun" />   
+                                            <f:selectItem itemLabel="Faible (3/7j" itemValue="Aucun" /> 
+                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
 
+                                        </p:selectOneRadio>
+                                        
                                         <p:outputLabel for="frt" value="Fruit / Legume Consommée" />
                                         <p:selectOneRadio  id="frt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.suivi.fruit}">
                                             <f:selectItem itemLabel="Normal(5/j)" itemValue="normal"  />
@@ -161,14 +160,28 @@
                                             <f:selectItems var="cs" value="#{consBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
                                         </p:selectOneMenu>
 
-                                        <p:outputLabel for="typhb" value="Type habitude" />
+                                        <p:outputLabel for="typhb" value="Quantité" />
                                         <p:selectOneMenu  id="typhb" value="#{consBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner un type habitude" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selectionner une quantité" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems var="tph" value="#{consBean.listeTypeHabitude}" itemValue="#{tph}" itemLabel="#{tph.label}"/>                              
                                         </p:selectOneMenu>
+                                        
+                                        <p:outputLabel  value="Nombre" />
+                                        <p:inputNumber value="#{rdvbean.idRDV}" decimalPlaces="0" emptyValue="0" decimalSeparator="" />
+                                        
+                                        <p:outputLabel  value="Temps de consommation" />
+                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{rdvbean.rdv.motifRdv}">
+                                            <f:selectItem itemLabel="Jour" itemValue="Jour"  />
+                                            <f:selectItem itemLabel="Semaine" itemValue="Moyen" />
+                                            <f:selectItem itemLabel="Mois" itemValue="Semaine" />
+                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
+                                        </p:selectOneRadio>
+                                        
 
-                                    </p:panelGrid>
-
+                                    </p:panelGrid> 
+                                    
+                                    <br/>
+                                    
                                     <center>
                                         <p:commandButton value="Ajouter" action="#{consBean.ajouterHabitudeAlimentaire()}" style="width: auto;" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
                                     </center>
@@ -188,10 +201,23 @@
                                                     <f:converter converterId="consommationConverterId"/>
                                                 </h:outputText>
                                             </p:column>
+                                            
+                                            <p:column headerText="Nombre" >
+                                                <h:outputText value="">
+                                                    
+                                                </h:outputText>
+                                            </p:column>
 
-                                            <p:column headerText="Type habitude" >
+                                            <p:column headerText="Quantité" >
                                                 <h:outputText value="#{consBean.tamponHabitudeAlimentaire[htal.key]}">
                                                     <f:converter converterId="typeHabitudeConverterId"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            
+                                            
+                                            <p:column headerText="Temps Conso." >
+                                                <h:outputText value="">
+                                                    
                                                 </h:outputText>
                                             </p:column>
 
@@ -237,6 +263,9 @@
 
                                         <p:outputLabel  value="Posologie"/>
                                         <p:inputText id="poso" value="#{consBean.ordonnance.posologie}"/>
+                                        
+                                        <p:outputLabel  value="Quantité"/>
+                                        <p:inputNumber id="poso2" value="#{consBean.ordonnance.quantite}"/>
 
                                     </p:panelGrid>
 

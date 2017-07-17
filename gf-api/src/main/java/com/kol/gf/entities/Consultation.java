@@ -35,11 +35,15 @@ public class Consultation implements Serializable{
     @Column(name = "ID",nullable = false)
     private Long id;
     
-    @Column(name = "detailConsultation")
+    @Column(name = "detailConsultation", length = 1000, nullable = true)
     private String detailConsultation;
     
+    
+    @Column(name = "TraitementNomMedicamenteux", length = 1000, nullable = true)
+    private String traitementNomMedicamenteux;
+    
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "dateConsultation")
+    @Column(name = "dateConsultation", nullable = false)
     private Date dateConsultation;
 
     
@@ -52,30 +56,38 @@ public class Consultation implements Serializable{
     private Intervenant intervenant;
     
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_classeTherapeutique",nullable = true)
+    private ClasseTherapeutique traitementMedicamenteurx;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_suivi",nullable = true)
     private Suivi suivi;
-    
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_traitement",nullable = true)
     private Traitement traitement;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_examenClinique",nullable = true)
+    private ExamenClinique examen_Clinique;
     
     
 
     public Consultation() {
     }
 
-    public Consultation(String detailConsultation, Date dateConsultation, Patient patient, Intervenant intervenant, Suivi suivi, Traitement traitement) {
+    public Consultation(String detailConsultation, String traitementNomMedicamenteux, Date dateConsultation, Patient patient, Intervenant intervenant, ClasseTherapeutique traitementMedicamenteurx, Suivi suivi, Traitement traitement) {
         this.detailConsultation = detailConsultation;
+        this.traitementNomMedicamenteux = traitementNomMedicamenteux;
         this.dateConsultation = dateConsultation;
         this.patient = patient;
         this.intervenant = intervenant;
+        this.traitementMedicamenteurx = traitementMedicamenteurx;
         this.suivi = suivi;
         this.traitement = traitement;
     }
 
     
-
 
 
     /**
@@ -144,6 +156,22 @@ public class Consultation implements Serializable{
 
     public void setTraitement(Traitement traitement) {
         this.traitement = traitement;
+    }
+
+    public String getTraitementNomMedicamenteux() {
+        return traitementNomMedicamenteux;
+    }
+
+    public void setTraitementNomMedicamenteux(String traitementNomMedicamenteux) {
+        this.traitementNomMedicamenteux = traitementNomMedicamenteux;
+    }
+
+    public ClasseTherapeutique getTraitementMedicamenteurx() {
+        return traitementMedicamenteurx;
+    }
+
+    public void setTraitementMedicamenteurx(ClasseTherapeutique traitementMedicamenteurx) {
+        this.traitementMedicamenteurx = traitementMedicamenteurx;
     }
     
     

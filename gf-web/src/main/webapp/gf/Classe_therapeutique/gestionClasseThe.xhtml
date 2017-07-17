@@ -39,11 +39,6 @@
                                             <f:validateLength minimum="2"/>
                                         </p:inputText>
 
-                                        <h:outputText  value="Traitement *" />
-                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{classeTherapeutiqueManagedBean.classeTherapeutique.traitement}"   converter="omnifaces.SelectItemsConverter">
-                                            <f:selectItem  itemLabel="Selectionner un traitement" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems value="#{classeTherapeutiqueManagedBean.traitementListe}" var="intser" itemLabel="#{intser.label}" itemValue="#{intser}"/>
-                                        </p:selectOneMenu>
 
                                     </p:panelGrid>
 
@@ -84,17 +79,6 @@
                                           filterMatchMode="contains" filterBy="#{int.label}">
                                     <center><h:outputText value="#{int.label}" /></center>
                                 </p:column>
-
-                                <p:column filterBy="#{int.traitement}" headerText="Traitement" filterMatchMode="exact"> 
-                                    <f:facet name="filter">
-                                        <p:selectOneMenu onchange="PF('intervenantWV').filter()" >
-                                            <f:selectItem itemLabel="Tous" itemValue="#{null}" noSelectionOption="true" />
-                                            <f:selectItems var="ser" value="#{classeTherapeutiqueManagedBean.traitementListe}" itemValue="#{ser}" itemLabel="#{ser.label}"/>
-                                        </p:selectOneMenu>
-                                    </f:facet>
-                                    <h:outputText value="#{int.traitement.label}" />          
-                                </p:column>
-
 
                                 <p:column  headerText="Action">                           
                                     <center><p:commandButton value="Modifier" action="#{classeTherapeutiqueManagedBean.renvoieClasseTherapeutique(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>

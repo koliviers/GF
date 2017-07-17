@@ -6,75 +6,59 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Entity
-@Table(name = "Classetherapeutique")
-public class ClasseTherapeutique implements Serializable{
+@Table(name = "EXAMEN_PARACLINIQUE")
+public class ExamenParaclinique implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @SequenceGenerator(name = "examenParaCliSeq", sequenceName = "EXAMEN_PARACLI_SEQ", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "examenParaCliSeq")
+    @Column(name = "ID", nullable = false)
     private Long id;
     
-    @Column(name = "label", nullable = false)
+    @Column(name = "label", nullable = true)
     private String label;
 
-
-    public ClasseTherapeutique() {
+    public ExamenParaclinique() {
     }
 
-    public ClasseTherapeutique(String label) {
+    public ExamenParaclinique(String label) {
         this.label = label;
     }
 
-   
-
-    /**
-     * @return the id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * @return the label
-     */
     public String getLabel() {
         return label;
     }
 
-    /**
-     * @param label the label to set
-     */
     public void setLabel(String label) {
         this.label = label;
     }
-    
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + (int) (this.id ^ (this.id >>> 32));
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -89,8 +73,8 @@ public class ClasseTherapeutique implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ClasseTherapeutique other = (ClasseTherapeutique) obj;
-        if (this.id != other.id) {
+        final ExamenParaclinique other = (ExamenParaclinique) obj;
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -98,9 +82,8 @@ public class ClasseTherapeutique implements Serializable{
 
     @Override
     public String toString() {
-        return "ClasseTherapeutique{" + "id=" + id + ", label=" + label + '}';
+        return "ExamenParaclinique{" + "id=" + id + ", label=" + label + '}';
     }
-
     
     
 }

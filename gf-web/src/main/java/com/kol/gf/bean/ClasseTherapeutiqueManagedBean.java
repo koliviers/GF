@@ -32,14 +32,12 @@ public class ClasseTherapeutiqueManagedBean implements Serializable {
 
     private ClasseTherapeutique classeTherapeutique;
 
-    private List<Traitement> traitementListe;
     private List<ClasseTherapeutique> classeTherapeutiqueListe;
 
     public ClasseTherapeutiqueManagedBean() {
         classeTherapeutique = new ClasseTherapeutique();
 
-        traitementListe = new ArrayList<>();
-        traitementListe = new ArrayList<>();
+        classeTherapeutiqueListe = new ArrayList<>();
     }
 
     @EJB
@@ -54,8 +52,6 @@ public class ClasseTherapeutiqueManagedBean implements Serializable {
         try {
             if (classeTherapeutique.getLabel().trim().isEmpty()) {
                 Mtm.mikiMessageWarnSaisir("le nom de la classe");
-            } else if (classeTherapeutique.getTraitement() == null) {
-                Mtm.mikiMessageWarnChoisir("le traitement");
             } else {
                 if (classeTherapeutique.getId() == null) {
                     tx.begin();
@@ -110,13 +106,6 @@ public class ClasseTherapeutiqueManagedBean implements Serializable {
         this.classeTherapeutique = classeTherapeutique;
     }
 
-    public List<Traitement> getTraitementListe() {
-        return traitementServices.getAll("label", true);
-    }
-
-    public void setTraitementListe(List<Traitement> traitementListe) {
-        this.traitementListe = traitementListe;
-    }
 
     public List<ClasseTherapeutique> getClasseTherapeutiqueListe() {
         return classeTherapeutiqueServices.getAll("label", true);

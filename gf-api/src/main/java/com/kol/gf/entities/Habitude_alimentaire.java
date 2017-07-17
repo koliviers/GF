@@ -29,6 +29,10 @@ public class Habitude_alimentaire implements Serializable{
     @Column(name = "quantite", nullable = true)
     private Integer quantite;
     
+    
+    @Column(name = "temps", nullable = true)
+    private String temps;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_consultation", nullable = false,insertable = false,updatable = false)
     private Consultation consultation;
@@ -44,14 +48,16 @@ public class Habitude_alimentaire implements Serializable{
     public Habitude_alimentaire() {
     }
 
-    public Habitude_alimentaire(Habitude_alimentaireId id, Integer quantite, Consultation consultation, Consommation consommation, TypeHabitude type_habitude) {
+    public Habitude_alimentaire(Habitude_alimentaireId id, Integer quantite, String temps, Consultation consultation, Consommation consommation, TypeHabitude type_habitude) {
         this.id = id;
         this.quantite = quantite;
+        this.temps = temps;
         this.consultation = consultation;
         this.consommation = consommation;
         this.type_habitude = type_habitude;
     }
 
+    
     
 
     public Habitude_alimentaireId getId() {
@@ -76,6 +82,14 @@ public class Habitude_alimentaire implements Serializable{
 
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
+    }
+
+    public String getTemps() {
+        return temps;
+    }
+
+    public void setTemps(String temps) {
+        this.temps = temps;
     }
 
     
@@ -125,9 +139,9 @@ public class Habitude_alimentaire implements Serializable{
 
     @Override
     public String toString() {
-        return "Habitude_alimentaire{" + "id=" + id + ", quantite=" + quantite + ", consultation=" + consultation + ", consommation=" + consommation + ", type_habitude=" + type_habitude + '}';
+        return "Habitude_alimentaire{" + "id=" + id + ", quantite=" + quantite + ", temps=" + temps + ", consultation=" + consultation + ", consommation=" + consommation + ", type_habitude=" + type_habitude + '}';
     }
 
-   
+    
     
 }

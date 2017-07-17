@@ -39,6 +39,9 @@ public class Patient implements Serializable {
 
     @Column(name = "prenomPatient", nullable = false)
     private String prenomPatient;
+    
+    @Column(name = "codePatient", nullable = false)
+    private String codePatient;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_naissance", nullable = true)
@@ -64,9 +67,10 @@ public class Patient implements Serializable {
     public Patient() {
     }
 
-    public Patient(String nomPatient, String prenomPatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse) {
+    public Patient(String nomPatient, String prenomPatient, String codePatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse) {
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
+        this.codePatient = codePatient;
         this.date_naissance = date_naissance;
         this.sexe = sexe;
         this.contact = contact;
@@ -74,8 +78,6 @@ public class Patient implements Serializable {
         this.profession = profession;
         this.adresse = adresse;
     }
-
-    
 
 
 
@@ -126,9 +128,7 @@ public class Patient implements Serializable {
 
     public void setContact(String contact) {
         this.contact = contact;
-    }
-
-    
+    }  
 
     public String getCivilite() {
         return civilite;
@@ -153,6 +153,16 @@ public class Patient implements Serializable {
     public void setAdresse(String adresse) {
         this.adresse = adresse;
     }
+
+    public String getCodePatient() {
+        return codePatient;
+    }
+
+    public void setCodePatient(String codePatient) {
+        this.codePatient = codePatient;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -181,7 +191,7 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + '}';
     }
 
    
