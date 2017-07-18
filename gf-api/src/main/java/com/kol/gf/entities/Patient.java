@@ -40,7 +40,7 @@ public class Patient implements Serializable {
     @Column(name = "prenomPatient", nullable = false)
     private String prenomPatient;
     
-    @Column(name = "codePatient", nullable = false)
+    @Column(name = "codePatient", nullable = true)
     private String codePatient;
 
     @Temporal(TemporalType.DATE)
