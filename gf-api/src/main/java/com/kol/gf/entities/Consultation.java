@@ -27,68 +27,70 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "consultation")
-public class Consultation implements Serializable{
-    
+public class Consultation implements Serializable {
+
     @Id
     @SequenceGenerator(name = "consulationSeq", sequenceName = "CONSULTATION_SEQ", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "consulationSeq")
-    @Column(name = "ID",nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
-    
+
     @Column(name = "detailConsultation", length = 1000, nullable = true)
     private String detailConsultation;
-    
-    
+
     @Column(name = "TraitementNomMedicamenteux", length = 1000, nullable = true)
     private String traitementNomMedicamenteux;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dateConsultation", nullable = false)
     private Date dateConsultation;
 
-    
+    @Column(name = "sport", nullable = true)
+    private String sport;
+
+    @Column(name = "fruit", nullable = true)
+    private String fruit;
+
+    @Column(name = "antmed", nullable = true)
+    private String antMedicaux;
+
+    @Column(name = "antChir", nullable = true)
+    private String antChirugicaux;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_patient",nullable = true)
+    @JoinColumn(name = "id_patient", nullable = true)
     private Patient patient;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_intervenant",nullable = true)
+    @JoinColumn(name = "id_intervenant", nullable = true)
     private Intervenant intervenant;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_classeTherapeutique",nullable = true)
+    @JoinColumn(name = "id_classeTherapeutique", nullable = true)
     private ClasseTherapeutique traitementMedicamenteurx;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_suivi",nullable = true)
-    private Suivi suivi;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_traitement",nullable = true)
-    private Traitement traitement;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_examenClinique",nullable = true)
+    @JoinColumn(name = "id_examenClinique", nullable = true)
     private ExamenClinique examen_Clinique;
-    
-    
 
     public Consultation() {
     }
 
-    public Consultation(String detailConsultation, String traitementNomMedicamenteux, Date dateConsultation, Patient patient, Intervenant intervenant, ClasseTherapeutique traitementMedicamenteurx, Suivi suivi, Traitement traitement) {
+    public Consultation(String detailConsultation, String traitementNomMedicamenteux, Date dateConsultation, String sport, String fruit, String antMedicaux, String antChirugicaux, Patient patient, Intervenant intervenant, ClasseTherapeutique traitementMedicamenteurx, ExamenClinique examen_Clinique) {
         this.detailConsultation = detailConsultation;
         this.traitementNomMedicamenteux = traitementNomMedicamenteux;
         this.dateConsultation = dateConsultation;
+        this.sport = sport;
+        this.fruit = fruit;
+        this.antMedicaux = antMedicaux;
+        this.antChirugicaux = antChirugicaux;
         this.patient = patient;
         this.intervenant = intervenant;
         this.traitementMedicamenteurx = traitementMedicamenteurx;
-        this.suivi = suivi;
-        this.traitement = traitement;
+        this.examen_Clinique = examen_Clinique;
     }
 
     
-
 
     /**
      * @return the detailConsultation
@@ -140,22 +142,12 @@ public class Consultation implements Serializable{
         this.id = id;
     }
 
-    public Suivi getSuivi() {
-        return suivi;
+    public ExamenClinique getExamen_Clinique() {
+        return examen_Clinique;
     }
 
-    public void setSuivi(Suivi suivi) {
-        this.suivi = suivi;
-    }
-
-   
-
-    public Traitement getTraitement() {
-        return traitement;
-    }
-
-    public void setTraitement(Traitement traitement) {
-        this.traitement = traitement;
+    public void setExamen_Clinique(ExamenClinique examen_Clinique) {
+        this.examen_Clinique = examen_Clinique;
     }
 
     public String getTraitementNomMedicamenteux() {
@@ -173,9 +165,39 @@ public class Consultation implements Serializable{
     public void setTraitementMedicamenteurx(ClasseTherapeutique traitementMedicamenteurx) {
         this.traitementMedicamenteurx = traitementMedicamenteurx;
     }
-    
-    
 
+    public String getSport() {
+        return sport;
+    }
+
+    public void setSport(String sport) {
+        this.sport = sport;
+    }
+
+    public String getFruit() {
+        return fruit;
+    }
+
+    public void setFruit(String fruit) {
+        this.fruit = fruit;
+    }
+
+    public String getAntMedicaux() {
+        return antMedicaux;
+    }
+
+    public void setAntMedicaux(String antMedicaux) {
+        this.antMedicaux = antMedicaux;
+    }
+
+    public String getAntChirugicaux() {
+        return antChirugicaux;
+    }
+
+    public void setAntChirugicaux(String antChirugicaux) {
+        this.antChirugicaux = antChirugicaux;
+    }
+    
     
 
     @Override
@@ -213,10 +235,9 @@ public class Consultation implements Serializable{
 
     @Override
     public String toString() {
-        return "Consultation{" + "id=" + id + ", detailConsultation=" + detailConsultation + ", dateConsultation=" + dateConsultation + ", patient=" + patient + ", intervenant=" + intervenant + ", suivi=" + suivi + ", traitement=" + traitement + '}';
+        return "Consultation{" + "id=" + id + ", detailConsultation=" + detailConsultation + ", traitementNomMedicamenteux=" + traitementNomMedicamenteux + ", dateConsultation=" + dateConsultation + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", patient=" + patient + ", intervenant=" + intervenant + ", traitementMedicamenteurx=" + traitementMedicamenteurx + ", examen_Clinique=" + examen_Clinique + '}';
     }
 
    
 
-    
 }

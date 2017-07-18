@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miki.webapp.journal.utils;
+package com.kol.gf.service;
 
 import com.kol.gf.entities.ParacliniqueConsultation;
 import com.kol.gf.entities.ParacliniqueConsultationId;

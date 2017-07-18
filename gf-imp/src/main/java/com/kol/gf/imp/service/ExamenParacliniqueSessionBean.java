@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miki.webapp.journal.utils;
+package com.kol.gf.imp.service;
 
-import com.kol.gf.dao.bean.IExamenCliniqueDAO;
-import com.kol.gf.entities.ExamenClinique;
+import com.kol.gf.dao.bean.IExamenParacliniqueDAO;
+import com.kol.gf.entities.ExamenParaclinique;
+import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
-import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -18,13 +18,13 @@ import javax.ejb.Stateless;
  * @author anonymousghost
  */
 @Stateless
-public class ExamenCliniqueSessionBean extends BaseServiceBeanImpl<ExamenClinique, Long> implements ExamenCliniqueSessionBeanLocal {
+public class ExamenParacliniqueSessionBean extends BaseServiceBeanImpl<ExamenParaclinique, Long> implements ExamenParacliniqueSessionBeanLocal {
 
     @EJB
-    private IExamenCliniqueDAO dao;
+    private IExamenParacliniqueDAO dao;
 
     @Override
-    protected BaseDaoBean<ExamenClinique, Long> getDao() {
+    protected BaseDaoBean<ExamenParaclinique, Long> getDao() {
         return dao;
     }
     

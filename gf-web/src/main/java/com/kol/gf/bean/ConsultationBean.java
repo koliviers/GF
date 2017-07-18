@@ -15,25 +15,34 @@ import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.Antecedent_familial;
 import com.kol.gf.entities.Antecedent_familial_Id;
+import com.kol.gf.entities.ClasseTherapeutique;
 import com.kol.gf.entities.Consommation;
 import com.kol.gf.entities.Consultation;
+import com.kol.gf.entities.Diagnostique;
+import com.kol.gf.entities.ExamenClinique;
+import com.kol.gf.entities.ExamenParaclinique;
 import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Habitude_alimentaireId;
 import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Ordonnance;
+import com.kol.gf.entities.ParacliniqueConsultation;
+import com.kol.gf.entities.ParacliniqueConsultationId;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
-import com.kol.gf.entities.Suivi;
 import com.kol.gf.entities.Traitement;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.entities.TypeHabitude;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
+import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
+import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
+import com.kol.gf.service.ExamenCliniqueSessionBeanLocal;
+import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
 import com.kol.gf.service.OrdonnanceSessionBeanLocal;
+import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
-import com.kol.gf.service.SuiviSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.Mtm;
@@ -67,8 +76,6 @@ public class ConsultationBean implements Serializable {
 
     private Pathologie pathologie;
 
-    private Suivi suivi;
-
     private boolean disable;
 
     private RendezVous rdv;
@@ -89,6 +96,20 @@ public class ConsultationBean implements Serializable {
 
     private Intervenant intervenantTampon2;
 
+    private ExamenClinique examentClinique;
+
+    private ExamenParaclinique examenParaclinique;
+
+    private Diagnostique diagnostique;
+
+    private ParacliniqueConsultation paracliniqueConsultation;
+
+    private ParacliniqueConsultationId paraconsultationId;
+
+    private Integer nombre;
+
+    private String tempsHabitude;
+
     private List<Patient> listePatient;
 
     private List<Pathologie> listePathologie;
@@ -107,10 +128,20 @@ public class ConsultationBean implements Serializable {
 
     private List<Consultation> consultationListe;
 
-    private List<Antecedent_familial> antecedentFamilialListe = new ArrayList<>();
+    private List<Antecedent_familial> antecedentFamilialListe;
 
-    private Map<Consommation, TypeHabitude> tamponHabitudeAlimentaire;
-    private Map<Consommation, TypeHabitude> tamponHabitudeAlimentaireTemporaire;
+    private List<Diagnostique> diagnostiqueListe;
+
+    private List<ExamenParaclinique> examenParacliniqueListe;
+
+    private List<ExamenParaclinique> examenParacliniqueListe2;
+
+    private List<ParacliniqueConsultation> paracliniqueConsultationTamponListe;
+
+    private List<ClasseTherapeutique> classeTherapeutiqueListe;
+
+    private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
+    private List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire;
 
     private List<TypeConsommation> liteType;
 
@@ -135,8 +166,6 @@ public class ConsultationBean implements Serializable {
     @EJB
     private Habitude_alimentaireDaoBeanLocal habitudeAlimentaireServices;
 
-    @EJB
-    private SuiviSessionBeanLocal suiviServices;
 
     @EJB
     private OrdonnanceSessionBeanLocal ordonnanceServices;
@@ -159,6 +188,21 @@ public class ConsultationBean implements Serializable {
     @EJB
     private RendezVousServiceBeanLocal rdvServices;
 
+    @EJB
+    private DiagnostiqueSessionBeanLocal diagnostiqueServices;
+
+    @EJB
+    private ExamenCliniqueSessionBeanLocal examenCliniqueServices;
+
+    @EJB
+    private ExamenParacliniqueSessionBeanLocal examentParacliniqueServices;
+
+    @EJB
+    private ParacliniqueConsultationSessionBeanLocal paracliniqueConsultationServices;
+
+    @EJB
+    private ClasseTheurapetiqueServiceBeanLocal classeTherapeutiqueServices;
+
     public ConsultationBean() {
 
         pathologie = new Pathologie();
@@ -172,20 +216,30 @@ public class ConsultationBean implements Serializable {
         typecons = new TypeConsommation();
         liteType = new ArrayList<>();
         listeTypeHabitude = new ArrayList<>();
-        tamponHabitudeAlimentaire = new LinkedHashMap<>();
-        tamponHabitudeAlimentaireTemporaire = new LinkedHashMap<>();
+        tamponHabitudeAlimentaire = new ArrayList<>();
+        tamponHabitudeAlimentaireTemporaire = new ArrayList<>();
         traitementListe = new ArrayList<>();
         ordonnanceListe = new ArrayList<>();
         antecedentFamilialListe = new ArrayList<>();
         intervenantListe = new ArrayList<>();
         consultationListe = new ArrayList<>();
         listePathologieTampon = new ArrayList<>();
+        diagnostiqueListe = new ArrayList<>();
+        examenParacliniqueListe = new ArrayList<>();
+        examenParacliniqueListe2 = new ArrayList<>();
+        paracliniqueConsultationTamponListe = new ArrayList<>();
+        classeTherapeutiqueListe = new ArrayList<>();
 
-        suivi = new Suivi();
         consultation = new Consultation();
         ordonnance = new Ordonnance();
         utilisateurTampon2 = new Utilisateur();
         intervenantTampon2 = new Intervenant();
+
+        examentClinique = new ExamenClinique();
+        examenParaclinique = new ExamenParaclinique();
+        diagnostique = new Diagnostique();
+        paracliniqueConsultation = new ParacliniqueConsultation();
+        paraconsultationId = new ParacliniqueConsultationId();
 
         disable = false;
 
@@ -209,8 +263,6 @@ public class ConsultationBean implements Serializable {
             try {
                 if (consultation.getPatient() == null) {
                     Mtm.mikiMessageWarnSelectionner("le patient");
-                } else if (consultation.getTraitement() == null) {
-                    Mtm.mikiMessageWarnSelectionner("le traitement du patient");
                 } else if (consultation.getIntervenant() == null) {
                     Mtm.mikiMessageWarnSelectionner("l'intervenant du patient");
                 } else {
@@ -218,14 +270,40 @@ public class ConsultationBean implements Serializable {
                         if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {
 
                             tx.begin();
-                            suiviServices.saveOne(suivi);
+                            examenCliniqueServices.saveOne(examentClinique);
                             tx.commit();
 
                             tx.begin();
                             consultation.setDateConsultation(new Date());
-                            consultation.setSuivi(suivi);
+                            consultation.setExamen_Clinique(examentClinique);
                             consultationServices.saveOne(consultation);
                             tx.commit();
+
+                            if (!diagnostiqueListe.isEmpty()) {
+                                for (Diagnostique diag : diagnostiqueListe) {
+                                    tx.begin();
+                                    diag.setConsultation(consultation);
+                                    diagnostiqueServices.saveOne(diag);
+                                    tx.commit();
+                                }
+                            }
+
+                            if (!examenParacliniqueListe.isEmpty()) {
+                                for (ExamenParaclinique examP : examenParacliniqueListe) {
+                                    tx.begin();
+                                    ParacliniqueConsultationId idParaCl = new ParacliniqueConsultationId();
+                                    ParacliniqueConsultation paraCl = new ParacliniqueConsultation();
+
+                                    idParaCl.setId_consultation(consultation.getId());
+                                    idParaCl.setId_examenParaclinique(examP.getId());
+
+                                    paraCl.setId(idParaCl);
+                                    paraCl.setConsultation(consultation);
+                                    paraCl.setExamen(examP);
+
+                                    paracliniqueConsultationServices.saveOne(paraCl);
+                                }
+                            }
 
                             if (rdv.getDateRdv() != null) {
                                 tx.begin();
@@ -264,24 +342,23 @@ public class ConsultationBean implements Serializable {
                                 }
                             }
 
-                            for (Map.Entry<Consommation, TypeHabitude> bt : tamponHabitudeAlimentaire.entrySet()) {
+                            if (!tamponHabitudeAlimentaire.isEmpty()) {
+                                for (Habitude_alimentaire bt : tamponHabitudeAlimentaire) {
 
-                                tx.begin();
-                                Habitude_alimentaireId idHb = new Habitude_alimentaireId();
-                                Habitude_alimentaire Hb = new Habitude_alimentaire();
+                                    tx.begin();
+                                    Habitude_alimentaireId idHb = new Habitude_alimentaireId();
 
-                                idHb.setId_Consommation(bt.getKey().getId());
-                                idHb.setId_type_habitude(bt.getValue().getId());
-                                idHb.setId_consultation(consultation.getId());
+                                    idHb.setId_Consommation(bt.getConsommation().getId());
+                                    idHb.setId_type_habitude(bt.getType_habitude().getId());
+                                    idHb.setId_consultation(consultation.getId());
 
-                                Hb.setId(idHb);
-                                Hb.setConsommation(bt.getKey());
-                                Hb.setType_habitude(bt.getValue());
-                                Hb.setConsultation(consultation);
+                                    bt.setId(idHb);
+                                    bt.setConsultation(consultation);
 
-                                habitudeAlimentaireServices.saveOne(Hb);
-                                tx.commit();
+                                    habitudeAlimentaireServices.saveOne(bt);
+                                    tx.commit();
 
+                                }
                             }
 
                             new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement d'une consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
@@ -292,13 +369,52 @@ public class ConsultationBean implements Serializable {
                     } else {
 
                         tx.begin();
-                        suiviServices.updateOne(suivi);
+                        examenCliniqueServices.updateOne(examentClinique);
                         tx.commit();
 
                         tx.begin();
-                        consultation.setSuivi(suivi);
+                        consultation.setExamen_Clinique(examentClinique);
                         consultationServices.updateOne(consultation);
-                        tx.commit();                    
+                        tx.commit();
+
+                        if (!diagnostiqueListe.isEmpty()) {
+                            for (Diagnostique diag : diagnostiqueListe) {
+
+                                if (diag.getId() == null) {
+                                    tx.begin();
+                                    diag.setConsultation(consultation);
+                                    diagnostiqueServices.saveOne(diag);
+                                    tx.commit();
+                                }
+
+                            }
+                        }
+
+                        if (!paracliniqueConsultationTamponListe.isEmpty()) {
+                            for (ParacliniqueConsultation paraCl2 : paracliniqueConsultationTamponListe) {
+                                tx.begin();
+                                paracliniqueConsultationServices.deleteOne(paraCl2.getId());
+                                tx.commit();
+                            }
+                        }
+
+                        if (!examenParacliniqueListe.isEmpty()) {
+                            for (ExamenParaclinique examP : examenParacliniqueListe) {
+                                tx.begin();
+                                ParacliniqueConsultationId idParaCl = new ParacliniqueConsultationId();
+                                ParacliniqueConsultation paraCl = new ParacliniqueConsultation();
+
+                                idParaCl.setId_consultation(consultation.getId());
+                                idParaCl.setId_examenParaclinique(examP.getId());
+
+                                paraCl.setId(idParaCl);
+                                paraCl.setConsultation(consultation);
+                                paraCl.setExamen(examP);
+
+                                paracliniqueConsultationServices.saveOne(paraCl);
+                                tx.commit();
+                            }
+                        }
 
                         for (Antecedent_familial antC : antecedentFamilialListe) {
 
@@ -340,60 +456,46 @@ public class ConsultationBean implements Serializable {
 
                         }
 
-                        for (Map.Entry<Consommation, TypeHabitude> bt2 : tamponHabitudeAlimentaireTemporaire.entrySet()) {
-                            tx.begin();
-                            Habitude_alimentaireId idHb2 = new Habitude_alimentaireId();
+                        if (!tamponHabitudeAlimentaireTemporaire.isEmpty()) {
+                            for (Habitude_alimentaire bt2 :  tamponHabitudeAlimentaireTemporaire) {
+                                tx.begin();
+                                Habitude_alimentaireId idHb2 = new Habitude_alimentaireId();
 
-                            idHb2.setId_Consommation(bt2.getKey().getId());
-                            idHb2.setId_type_habitude(bt2.getValue().getId());
-                            idHb2.setId_consultation(consultation.getId());
+                                idHb2.setId_Consommation(bt2.getConsommation().getId());
+                                idHb2.setId_type_habitude(bt2.getType_habitude().getId());
+                                idHb2.setId_consultation(bt2.getConsultation().getId());
 
-                            habitudeAlimentaireServices.deleteOne(idHb2);
-                            tx.commit();
+                                habitudeAlimentaireServices.deleteOne(idHb2);
+                                tx.commit();
 
+                            }
                         }
 
-                        for (Map.Entry<Consommation, TypeHabitude> bt : tamponHabitudeAlimentaire.entrySet()) {
-                            tx.begin();
-                            Habitude_alimentaireId idHb = new Habitude_alimentaireId();
-                            Habitude_alimentaire Hb = new Habitude_alimentaire();
+                        if (!tamponHabitudeAlimentaire.isEmpty()) {
+                            for (Habitude_alimentaire bt : tamponHabitudeAlimentaire) {
 
-                            idHb.setId_Consommation(bt.getKey().getId());
-                            idHb.setId_type_habitude(bt.getValue().getId());
-                            idHb.setId_consultation(consultation.getId());
+                                tx.begin();
+                                Habitude_alimentaireId idHb = new Habitude_alimentaireId();
 
-                            Hb.setId(idHb);
-                            Hb.setConsommation(bt.getKey());
-                            Hb.setType_habitude(bt.getValue());
-                            Hb.setConsultation(consultation);
+                                idHb.setId_Consommation(bt.getConsommation().getId());
+                                idHb.setId_type_habitude(bt.getType_habitude().getId());
+                                idHb.setId_consultation(consultation.getId());
 
-                            habitudeAlimentaireServices.saveOne(Hb);
-                            tx.commit();
+                                bt.setId(idHb);
+                                bt.setConsultation(consultation);
 
+                                habitudeAlimentaireServices.saveOne(bt);
+                                tx.commit();
+
+                            }
                         }
 
                     }
 
                     Mtm.mikiMessageInfo();
                     new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur la consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
-                    pathologie = new Pathologie();
-                    consommation = new Consommation();
 
-                    typecons = new TypeConsommation();
-                    listeTypeHabitude = new ArrayList<>();
-                    tamponHabitudeAlimentaire = new LinkedHashMap<>();
-                    tamponHabitudeAlimentaireTemporaire = new LinkedHashMap<>();
-                    ordonnanceListe = new ArrayList<>();
-                    antecedentFamilialListe = new ArrayList<>();
-
-                    suivi = new Suivi();
-                    consultation = new Consultation();
-                    ordonnance = new Ordonnance();
-                    rdv = new RendezVous();
-                    rdvTampon = new RendezVous();
-
-                    consultation.setIntervenant(intervenantTampon2);
-
+                    this.annulerConsultation();
                 }
             } catch (Exception ex) {
                 try {
@@ -413,19 +515,17 @@ public class ConsultationBean implements Serializable {
     public void renvoieConsultation(Consultation consul) {
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE) && intervenantTampon2 != null) {
             try {
+
+                this.annulerConsultation();
+
                 consultation = consul;
-                suivi = consultation.getSuivi();
+                examentClinique = consultation.getExamen_Clinique();
 
                 //Recuperation Habitude alimentaire
                 List<Habitude_alimentaire> habitude_Al = habitudeAlimentaireServices.getBy("consultation", consultation);
-                Map<Consommation, TypeHabitude> HabitudeAlimentaireRecup = new LinkedHashMap<>();
 
-                for (Habitude_alimentaire hbt : habitude_Al) {
-                    HabitudeAlimentaireRecup.put(hbt.getConsommation(), hbt.getType_habitude());
-                }
-
-                tamponHabitudeAlimentaire = HabitudeAlimentaireRecup;
-                tamponHabitudeAlimentaireTemporaire = HabitudeAlimentaireRecup;
+                tamponHabitudeAlimentaire = habitude_Al;
+                tamponHabitudeAlimentaireTemporaire = habitude_Al;
 
                 //Recuperation Antecedent familial
                 antecedentFamilialListe = antecedentFamilialServices.getBy("patient", consultation.getPatient());
@@ -442,6 +542,16 @@ public class ConsultationBean implements Serializable {
 
                 //Disable du rdv
                 disable = true;
+
+                //Recuperation du Diagnostique
+                diagnostiqueListe = diagnostiqueServices.getBy("consultation", consultation);
+
+                //Recuperation du paracliniqueConsultation
+                paracliniqueConsultationTamponListe = paracliniqueConsultationServices.getBy("consultation", consultation);
+
+                for (ParacliniqueConsultation pr : paracliniqueConsultationTamponListe) {
+                    examenParacliniqueListe.add(pr.getExamen());
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -460,18 +570,27 @@ public class ConsultationBean implements Serializable {
 
         typecons = new TypeConsommation();
         listeTypeHabitude = new ArrayList<>();
-        tamponHabitudeAlimentaire = new LinkedHashMap<>();
-        tamponHabitudeAlimentaireTemporaire = new LinkedHashMap<>();
+        tamponHabitudeAlimentaire = new ArrayList<>();
+        tamponHabitudeAlimentaireTemporaire = new ArrayList<>();
         ordonnanceListe = new ArrayList<>();
         antecedentFamilialListe = new ArrayList<>();
 
-        suivi = new Suivi();
         consultation = new Consultation();
         ordonnance = new Ordonnance();
         rdv = new RendezVous();
         rdvTampon = new RendezVous();
 
         consultation.setIntervenant(intervenantTampon2);
+
+        examentClinique = new ExamenClinique();
+        examenParaclinique = new ExamenParaclinique();
+        diagnostique = new Diagnostique();
+        paracliniqueConsultation = new ParacliniqueConsultation();
+        paraconsultationId = new ParacliniqueConsultationId();
+
+        diagnostiqueListe = new ArrayList<>();
+        examenParacliniqueListe = new ArrayList<>();
+        paracliniqueConsultationTamponListe = new ArrayList<>();
 
         disable = false;
     }
@@ -484,14 +603,38 @@ public class ConsultationBean implements Serializable {
         } else if (typeHabitude == null) {
             Mtm.mikiMessageWarnSelectionner("le type habitude");
         } else {
-            if (!tamponHabitudeAlimentaire.containsKey(consommation)) {
-                tamponHabitudeAlimentaire.put(consommation, typeHabitude);
+            Habitude_alimentaire newHabT = new Habitude_alimentaire();
+
+            newHabT.setConsommation(consommation);
+            newHabT.setType_habitude(typeHabitude);
+            newHabT.setTemps(tempsHabitude);
+            newHabT.setQuantite(nombre);
+
+            if (!tamponHabitudeAlimentaire.contains(newHabT)) {
+                tamponHabitudeAlimentaire.add(newHabT);
                 typecons = new TypeConsommation();
                 consommation = new Consommation();
                 typeHabitude = new TypeHabitude();
+                nombre = null;
+                tempsHabitude = null;
             }
         }
 
+    }
+
+    public void ajouterDiagnostique() {
+        if (diagnostique != null && !diagnostiqueListe.contains(diagnostique)) {
+            diagnostiqueListe.add(diagnostique);
+            diagnostique = new Diagnostique();
+        }
+    }
+
+    public void supprimerDiagnostique(Diagnostique diagn) {
+        if (diagn.getId() == null) {
+            diagnostiqueListe.remove(diagn);
+        } else {
+            diagnostiqueServices.deleteOne(diagn.getId());
+        }
     }
 
     public List<Consultation> getConsulationFiltrerIntervenant() {
@@ -509,16 +652,14 @@ public class ConsultationBean implements Serializable {
 
     }
 
-    public void supprimerHabitudeAlimentaire(Consommation tampon) {
+    public void supprimerHabitudeAlimentaire(Habitude_alimentaire tampon) {
         tamponHabitudeAlimentaire.remove(tampon);
     }
 
     public void ajouterAntecedentFamilial() {
-        System.out.println(pathologie);
         try {
             if (pathologie != null && !listePathologieTampon.contains(pathologie)) {
                 listePathologieTampon.add(pathologie);
-                System.out.println(listePathologieTampon);
                 pathologie = new Pathologie();
             }
         } catch (Exception e) {
@@ -707,14 +848,6 @@ public class ConsultationBean implements Serializable {
         this.listeTypeHabitude = listeTypeHabitude;
     }
 
-    public Map<Consommation, TypeHabitude> getTamponHabitudeAlimentaire() {
-        return tamponHabitudeAlimentaire;
-    }
-
-    public void setTamponHabitudeAlimentaire(Map<Consommation, TypeHabitude> tamponHabitudeAlimentaire) {
-        this.tamponHabitudeAlimentaire = tamponHabitudeAlimentaire;
-    }
-
     public TypeHabitude getTypeHabitude() {
         return typeHabitude;
     }
@@ -729,14 +862,6 @@ public class ConsultationBean implements Serializable {
 
     public void setHabitudeAlimentaireServices(Habitude_alimentaireDaoBeanLocal habitudeAlimentaireServices) {
         this.habitudeAlimentaireServices = habitudeAlimentaireServices;
-    }
-
-    public Suivi getSuivi() {
-        return suivi;
-    }
-
-    public void setSuivi(Suivi suivi) {
-        this.suivi = suivi;
     }
 
     public Consultation getConsultation() {
@@ -755,13 +880,6 @@ public class ConsultationBean implements Serializable {
         this.ordonnance = ordonnance;
     }
 
-    public SuiviSessionBeanLocal getSuiviServices() {
-        return suiviServices;
-    }
-
-    public void setSuiviServices(SuiviSessionBeanLocal suiviServices) {
-        this.suiviServices = suiviServices;
-    }
 
     public OrdonnanceSessionBeanLocal getOrdonnanceServices() {
         return ordonnanceServices;
@@ -811,13 +929,6 @@ public class ConsultationBean implements Serializable {
         this.traitementListe = traitementListe;
     }
 
-    public Map<Consommation, TypeHabitude> getTamponHabitudeAlimentaireTemporaire() {
-        return tamponHabitudeAlimentaireTemporaire;
-    }
-
-    public void setTamponHabitudeAlimentaireTemporaire(Map<Consommation, TypeHabitude> tamponHabitudeAlimentaireTemporaire) {
-        this.tamponHabitudeAlimentaireTemporaire = tamponHabitudeAlimentaireTemporaire;
-    }
 
     public List<Pathologie> getListePathologieTampon() {
         return listePathologieTampon;
@@ -922,5 +1033,159 @@ public class ConsultationBean implements Serializable {
     public void setDisable(boolean disable) {
         this.disable = disable;
     }
+
+    public ExamenClinique getExamentClinique() {
+        return examentClinique;
+    }
+
+    public void setExamentClinique(ExamenClinique examentClinique) {
+        this.examentClinique = examentClinique;
+    }
+
+    public ExamenParaclinique getExamenParaclinique() {
+        return examenParaclinique;
+    }
+
+    public void setExamenParaclinique(ExamenParaclinique examenParaclinique) {
+        this.examenParaclinique = examenParaclinique;
+    }
+
+    public Diagnostique getDiagnostique() {
+        return diagnostique;
+    }
+
+    public void setDiagnostique(Diagnostique diagnostique) {
+        this.diagnostique = diagnostique;
+    }
+
+    public ParacliniqueConsultation getParacliniqueConsultation() {
+        return paracliniqueConsultation;
+    }
+
+    public void setParacliniqueConsultation(ParacliniqueConsultation paracliniqueConsultation) {
+        this.paracliniqueConsultation = paracliniqueConsultation;
+    }
+
+    public ParacliniqueConsultationId getParaconsultationId() {
+        return paraconsultationId;
+    }
+
+    public void setParaconsultationId(ParacliniqueConsultationId paraconsultationId) {
+        this.paraconsultationId = paraconsultationId;
+    }
+
+    public List<Diagnostique> getDiagnostiqueListe() {
+        return diagnostiqueListe;
+    }
+
+    public void setDiagnostiqueListe(List<Diagnostique> diagnostiqueListe) {
+        this.diagnostiqueListe = diagnostiqueListe;
+    }
+
+    public List<ExamenParaclinique> getExamenParacliniqueListe() {
+        return examenParacliniqueListe;
+    }
+
+    public void setExamenParacliniqueListe(List<ExamenParaclinique> examenParacliniqueListe) {
+        this.examenParacliniqueListe = examenParacliniqueListe;
+    }
+
+    public DiagnostiqueSessionBeanLocal getDiagnostiqueServices() {
+        return diagnostiqueServices;
+    }
+
+    public void setDiagnostiqueServices(DiagnostiqueSessionBeanLocal diagnostiqueServices) {
+        this.diagnostiqueServices = diagnostiqueServices;
+    }
+
+    public ExamenCliniqueSessionBeanLocal getExamenCliniqueServices() {
+        return examenCliniqueServices;
+    }
+
+    public void setExamenCliniqueServices(ExamenCliniqueSessionBeanLocal examenCliniqueServices) {
+        this.examenCliniqueServices = examenCliniqueServices;
+    }
+
+    public ExamenParacliniqueSessionBeanLocal getExamentParacliniqueServices() {
+        return examentParacliniqueServices;
+    }
+
+    public void setExamentParacliniqueServices(ExamenParacliniqueSessionBeanLocal examentParacliniqueServices) {
+        this.examentParacliniqueServices = examentParacliniqueServices;
+    }
+
+    public ParacliniqueConsultationSessionBeanLocal getParacliniqueConsultationServices() {
+        return paracliniqueConsultationServices;
+    }
+
+    public void setParacliniqueConsultationServices(ParacliniqueConsultationSessionBeanLocal paracliniqueConsultationServices) {
+        this.paracliniqueConsultationServices = paracliniqueConsultationServices;
+    }
+
+    public List<ParacliniqueConsultation> getParacliniqueConsultationTamponListe() {
+        return paracliniqueConsultationTamponListe;
+    }
+
+    public void setParacliniqueConsultationTamponListe(List<ParacliniqueConsultation> paracliniqueConsultationTamponListe) {
+        this.paracliniqueConsultationTamponListe = paracliniqueConsultationTamponListe;
+    }
+
+    public List<ExamenParaclinique> getExamenParacliniqueListe2() {
+        return examentParacliniqueServices.getAll("label", true);
+    }
+
+    public void setExamenParacliniqueListe2(List<ExamenParaclinique> examenParacliniqueListe2) {
+        this.examenParacliniqueListe2 = examenParacliniqueListe2;
+    }
+
+    public List<ClasseTherapeutique> getClasseTherapeutiqueListe() {
+        return classeTherapeutiqueServices.getAll("label", true);
+    }
+
+    public void setClasseTherapeutiqueListe(List<ClasseTherapeutique> classeTherapeutiqueListe) {
+        this.classeTherapeutiqueListe = classeTherapeutiqueListe;
+    }
+
+    public ClasseTheurapetiqueServiceBeanLocal getClasseTherapeutiqueServices() {
+        return classeTherapeutiqueServices;
+    }
+
+    public void setClasseTherapeutiqueServices(ClasseTheurapetiqueServiceBeanLocal classeTherapeutiqueServices) {
+        this.classeTherapeutiqueServices = classeTherapeutiqueServices;
+    }
+
+    public Integer getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(Integer nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTempsHabitude() {
+        return tempsHabitude;
+    }
+
+    public void setTempsHabitude(String tempsHabitude) {
+        this.tempsHabitude = tempsHabitude;
+    }
+
+    public List<Habitude_alimentaire> getTamponHabitudeAlimentaire() {
+        return tamponHabitudeAlimentaire;
+    }
+
+    public void setTamponHabitudeAlimentaire(List<Habitude_alimentaire> tamponHabitudeAlimentaire) {
+        this.tamponHabitudeAlimentaire = tamponHabitudeAlimentaire;
+    }
+
+    public List<Habitude_alimentaire> getTamponHabitudeAlimentaireTemporaire() {
+        return tamponHabitudeAlimentaireTemporaire;
+    }
+
+    public void setTamponHabitudeAlimentaireTemporaire(List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire) {
+        this.tamponHabitudeAlimentaireTemporaire = tamponHabitudeAlimentaireTemporaire;
+    }
+    
+    
 
 }

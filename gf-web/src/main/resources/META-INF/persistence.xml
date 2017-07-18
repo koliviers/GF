@@ -7,14 +7,17 @@
     <class>com.kol.gf.entities.Consommation</class>
     <class>com.kol.gf.entities.Consultation</class>
     <class>com.kol.gf.entities.Deces</class>
+    <class>com.kol.gf.entities.Diagnostique</class>
+    <class>com.kol.gf.entities.ExamenClinique</class>
+    <class>com.kol.gf.entities.ExamenParaclinique</class>
     <class>com.kol.gf.entities.Habitude_alimentaire</class>
     <class>com.kol.gf.entities.Intervenant</class>
     <class>com.kol.gf.entities.Ordonnance</class>
+    <class>com.kol.gf.entities.ParacliniqueConsultation</class>
     <class>com.kol.gf.entities.Pathologie</class>
     <class>com.kol.gf.entities.Patient</class>
     <class>com.kol.gf.entities.RendezVous</class>
     <class>com.kol.gf.entities.Services</class>
-    <class>com.kol.gf.entities.Suivi</class>
     <class>com.kol.gf.entities.Traitement</class>
     <class>com.kol.gf.entities.TypeConsommation</class>
     <class>com.kol.gf.entities.TypeHabitude</class>

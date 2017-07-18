@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miki.webapp.journal.utils;
+package com.kol.gf.service;
 
-import com.kol.gf.entities.ExamenClinique;
+import com.kol.gf.entities.Diagnostique;
 import com.miki.webapp.core.Service.BaseServiceBean;
 import java.io.Serializable;
 import javax.ejb.Local;
@@ -15,6 +15,6 @@ import javax.ejb.Local;
  * @author anonymousghost
  */
 @Local
-public interface ExamenCliniqueSessionBeanLocal extends BaseServiceBean<ExamenClinique, Long>{
+public interface DiagnostiqueSessionBeanLocal extends BaseServiceBean<Diagnostique, Long>{
     
 }

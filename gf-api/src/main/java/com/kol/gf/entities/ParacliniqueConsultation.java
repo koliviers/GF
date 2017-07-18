@@ -33,6 +33,17 @@ public class ParacliniqueConsultation implements Serializable{
     @JoinColumn(name = "id_examenParaclinique", nullable = false, insertable = false, updatable = false)
     private ExamenParaclinique examen;
 
+    public ParacliniqueConsultation() {
+    }
+    
+    public ParacliniqueConsultation(ParacliniqueConsultationId id, Consultation consultation, ExamenParaclinique examen) {
+        this.id = id;
+        this.consultation = consultation;
+        this.examen = examen;
+    }
+    
+    
+
     public ParacliniqueConsultationId getId() {
         return id;
     }

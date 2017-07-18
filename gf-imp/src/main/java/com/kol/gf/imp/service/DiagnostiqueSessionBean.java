@@ -5,10 +5,9 @@
  */
 package com.kol.gf.imp.service;
 
-
-import com.kol.gf.dao.bean.ISuiviDAO;
-import com.kol.gf.entities.Suivi;
-import com.kol.gf.service.SuiviSessionBeanLocal;
+import com.kol.gf.dao.bean.IDiagnostique;
+import com.kol.gf.entities.Diagnostique;
+import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
 import javax.ejb.EJB;
@@ -19,15 +18,15 @@ import javax.ejb.Stateless;
  * @author anonymousghost
  */
 @Stateless
-public class SuiviSessionBean extends BaseServiceBeanImpl<Suivi, Long> implements SuiviSessionBeanLocal {
-    
+public class DiagnostiqueSessionBean extends BaseServiceBeanImpl<Diagnostique, Long> implements DiagnostiqueSessionBeanLocal {
+
     @EJB
-    private ISuiviDAO dao;
+    private IDiagnostique dao;
 
     @Override
-    protected BaseDaoBean<Suivi, Long> getDao() {
-       return dao;
+    protected BaseDaoBean<Diagnostique, Long> getDao() {
+        return dao;
     }
-
-   
+    
+    
 }

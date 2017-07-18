@@ -61,13 +61,28 @@ public class Patient implements Serializable {
 
     @Column(name = "adresse", nullable = true)
     private String adresse;
+    
+     @Column(name = "taille", nullable = true)
+    private double taille;
+
+    @Column(name = "poids", nullable = true)
+    private double poids;
+
+    @Column(name = "tourtaille", nullable = true)
+    private double tourtaille;
+    
+    @Column(name = "tensiondroit", nullable = true)
+    private double tensiondroit;
+
+    @Column(name = "tension", nullable = true)
+    private double tension;
 
 
 
     public Patient() {
     }
 
-    public Patient(String nomPatient, String prenomPatient, String codePatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse) {
+    public Patient(String nomPatient, String prenomPatient, String codePatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse, double taille, double poids, double tourtaille, double tensiondroit, double tension) {
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
         this.codePatient = codePatient;
@@ -77,7 +92,14 @@ public class Patient implements Serializable {
         this.civilite = civilite;
         this.profession = profession;
         this.adresse = adresse;
+        this.taille = taille;
+        this.poids = poids;
+        this.tourtaille = tourtaille;
+        this.tensiondroit = tensiondroit;
+        this.tension = tension;
     }
+
+   
 
 
 
@@ -161,6 +183,46 @@ public class Patient implements Serializable {
     public void setCodePatient(String codePatient) {
         this.codePatient = codePatient;
     }
+
+    public double getTaille() {
+        return taille;
+    }
+
+    public void setTaille(double taille) {
+        this.taille = taille;
+    }
+
+    public double getPoids() {
+        return poids;
+    }
+
+    public void setPoids(double poids) {
+        this.poids = poids;
+    }
+
+    public double getTourtaille() {
+        return tourtaille;
+    }
+
+    public void setTourtaille(double tourtaille) {
+        this.tourtaille = tourtaille;
+    }
+
+    public double getTensiondroit() {
+        return tensiondroit;
+    }
+
+    public void setTensiondroit(double tensiondroit) {
+        this.tensiondroit = tensiondroit;
+    }
+
+    public double getTension() {
+        return tension;
+    }
+
+    public void setTension(double tension) {
+        this.tension = tension;
+    }
     
     
 
@@ -191,9 +253,9 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tension=" + tension + '}';
     }
 
-   
+    
   
 }

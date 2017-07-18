@@ -72,13 +72,12 @@ public class Diagnostique implements Serializable{
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
     }
-    
-    
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.label);
         return hash;
     }
 
@@ -94,11 +93,18 @@ public class Diagnostique implements Serializable{
             return false;
         }
         final Diagnostique other = (Diagnostique) obj;
+        if (!Objects.equals(this.label, other.label)) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
     }
+    
+    
+
+    
 
     @Override
     public String toString() {

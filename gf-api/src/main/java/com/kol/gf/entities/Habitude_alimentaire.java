@@ -109,13 +109,13 @@ public class Habitude_alimentaire implements Serializable{
     public void setType_habitude(TypeHabitude type_habitude) {
         this.type_habitude = type_habitude;
     }
-    
-    
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.id);
+        int hash = 5;
+        hash = 73 * hash + Objects.hashCode(this.id);
+        hash = 73 * hash + Objects.hashCode(this.consommation);
+        hash = 73 * hash + Objects.hashCode(this.type_habitude);
         return hash;
     }
 
@@ -134,8 +134,18 @@ public class Habitude_alimentaire implements Serializable{
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
+        if (!Objects.equals(this.consommation, other.consommation)) {
+            return false;
+        }
+        if (!Objects.equals(this.type_habitude, other.type_habitude)) {
+            return false;
+        }
         return true;
     }
+    
+    
+
+    
 
     @Override
     public String toString() {
