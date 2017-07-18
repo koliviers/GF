@@ -73,7 +73,20 @@
                                             <f:selectItem itemLabel="Fiancée" itemValue="Fiancé(e)" />
                                         </p:selectOneRadio>
 
+                                        <p:outputLabel for="pemabdo" value="Perimetre abdominal"/>
+                                        <p:inputText id="pemabdo" value="#{patientBean.patient.tourtaille}"/>
 
+                                        <p:outputLabel for="poid" value="Poids"/>
+                                        <p:inputText id="poid" value="#{patientBean.patient.poids}"/>
+                                        
+                                        <p:outputLabel for="tens" value="Tension bras gauche"/>
+                                        <p:inputNumber id="tens" value="#{patientBean.patient.tension}" decimalSeparator="," decimalPlaces=""/>
+
+                                         <p:outputLabel for="tensd" value="Tension bras droit"/>
+                                         <p:inputNumber id="tensd" value="#{patientBean.patient.tensiondroit}" />
+
+                                        
+                                        
                                     </p:panelGrid>
                                     
                                     
