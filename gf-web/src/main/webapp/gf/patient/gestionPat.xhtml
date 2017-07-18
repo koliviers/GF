@@ -34,6 +34,9 @@
                                     
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
+                                        <p:outputLabel  value="Code patient"/>
+                                        <p:inputText  value="#{patientBean.patient.codePatient}"/>
+                                        
                                         <p:outputLabel for="nompat" value="Nom"/>
                                         <p:inputText id="nompat" value="#{patientBean.patient.nomPatient}"/>
 
@@ -117,10 +120,16 @@
                                     </p:outputPanel>
                                 </f:facet>
 
+                                <p:column headerText="Code " sortBy="#{int.codePatient}"
+                                          filterMatchMode="contains" filterBy="#{int.codePatient}">
+                                    <h:outputText value="#{int.codePatient}" />
+                                </p:column>
+                                
                                 <p:column headerText="Nom" sortBy="#{int.nomPatient}"
                                           filterMatchMode="contains" filterBy="#{int.nomPatient}">
                                     <h:outputText value="#{int.nomPatient}" />
                                 </p:column>
+                                
                                 <p:column headerText="Prenom" sortBy="#{int.prenomPatient}"
                                           filterMatchMode="contains" filterBy="#{int.prenomPatient}">
                                     <h:outputText value="#{int.prenomPatient}" />

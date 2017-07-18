@@ -75,6 +75,8 @@ import javax.transaction.UserTransaction;
 public class ConsultationBean implements Serializable {
 
     private Pathologie pathologie;
+    
+    private Patient patient;
 
     private boolean disable;
 
@@ -209,6 +211,7 @@ public class ConsultationBean implements Serializable {
         consommation = new Consommation();
         rdv = new RendezVous();
         rdvTampon = new RendezVous();
+        patient = new Patient();
 
         listePatient = new ArrayList<>();
         listePathologie = new ArrayList<>();
@@ -567,6 +570,7 @@ public class ConsultationBean implements Serializable {
     public void annulerConsultation() {
         pathologie = new Pathologie();
         consommation = new Consommation();
+        patient = new Patient();
 
         typecons = new TypeConsommation();
         listeTypeHabitude = new ArrayList<>();
@@ -593,6 +597,14 @@ public class ConsultationBean implements Serializable {
         paracliniqueConsultationTamponListe = new ArrayList<>();
 
         disable = false;
+    }
+    
+    public void listenerPatient(){
+        if(consultation.getPatient() == null){
+            patient = new Patient();
+        }else{
+            patient = consultation.getPatient();
+        }
     }
 
     public void ajouterHabitudeAlimentaire() {
@@ -1184,6 +1196,14 @@ public class ConsultationBean implements Serializable {
 
     public void setTamponHabitudeAlimentaireTemporaire(List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire) {
         this.tamponHabitudeAlimentaireTemporaire = tamponHabitudeAlimentaireTemporaire;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
     
     

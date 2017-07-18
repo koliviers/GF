@@ -18,418 +18,460 @@
             <p:growl id="growl" showDetail="true" sticky="true" />
         </h:form>
 
-        <div class="ui-fluid">
-            <div class="ui-g">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-lg-8">
+                <div class="ui-g">
 
-                <div class="ui-g-12">
-                    <div class="card card-w-title">
-                        <h:form id="patform">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <center> <h1>Consultation</h1> </center>
+                            
+                            <h:form id="patform">
+                                <p:wizard flowListener="#{userWizard.onFlowProcess}" widgetVar="accordPanel">
+                                    <h:inputHidden value="#{consBean.consultation.id}"/>
+                                    <h:inputHidden value="#{consBean.examentClinique.id}" />
 
+                                    <p:tab id="ant" title="Antecedant">
 
+                                        <!--<p:panel style="height: 300px">-->
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
-                            <p:wizard flowListener="#{userWizard.onFlowProcess}" widgetVar="accordPanel">
-                                <h:inputHidden value="#{consBean.consultation.id}"/>
-                                <h:inputHidden value="#{consBean.examentClinique.id}" />
+                                            <p:outputLabel  value="Patient" />
+                                            <p:selectOneMenu   value="#{consBean.consultation.patient}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="pati" value="#{consBean.listePatient}" itemValue="#{pati}" itemLabel="#{pati.nomPatient} #{pati.prenomPatient}"/> 
+                                                <p:ajax update=":patienForm" listener="#{consBean.listenerPatient}"/>
+                                            </p:selectOneMenu>
 
-                                <p:tab id="ant" title="Antecedant">
+                                            <p:outputLabel for="chir" value="Antecedant Personelle Chirugicaux"/>
+                                            <p:inputTextarea id="chir" value="#{consBean.consultation.antChirugicaux}"/>
 
-                                    <!--<p:panel style="height: 300px">-->
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-                                        
-                                        <p:outputLabel  value="Patient" />
-                                        <p:selectOneMenu   value="#{consBean.consultation.patient}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="pati" value="#{consBean.listePatient}" itemValue="#{pati}" itemLabel="#{pati.nomPatient} #{pati.prenomPatient}"/>  
-                                        </p:selectOneMenu>
-                                        
-                                        <p:outputLabel for="chir" value="Antecedant Personelle Chirugicaux"/>
-                                        <p:inputTextarea id="chir" value="#{consBean.consultation.antChirugicaux}"/>
+                                            <p:outputLabel for="med" value="Antecedant Personelle Medicaux"/>
+                                            <p:inputTextarea id="med" value="#{consBean.consultation.antMedicaux}"/>
 
-                                        <p:outputLabel for="med" value="Antecedant Personelle Medicaux"/>
-                                        <p:inputTextarea id="med" value="#{consBean.consultation.antMedicaux}"/>
+                                        </p:panelGrid>
 
-                                    </p:panelGrid>
+                                        <br/>
 
-                                    <br/>
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+                                            <p:outputLabel  value="Antecedant familiale"/>
 
-                                        <p:outputLabel  value="Antecedant familiale"/>
+                                            <p:selectOneMenu id="pathlist" style="margin-bottom:10px;" value="#{consBean.pathologie}"   converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{consBean.listePathologie}" var="rpat" itemLabel="#{rpat.nomPathologie}" itemValue="#{rpat}"/>
+                                            </p:selectOneMenu>
+                                        </p:panelGrid>
 
-                                        <p:selectOneMenu id="pathlist" style="margin-bottom:10px;" value="#{consBean.pathologie}"   converter="omnifaces.SelectItemsConverter">
-                                            <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
-                                            <f:selectItems value="#{consBean.listePathologie}" var="rpat" itemLabel="#{rpat.nomPathologie}" itemValue="#{rpat}"/>
-                                        </p:selectOneMenu>
-                                    </p:panelGrid>
+                                        <br/>
 
-                                    <br/>
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterAntecedentFamilial()}" style="width: auto;" update="@form:pathlist,@form:pathologieTamponId"/></center>
 
-                                    <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterAntecedentFamilial()}" style="width: auto;" update="@form:pathlist,@form:pathologieTamponId"/></center>
+                                        <br/>
 
-                                    <br/>
+                                        <p:dataTable value="#{consBean.listePathologieTampon}" var="pa" id="pathologieTamponId" emptyMessage="Liste vide" >
 
-                                    <p:dataTable value="#{consBean.listePathologieTampon}" var="pa" id="pathologieTamponId" emptyMessage="Liste vide" >
-
-                                        <p:column headerText="Pathologie" >
-                                            <center><h:outputText value="#{pa.nomPathologie}"/></center>
-                                        </p:column>
-
-                                        <p:column headerText="Action" >
-                                            <center>
-                                                <p:commandButton  value="Supprimer" action="#{consBean.supprimerAntecedentFamilial(pa)}" update="@form:pathologieTamponId" styleClass="red-btn" style="width: auto;"/>
-                                            </center>
-                                        </p:column>
-
-                                    </p:dataTable>
-
-                                    <br/>
-                                    <br/>
-                                    <!--</p:panel>-->
-
-
-                                </p:tab>
-
-
-                                <p:tab id="halimentaire" title="Habitude allimentaire">
-
-                                    <!--<p:panel style="height: 500px">-->
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel for="spt" value="Sport effectué" />
-                                        <p:selectOneRadio  id="spt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.consultation.sport}">
-                                            <f:selectItem itemLabel="Intense(7/7j)" itemValue="normal"  />
-                                            <f:selectItem itemLabel="Moderé(5/7j)" itemValue="Aucun" />   
-                                            <f:selectItem itemLabel="Faible (3/7j" itemValue="Aucun" /> 
-                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
-                                        </p:selectOneRadio>
-
-                                        <p:outputLabel for="frt" value="Fruit / Legume Consommée" />
-                                        <p:selectOneRadio  id="frt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.consultation.fruit}">
-                                            <f:selectItem itemLabel="Normal(5/j)" itemValue="normal"  />
-                                            <f:selectItem itemLabel="Moyen (3/j)" itemValue="Moyen" />
-                                            <f:selectItem itemLabel="faible (1/j)" itemValue="faible" />
-                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
-                                        </p:selectOneRadio>
-
-                                        <p:outputLabel for="typcsl" value="Type consommation" />
-                                        <p:selectOneMenu  id="typcsl" value="#{consBean.typecons}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="tpc" value="#{consBean.liteType}" itemValue="#{tpc}" itemLabel="#{tpc.label}"/>  
-                                            <p:ajax update="@form:cns,@form:typhb" />
-                                        </p:selectOneMenu>
-
-                                        <p:outputLabel for="cns" value="Consommation" />
-                                        <p:selectOneMenu  id="cns" value="#{consBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner une consommation" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="cs" value="#{consBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
-                                        </p:selectOneMenu>
-
-                                        <p:outputLabel for="typhb" value="Quantité" />
-                                        <p:selectOneMenu  id="typhb" value="#{consBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner une quantité" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="tph" value="#{consBean.listeTypeHabitude}" itemValue="#{tph}" itemLabel="#{tph.label}"/>                              
-                                        </p:selectOneMenu>
-
-                                        <p:outputLabel  value="Nombre" />
-                                        <p:inputNumber value="#{consBean.nombre}" decimalPlaces="0" emptyValue="0" decimalSeparator="" />
-
-                                        <p:outputLabel  value="Temps de consommation" />
-                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.tempsHabitude}">
-                                            <f:selectItem itemLabel="Jour" itemValue="Jour"  />
-                                            <f:selectItem itemLabel="Semaine" itemValue="Moyen" />
-                                            <f:selectItem itemLabel="Mois" itemValue="Semaine" />
-                                            <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
-                                        </p:selectOneRadio>
-
-
-                                    </p:panelGrid> 
-
-                                    <br/>
-
-                                    <center>
-                                        <p:commandButton value="Ajouter" action="#{consBean.ajouterHabitudeAlimentaire()}" style="width: auto;" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
-                                    </center>
-
-
-                                    <div class="ui-g-12">
-
-                                        <p:dataTable value="#{consBean.tamponHabitudeAlimentaire}" var="htal" id="tamponId" emptyMessage="Liste vide">
-                                            <p:column headerText="Type consommation" >
-                                                <h:outputText value="#{htal.consommation.type_consommation.label}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Consommation" >
-                                                <h:outputText value="#{htal.consommation.label}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Nombre" >
-                                                <h:outputText value="#{htal.quantite}" />
-                                            </p:column>
-
-                                            <p:column headerText="Quantité" >
-                                                <h:outputText value="#{htal.type_habitude.label}">
-                                                    <f:converter converterId="typeHabitudeConverterId"/>
-                                                </h:outputText>
-                                            </p:column>
-
-
-                                            <p:column headerText="Temps Conso." >
-                                                <h:outputText value="#{htal.temps}"/>
+                                            <p:column headerText="Pathologie" >
+                                                <center><h:outputText value="#{pa.nomPathologie}"/></center>
                                             </p:column>
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerHabitudeAlimentaire(htal)}" update="@form:tamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerAntecedentFamilial(pa)}" update="@form:pathologieTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                </center>
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                        <br/>
+                                        <br/>
+                                        <!--</p:panel>-->
+
+
+                                    </p:tab>
+
+
+                                    <p:tab id="halimentaire" title="Habitude allimentaire">
+
+                                        <!--<p:panel style="height: 500px">-->
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel for="spt" value="Sport effectué" />
+                                            <p:selectOneRadio  id="spt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.consultation.sport}">
+                                                <f:selectItem itemLabel="Intense(7/7j)" itemValue="normal"  />
+                                                <f:selectItem itemLabel="Moderé(5/7j)" itemValue="Aucun" />   
+                                                <f:selectItem itemLabel="Faible (3/7j" itemValue="Aucun" /> 
+                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
+                                            </p:selectOneRadio>
+
+                                            <p:outputLabel for="frt" value="Fruit / Legume Consommée" />
+                                            <p:selectOneRadio  id="frt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.consultation.fruit}">
+                                                <f:selectItem itemLabel="Normal(5/j)" itemValue="normal"  />
+                                                <f:selectItem itemLabel="Moyen (3/j)" itemValue="Moyen" />
+                                                <f:selectItem itemLabel="faible (1/j)" itemValue="faible" />
+                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
+                                            </p:selectOneRadio>
+
+                                            <p:outputLabel for="typcsl" value="Type consommation" />
+                                            <p:selectOneMenu  id="typcsl" value="#{consBean.typecons}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tpc" value="#{consBean.liteType}" itemValue="#{tpc}" itemLabel="#{tpc.label}"/>  
+                                                <p:ajax update="@form:cns,@form:typhb" />
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel for="cns" value="Consommation" />
+                                            <p:selectOneMenu  id="cns" value="#{consBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une consommation" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="cs" value="#{consBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel for="typhb" value="Quantité" />
+                                            <p:selectOneMenu  id="typhb" value="#{consBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une quantité" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tph" value="#{consBean.listeTypeHabitude}" itemValue="#{tph}" itemLabel="#{tph.label}"/>                              
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel  value="Nombre" />
+                                            <p:inputNumber value="#{consBean.nombre}" decimalPlaces="0" emptyValue="0" decimalSeparator="" />
+
+                                            <p:outputLabel  value="Temps de consommation" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.tempsHabitude}">
+                                                <f:selectItem itemLabel="Jour" itemValue="Jour"  />
+                                                <f:selectItem itemLabel="Semaine" itemValue="Moyen" />
+                                                <f:selectItem itemLabel="Mois" itemValue="Semaine" />
+                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
+                                            </p:selectOneRadio>
+
+
+                                        </p:panelGrid> 
+
+                                        <br/>
+
+                                        <center>
+                                            <p:commandButton value="Ajouter" action="#{consBean.ajouterHabitudeAlimentaire()}" style="width: auto;" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
+                                        </center>
+
+
+                                        <div class="ui-g-12">
+
+                                            <p:dataTable value="#{consBean.tamponHabitudeAlimentaire}" var="htal" id="tamponId" emptyMessage="Liste vide">
+                                                <p:column headerText="Type consommation" >
+                                                    <h:outputText value="#{htal.consommation.type_consommation.label}"/>
+                                                </p:column>
+
+                                                <p:column headerText="Consommation" >
+                                                    <h:outputText value="#{htal.consommation.label}"/>
+                                                </p:column>
+
+                                                <p:column headerText="Nombre" >
+                                                    <h:outputText value="#{htal.quantite}" />
+                                                </p:column>
+
+                                                <p:column headerText="Quantité" >
+                                                    <h:outputText value="#{htal.type_habitude.label}">
+                                                        <f:converter converterId="typeHabitudeConverterId"/>
+                                                    </h:outputText>
+                                                </p:column>
+
+
+                                                <p:column headerText="Temps Conso." >
+                                                    <h:outputText value="#{htal.temps}"/>
+                                                </p:column>
+
+                                                <p:column headerText="Action" >
+                                                    <center>
+                                                        <p:commandButton  value="Supprimer" action="#{consBean.supprimerHabitudeAlimentaire(htal)}" update="@form:tamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    </center>
+                                                </p:column>
+                                            </p:dataTable>
+
+                                        </div>
+
+                                        <!--</p:panel>-->
+
+                                        <br/>
+                                        <br/>
+
+                                    </p:tab>
+
+                                    <p:tab id="examClinique" title="Examen clinique">
+
+                                        <!--<p:panel style="height: 400px">-->
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Signe clinique" />
+                                            <p:inputTextarea value="#{consBean.examentClinique.signe_clinique}" />
+
+                                            <p:outputLabel  value="Etat general" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_general}">
+                                                <f:selectItem itemLabel="Bon" itemValue="Bon"  />
+                                                <f:selectItem itemLabel="Altéré" itemValue="Altéré" />                                           
+                                            </p:selectOneRadio>
+
+
+                                            <p:outputLabel  value="Etat de conscience" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_consce}">
+                                                <f:selectItem itemLabel="Mauvais" itemValue="Mauvais"  />
+                                                <f:selectItem itemLabel="Altéré" itemValue="Altéré" />                                           
+                                            </p:selectOneRadio>
+
+
+                                            <p:outputLabel  value="Palure" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.palure}">
+                                                <f:selectItem itemLabel="Moyenne" itemValue="Moyenne"  />
+                                                <f:selectItem itemLabel="Sévère" itemValue="Sévère" />                                           
+                                            </p:selectOneRadio>
+
+
+                                            <p:outputLabel  value="Etat d'hydratation" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_hydratation}">
+                                                <f:selectItem itemLabel="Bon" itemValue="Bon"  />
+                                                <f:selectItem itemLabel="Mauvais" itemValue="Mauvais" />                                           
+                                            </p:selectOneRadio>
+
+                                        </p:panelGrid>
+
+                                        <br/>
+                                        <br/>
+
+                                    </p:tab>
+
+
+                                    <p:tab id="examParaClinique" title="Examen Paraclinique">
+
+                                        <!--<p:panel style="height: 400px">-->
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Examens" />
+
+                                        </p:panelGrid>
+
+                                        <p:selectManyCheckbox value="#{consBean.examenParacliniqueListe}" layout="responsive" columns="3" converter="omnifaces.SelectItemsIndexConverter" styleClass="form-group">
+                                            <f:selectItems value="#{consBean.examenParacliniqueListe2}" var="grp" itemLabel="#{grp.label}" itemValue="#{grp}" />
+                                        </p:selectManyCheckbox>
+
+                                        <br/>
+                                        <br/>
+
+                                    </p:tab>
+
+                                    <p:tab id="diagn" title="Diagnostique">
+
+                                        <!--<p:panel style="height: 400px">-->
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Diagnostique"/>
+
+                                            <p:selectOneMenu id="pathlist2" style="margin-bottom:10px;" value="#{consBean.diagnostique.label}" >
+                                                <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{consBean.listePathologie}" var="rpat2" itemLabel="#{rpat2.nomPathologie}" itemValue="#{rpat2.nomPathologie}"/>
+                                            </p:selectOneMenu>
+                                        </p:panelGrid>
+
+                                        <br/>
+
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterDiagnostique()}" style="width: auto;" update="@form:pathlist2,@form:diagnostiqueTamponId"/></center>
+
+                                        <br/>
+
+                                        <p:dataTable value="#{consBean.diagnostiqueListe}" var="dg" id="diagnostiqueTamponId" emptyMessage="Liste vide" >
+
+                                            <p:column headerText="Pathologie" >
+                                                <center><h:outputText value="#{dg.label}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Action" >
+                                                <center>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerDiagnostique(dg)}" update="@form:diagnostiqueTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                </center>
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                        <br/>
+                                        <br/>
+
+                                    </p:tab>
+
+                                    <p:tab id="traitem" title="Traitement">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Traitement medicamenteux" />
+                                            <p:selectOneMenu   value="#{consBean.consultation.traitementMedicamenteurx}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une classe" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tr" value="#{consBean.classeTherapeutiqueListe}" itemValue="#{tr}" itemLabel="#{tr.label}"/>                              
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel  value="Traitement non medicamenteux" />
+                                            <p:inputTextarea value="#{consBean.consultation.traitementNomMedicamenteux}" />
+
+                                            <p:outputLabel  value="Intervenant" />
+                                            <p:selectOneMenu   value="#{consBean.consultation.intervenant}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner l'intervenant" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="intervn" value="#{consBean.intervenantListe}" itemValue="#{intervn}" itemLabel="#{intervn.nomIntervenant} #{intervn.prenomIntervenant}"/>                              
+                                            </p:selectOneMenu>
+                                        </p:panelGrid> 
+
+                                        <br/>
+                                        <br/>
+
+                                    </p:tab>
+
+                                    <p:tab id="rslt" title="Resultat">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Resultat"/>
+                                            <p:inputTextarea  value="#{consBean.consultation.detailConsultation}"/>
+
+                                        </p:panelGrid>
+
+                                        <br/>
+                                        <br/>
+
+
+                                    </p:tab>
+
+                                    <p:tab id="ordonn" title="Ordonnance">
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Medicament"/>
+                                            <p:inputText id="medoc" value="#{consBean.ordonnance.medicament}"/>
+
+                                            <p:outputLabel  value="Posologie"/>
+                                            <p:inputText id="poso" value="#{consBean.ordonnance.posologie}"/>
+
+                                            <p:outputLabel  value="Quantité"/>
+                                            <p:inputNumber id="poso2" value="#{consBean.ordonnance.quantite}"/>
+
+                                        </p:panelGrid>
+
+                                        <br/>
+
+                                        <center> <p:commandButton value="Ajouter" action="#{consBean.ajouterOrdonnance()}" style="width: auto;" update="@form:medoc,@form:poso,@form:ordonnanceTamponId"/></center>
+
+                                        <br/>
+
+                                        <p:dataTable value="#{consBean.ordonnanceListe}" var="ordo" id="ordonnanceTamponId" emptyMessage="Liste vide">
+
+                                            <h:inputHidden value="#{ordo.id}"/>
+
+                                            <p:column headerText="Medicament" >
+                                                <center><h:outputText value="#{ordo.medicament}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Posologie" >
+                                                <center><h:outputText value="#{ordo.posologie}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Quantité" >
+                                                <center><h:outputText value="#{ordo.quantite}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Action" >
+                                                <center>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerOrdonnance(ordo)}" update="@form:ordonnanceTamponId" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
                                         </p:dataTable>
 
-                                    </div>
+                                        <br/>
+                                        <br/>
 
-                                    <!--</p:panel>-->
 
-                                    <br/>
-                                    <br/>
+                                    </p:tab>
 
-                                </p:tab>
+                                    <p:tab id="rdv" title="Rendez-vous">
 
-                                <p:tab id="examClinique" title="Examen clinique">
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
 
-                                    <!--<p:panel style="height: 400px">-->
+                                            <h:outputText value="Motif" />
+                                            <p:inputTextarea value="#{consBean.rdv.motifRdv}" disabled="#{consBean.disable}"/>
 
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+                                            <h:outputText value="Date et heure" />
+                                            <p:calendar value="#{consBean.rdv.dateRdv}" disabled="#{consBean.disable}"  mask="true"  pattern="dd/MM/yyyy HH:mm"/>
 
-                                        <p:outputLabel  value="Signe clinique" />
-                                        <p:inputTextarea value="#{consBean.examentClinique.signe_clinique}" />
+                                        </p:panelGrid>   
 
-                                        <p:outputLabel  value="Etat general" />
-                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_general}">
-                                            <f:selectItem itemLabel="Bon" itemValue="Bon"  />
-                                            <f:selectItem itemLabel="Altéré" itemValue="Altéré" />                                           
-                                        </p:selectOneRadio>
+                                        <br/>
+                                        <br/>
 
+                                        <div class="ui-g-12 ui-md-6">
+                                            <center><p:commandButton value="Annuler" action="#{consBean.annulerConsultation()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                        </div>
 
-                                        <p:outputLabel  value="Etat de conscience" />
-                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_consce}">
-                                            <f:selectItem itemLabel="Mauvais" itemValue="Mauvais"  />
-                                            <f:selectItem itemLabel="Altéré" itemValue="Altéré" />                                           
-                                        </p:selectOneRadio>
+                                        <div class="ui-g-12 ui-md-6">
+                                            <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                        </div>
 
+                                        <br/>
+                                        <br/>
 
-                                        <p:outputLabel  value="Palure" />
-                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.palure}">
-                                            <f:selectItem itemLabel="Moyenne" itemValue="Moyenne"  />
-                                            <f:selectItem itemLabel="Sévère" itemValue="Sévère" />                                           
-                                        </p:selectOneRadio>
+                                    </p:tab>
 
+                                </p:wizard>
 
-                                        <p:outputLabel  value="Etat d'hydratation" />
-                                        <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.etat_hydratation}">
-                                            <f:selectItem itemLabel="Bon" itemValue="Bon"  />
-                                            <f:selectItem itemLabel="Mauvais" itemValue="Mauvais" />                                           
-                                        </p:selectOneRadio>
 
-                                    </p:panelGrid>
 
-                                    <br/>
-                                    <br/>
+                            </h:form>
+                        </div>
 
-                                </p:tab>
-
-
-                                <p:tab id="examParaClinique" title="Examen Paraclinique">
-
-                                    <!--<p:panel style="height: 400px">-->
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel  value="Examens" />
-
-                                    </p:panelGrid>
-
-                                    <p:selectManyCheckbox value="#{consBean.examenParacliniqueListe}" layout="responsive" columns="3" converter="omnifaces.SelectItemsIndexConverter" styleClass="form-group">
-                                        <f:selectItems value="#{consBean.examenParacliniqueListe2}" var="grp" itemLabel="#{grp.label}" itemValue="#{grp}" />
-                                    </p:selectManyCheckbox>
-
-                                    <br/>
-                                    <br/>
-
-                                </p:tab>
-
-                                <p:tab id="diagn" title="Diagnostique">
-
-                                    <!--<p:panel style="height: 400px">-->
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel  value="Diagnostique"/>
-
-                                        <p:selectOneMenu id="pathlist2" style="margin-bottom:10px;" value="#{consBean.diagnostique.label}" >
-                                            <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
-                                            <f:selectItems value="#{consBean.listePathologie}" var="rpat2" itemLabel="#{rpat2.nomPathologie}" itemValue="#{rpat2.nomPathologie}"/>
-                                        </p:selectOneMenu>
-                                    </p:panelGrid>
-
-                                    <br/>
-
-                                    <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterDiagnostique()}" style="width: auto;" update="@form:pathlist2,@form:diagnostiqueTamponId"/></center>
-
-                                    <br/>
-
-                                    <p:dataTable value="#{consBean.diagnostiqueListe}" var="dg" id="diagnostiqueTamponId" emptyMessage="Liste vide" >
-
-                                        <p:column headerText="Pathologie" >
-                                            <center><h:outputText value="#{dg.label}"/></center>
-                                        </p:column>
-
-                                        <p:column headerText="Action" >
-                                            <center>
-                                                <p:commandButton  value="Supprimer" action="#{consBean.supprimerDiagnostique(dg)}" update="@form:diagnostiqueTamponId" styleClass="red-btn" style="width: auto;"/>
-                                            </center>
-                                        </p:column>
-
-                                    </p:dataTable>
-
-                                    <br/>
-                                    <br/>
-
-                                </p:tab>
-
-                                <p:tab id="traitem" title="Traitement">
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel  value="Traitement medicamenteux" />
-                                        <p:selectOneMenu   value="#{consBean.consultation.traitementMedicamenteurx}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner une classe" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="tr" value="#{consBean.classeTherapeutiqueListe}" itemValue="#{tr}" itemLabel="#{tr.label}"/>                              
-                                        </p:selectOneMenu>
-
-                                        <p:outputLabel  value="Traitement non medicamenteux" />
-                                        <p:inputTextarea value="#{consBean.consultation.traitementNomMedicamenteux}" />
-
-                                        <p:outputLabel  value="Intervenant" />
-                                        <p:selectOneMenu   value="#{consBean.consultation.intervenant}" converter="omnifaces.SelectItemsIndexConverter">
-                                            <f:selectItem itemLabel="Selectionner l'intervenant" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems var="intervn" value="#{consBean.intervenantListe}" itemValue="#{intervn}" itemLabel="#{intervn.nomIntervenant} #{intervn.prenomIntervenant}"/>                              
-                                        </p:selectOneMenu>
-                                    </p:panelGrid> 
-
-                                    <br/>
-                                    <br/>
-
-                                </p:tab>
-
-                                <p:tab id="rslt" title="Resultat">
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel  value="Resultat"/>
-                                        <p:inputTextarea  value="#{consBean.consultation.detailConsultation}"/>
-
-                                    </p:panelGrid>
-
-                                    <br/>
-                                    <br/>
-
-
-                                </p:tab>
-
-                                <p:tab id="ordonn" title="Ordonnance">
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                        <p:outputLabel  value="Medicament"/>
-                                        <p:inputText id="medoc" value="#{consBean.ordonnance.medicament}"/>
-
-                                        <p:outputLabel  value="Posologie"/>
-                                        <p:inputText id="poso" value="#{consBean.ordonnance.posologie}"/>
-
-                                        <p:outputLabel  value="Quantité"/>
-                                        <p:inputNumber id="poso2" value="#{consBean.ordonnance.quantite}"/>
-
-                                    </p:panelGrid>
-
-                                    <br/>
-
-                                    <center> <p:commandButton value="Ajouter" action="#{consBean.ajouterOrdonnance()}" style="width: auto;" update="@form:medoc,@form:poso,@form:ordonnanceTamponId"/></center>
-
-                                    <br/>
-
-                                    <p:dataTable value="#{consBean.ordonnanceListe}" var="ordo" id="ordonnanceTamponId" emptyMessage="Liste vide">
-
-                                        <h:inputHidden value="#{ordo.id}"/>
-
-                                        <p:column headerText="Medicament" >
-                                            <center><h:outputText value="#{ordo.medicament}"/></center>
-                                        </p:column>
-
-                                        <p:column headerText="Posologie" >
-                                            <center><h:outputText value="#{ordo.posologie}"/></center>
-                                        </p:column>
-                                        
-                                        <p:column headerText="Quantité" >
-                                            <center><h:outputText value="#{ordo.quantite}"/></center>
-                                        </p:column>
-
-                                        <p:column headerText="Action" >
-                                            <center>
-                                                <p:commandButton  value="Supprimer" action="#{consBean.supprimerOrdonnance(ordo)}" update="@form:ordonnanceTamponId" styleClass="red-btn" style="width: auto;"/>
-                                            </center>
-                                        </p:column>
-                                    </p:dataTable>
-
-                                    <br/>
-                                    <br/>
-
-
-                                </p:tab>
-
-                                <p:tab id="rdv" title="Rendez-vous">
-
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" >
-
-                                        <h:outputText value="Motif" />
-                                        <p:inputTextarea value="#{consBean.rdv.motifRdv}" disabled="#{consBean.disable}"/>
-
-                                        <h:outputText value="Date et heure" />
-                                        <p:calendar value="#{consBean.rdv.dateRdv}" disabled="#{consBean.disable}"  mask="true"  pattern="dd/MM/yyyy HH:mm"/>
-
-                                    </p:panelGrid>   
-
-                                    <br/>
-                                    <br/>
-
-                                    <div class="ui-g-12 ui-md-6">
-                                        <center><p:commandButton value="Annuler" action="#{consBean.annulerConsultation()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
-                                    </div>
-
-                                    <div class="ui-g-12 ui-md-6">
-                                        <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
-                                    </div>
-
-                                    <br/>
-                                    <br/>
-
-                                </p:tab>
-
-                            </p:wizard>
-
-
-
-                        </h:form>
                     </div>
-                    
-                    <div class="card card-w-title">
-                        <center> <h1>Patient</h1> </center>
-                        
-                        <h:form>
-                            
-                        </h:form>
+
+                </div>
+            </div>
+
+            <div class="ui-g-12 ui-lg-4">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <center> <h1>Patient</h1> </center>
+
+                            <h:form id="patienForm">
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Nom"/>
+                                    <h:outputText value="#{consBean.patient.nomPatient}"/>
+                                    
+                                    <p:outputLabel value="Prenom"/>
+                                    <h:outputText value="#{consBean.patient.prenomPatient}"/>
+                                    
+                                    <p:outputLabel value="Sexe"/>
+                                    <h:outputText value="#{consBean.patient.sexe}"/>
+                                    
+                                    <p:outputLabel value="Profession"/>
+                                    <h:outputText value="#{consBean.patient.profession}"/>
+                                    
+                                    <p:outputLabel value="Date de naissance"/>
+                                    <h:outputText value="#{consBean.patient.date_naissance}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                    
+                                    <p:outputLabel value="Contact"/>
+                                    <h:outputText value="#{consBean.patient.contact}"/>
+                                    
+                                    <p:outputLabel value="Adresse"/>
+                                    <h:outputText value="#{consBean.patient.adresse}"/>
+                                    
+                                    <p:outputLabel value="Civilite"/>
+                                    <h:outputText value="#{consBean.patient.civilite}"/>
+                                </p:panelGrid>
+
+                            </h:form>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="ui-fluid">
+            <div class="ui-g">
                 <div class="ui-g-12">
 
                     <div class="card card-w-title">
@@ -464,9 +506,14 @@
                                 </p:column>
 
 
-                                <p:column headerText="Traitement" sortBy="#{int.traitement.label}"
-                                          filterMatchMode="contains" filterBy="#{int.traitement.label}">
-                                    <h:outputText value="#{int.traitement.label}" />
+                                <p:column headerText="Traitement Medic" sortBy="#{int.traitementMedicamenteurx.label}"
+                                          filterMatchMode="contains" filterBy="#{int.traitementMedicamenteurx.label}">
+                                    <h:outputText value="#{int.traitementMedicamenteurx.label}" />
+                                </p:column>
+
+                                <p:column headerText="Traitement Non Medic" sortBy="#{int.traitementNomMedicamenteux}"
+                                          filterMatchMode="contains" filterBy="#{int.traitementNomMedicamenteux}">
+                                    <h:outputText value="#{int.traitementNomMedicamenteux}" />
                                 </p:column>
 
                                 <p:column headerText="Detail" sortBy="#{int.detailConsultation}"
