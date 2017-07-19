@@ -16,5 +16,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface Habitude_alimentaireServiceBeanLocal extends BaseServiceBean<Habitude_alimentaire, Habitude_alimentaireId>{
-    
+    public void supprimerHabitudeAlimentaire(Habitude_alimentaireId id);
 }

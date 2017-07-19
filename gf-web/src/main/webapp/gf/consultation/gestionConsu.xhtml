@@ -25,7 +25,7 @@
                     <div class="ui-g-12">
                         <div class="card card-w-title">
                             <center> <h1>Consultation</h1> </center>
-                            
+
                             <h:form id="patform">
                                 <p:wizard flowListener="#{userWizard.onFlowProcess}" widgetVar="accordPanel">
                                     <h:inputHidden value="#{consBean.consultation.id}"/>
@@ -169,9 +169,7 @@
                                                 </p:column>
 
                                                 <p:column headerText="Quantité" >
-                                                    <h:outputText value="#{htal.type_habitude.label}">
-                                                        <f:converter converterId="typeHabitudeConverterId"/>
-                                                    </h:outputText>
+                                                    <h:outputText value="#{htal.type_habitude.label}"/>
                                                 </p:column>
 
 
@@ -239,7 +237,7 @@
                                     </p:tab>
 
 
-                                    <p:tab id="examParaClinique" title="Examen Paraclinique">
+                                    <p:tab id="examParaClinique" title="Examen paraclinique">
 
                                         <!--<p:panel style="height: 400px">-->
 
@@ -400,24 +398,25 @@
                                         </p:panelGrid>   
 
                                         <br/>
-                                        <br/>
-
-                                        <div class="ui-g-12 ui-md-6">
-                                            <center><p:commandButton value="Annuler" action="#{consBean.annulerConsultation()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-6">
-                                            <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
-                                        </div>
-
-                                        <br/>
-                                        <br/>
+                                        <br/> 
 
                                     </p:tab>
 
                                 </p:wizard>
 
+                                <br/>
+                                <br/>
 
+                                <div class="ui-g-12 ui-md-6">
+                                    <center><p:commandButton value="Annuler" action="#{consBean.annulerConsultation()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form,:patienForm"/></center>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6">
+                                    <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV),:patienForm" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                </div>
+
+                                <br/>
+                                <br/>
 
                             </h:form>
                         </div>
@@ -438,29 +437,47 @@
                                 <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
                                     <p:outputLabel value="Nom"/>
                                     <h:outputText value="#{consBean.patient.nomPatient}"/>
-                                    
+
                                     <p:outputLabel value="Prenom"/>
                                     <h:outputText value="#{consBean.patient.prenomPatient}"/>
-                                    
+
                                     <p:outputLabel value="Sexe"/>
                                     <h:outputText value="#{consBean.patient.sexe}"/>
-                                    
+
                                     <p:outputLabel value="Profession"/>
                                     <h:outputText value="#{consBean.patient.profession}"/>
-                                    
+
                                     <p:outputLabel value="Date de naissance"/>
                                     <h:outputText value="#{consBean.patient.date_naissance}">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </h:outputText>
-                                    
+
                                     <p:outputLabel value="Contact"/>
                                     <h:outputText value="#{consBean.patient.contact}"/>
-                                    
+
                                     <p:outputLabel value="Adresse"/>
                                     <h:outputText value="#{consBean.patient.adresse}"/>
-                                    
+
                                     <p:outputLabel value="Civilite"/>
                                     <h:outputText value="#{consBean.patient.civilite}"/>
+
+                                    <p:outputLabel value="Perimetre abdominal"/>
+                                    <h:outputText value="#{consBean.patient.tourtaille}"/>
+
+                                    <p:outputLabel  value="Poids"/>
+                                    <h:outputText value="#{consBean.patient.poids}"/>
+
+                                    <p:outputLabel  value="Taille"/>
+                                    <h:outputText value="#{consBean.patient.taille}"/>
+
+                                    <p:outputLabel  value="Tension bras gauche"/>
+                                    <h:outputText value="#{consBean.patient.tension}"/>
+
+                                    <p:outputLabel  value="Tension bras droit"/>
+                                    <h:outputText value="#{consBean.patient.tensiondroit}"/>
+
+                                    <p:outputLabel  value="Masse corporelle"/>
+                                    <h:outputText value="#{consBean.patient.calculMasseCorporelle()}" />
                                 </p:panelGrid>
 
                             </h:form>
@@ -499,10 +516,9 @@
                                     <h:outputText value="#{int.patient.sexe}" />
                                 </p:column>
 
-                                <p:column headerText="Date" >
-                                    <h:outputText value="#{int.dateConsultation}" >
-                                        <f:convertDateTime dateStyle="full" locale="fr_FR"/>
-                                    </h:outputText>
+                                <p:column headerText="Date" sortBy="#{rdvbean.dateFormatRdv(int.dateConsultation)}" 
+                                          filterMatchMode="contains" filterBy="#{rdvbean.dateFormatRdv(int.dateConsultation)}">
+                                    <h:outputText value="#{rdvbean.dateFormatRdv(int.dateConsultation)}" />
                                 </p:column>
 
 
@@ -523,7 +539,11 @@
 
 
                                 <p:column  headerText="Action">                           
-                                    <center><p:commandButton value="Modifier" action="#{consBean.renvoieConsultation(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                    <center><p:commandButton value="Voir" action="#{consultationViewManagedBean.informationConsultation(int)}" styleClass="cyan-btn" style="width: auto;"/></center>
+                                </p:column>
+                                
+                                <p:column>                           
+                                    <center><p:commandButton value="Modifier" action="#{consBean.renvoieConsultation(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel),:patienForm,:form:growl"/></center>
                                 </p:column>
 
                             </p:dataTable>

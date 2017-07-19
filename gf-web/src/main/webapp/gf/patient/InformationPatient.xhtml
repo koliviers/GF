@@ -4,88 +4,92 @@
                 template="./../../WEB-INF/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-
+    <ui:define name="head">
+        <title>Information patient</title>
+    </ui:define>
 
     <ui:define name="content">
 
-        <h:form id="formpat">
-            <div class="ui-g">
-                <div class="ui-g-12">
-                    <div class="card card-w-title">
-                        <h1 align="center">Liste des Patients</h1>
-                        <p:dataTable var="p" value="#{patientBean.allPatient}" selectionMode="single" reflow="true"
-                                     selection="#{patientBean.patient}" rowKey="#{p.id}" paginator="true" rows="10">
-                            <f:facet name="header">
-                                Mes patients
-                            </f:facet>
-                            <p:column headerText="Id" sortBy="#{p.id}">
-                                <h:outputText value="#{p.id}" />
-                            </p:column>
-                            <p:column headerText="Nom" sortBy="#{p.nomPatient}">
-                                <h:outputText value="#{p.nomPatient}" />
-                            </p:column>
+        <div class="ui-fluid">
+            <h:form>
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="ui-g-12 ui-lg-6">
+                            <div class="card card-w-title">
+                                <center> <h1>Etat civil</h1> </center>
 
-                            <p:column headerText="Prenom" sortBy="#{p.prenomPatient}">
-                                <h:outputText value="#{p.prenomPatient}" />
-                            </p:column>
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Nom"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.nomPatient}"/>
 
-                            <p:column headerText="Sexe" sortBy="#{p.sexe}">
-                                <h:outputText value="#{p.sexe}" />
-                            </p:column>
+                                    <p:outputLabel value="Prenom"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.prenomPatient}"/>
 
-                            <p:column headerText="Age" sortBy="#{p.age}">
-                                <h:outputText value="#{p.age}">
+                                    <p:outputLabel value="Sexe"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.sexe}"/>
 
-                                </h:outputText>
-                            </p:column>
+                                    <p:outputLabel value="Profession"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.profession}"/>
 
-                            <p:column headerText="Profession" sortBy="#{p.profession}">
-                                <h:outputText value="#{p.profession}" />
-                            </p:column>
+                                    <p:outputLabel value="Date de naissance"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.date_naissance}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
 
-                            <p:column headerText="Masse corporelle" sortBy="#{p.calculMasse()}">
-                                <h:outputText value="#{p.calculMasse()}"  />
-                            </p:column>
+                                    <p:outputLabel value="Contact"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.contact}"/>
 
-                            <p:column style="width:32px;text-align: center">
-                                <p:commandButton update=":formpat:patDetail" oncomplete="PF('patInfo').show()" icon="ui-icon-search" title="Detail du patient">
-                                    <f:setPropertyActionListener value="#{p}" target="#{patientBean.patient}" />
-                                </p:commandButton>
-                            </p:column>
+                                    <p:outputLabel value="Adresse"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.adresse}"/>
 
-                        </p:dataTable>
-
-
-
-                        <p:dialog header="Patient Info" widgetVar="patInfo" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                            <p:outputPanel id="patDetail" style="text-align:center;">
-                                <p:panelGrid  columns="2" rendered="#{not empty patientBean.patient}" columnClasses="label,value">
-                                    <f:facet name="header">
-                                    </f:facet>
-
-                                    <h:outputText value="Nom" />
-                                    <h:outputText value="#{patientBean.patient.nomPatient}" />
-
-                                    <h:outputText value="Prenom" />
-                                    <h:outputText value="#{patientBean.patient.prenomPatient}" />
-
-                                    <h:outputText value="Pathologie:" />
-                                    <h:outputText value="#{patientBean.patient.pathologie.nomPathologie}" style="color:#{dtSelectionView.selectedCar.color}"/>
-
-                                    <h:outputText value="Sexe" />
-                                    <h:outputText value="#{patientBean.patient.sexe}" />
+                                    <p:outputLabel value="Civilite"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.civilite}"/> 
                                 </p:panelGrid>
-                            </p:outputPanel>
-                        </p:dialog>
+
+                                <br/>
+                                <br/>
+                                <center>
+                                    <p:commandButton value="Retour" action="#{patientViewManagedBean.retour()}" styleClass="red-btn" style="width: auto;"/>
+                                </center>
+                            </div>
+
+                        </div>
 
 
+                        <div class="ui-g-12  ui-lg-6">
+                            <div class="card card-w-title">
+                                <center> <h1>Constantes</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Perimetre abdominal"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.tourtaille}"/>
+
+                                    <p:outputLabel  value="Poids"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.poids}"/>
+
+                                    <p:outputLabel  value="Taille"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.taille}"/>
+
+                                    <p:outputLabel  value="Tension bras gauche"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.tension}"/>
+
+                                    <p:outputLabel  value="Tension bras droit"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.tensiondroit}"/>
+
+                                    <p:outputLabel  value="Masse corporelle"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.calculMasseCorporelle()}" />
+                                </p:panelGrid>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </h:form>        
 
+
+            </h:form>
+        </div>
 
     </ui:define>
 

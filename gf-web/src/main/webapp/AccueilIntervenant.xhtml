@@ -48,21 +48,99 @@
     </ui:define>
 
     <ui:define name="content">
+        <h:form id="form">
+            <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
+            <p:growl id="growl" showDetail="true" sticky="true" />
+        </h:form>
+        
+        
         <div class="ui-g dashboard">
             <div class="ui-g">
                 <div class="ui-g-12">
+                    <div class="ui-g-12 ui-lg-8">
 
-                    <div class="card card-w-title">
-                        <h:form>
-                            <center>   <h1>Plannification des rendez - vous</h1> </center>
-                            <br/>
-                            
+                        <div class="card card-w-title">
+                            <h:form id="sch">
+                                <center>   <h1>Plannification des rendez - vous</h1> </center>
+                                <br/>
+
                                 <p:schedule id="schedule" value="#{rdvbean.eventModel}" widgetVar="myschedule" locale="fr" timeZone="GMT"/>
-                            
-                            
-                        </h:form>
+
+
+                            </h:form>
+
+                        </div>
+
+                        <p:dialog header="Report" widgetVar="reportWV" modal="true" width="500" height="100"  responsive="true">
+                            <h:form id="reportForm">
+                                <h:inputHidden value="#{rdvbean.rdvTampon.id}"/>
+                                <h:inputHidden value="#{rdvbean.rdvTampon.motifRdv}"/>
+                                <h:inputHidden value="#{rdvbean.idInterv}"/>
+                                <h:inputHidden value="#{rdvbean.idPat}"/>
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Date et heure :" />
+                                    <p:calendar value="#{rdvbean.rdvTampon.dateRdv}"  mask="true"  pattern="dd/MM/yyyy HH:mm"/>
+                                </p:panelGrid>
+                                <br/>
+
+                                <div class="ui-g-12 ui-md-6">
+                                    <center><p:commandButton value="Annuler" type="button" onclick="PF('reportWV').hide();" styleClass="teal-btn" icon="ui-icon-close" /></center>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6">
+                                    <center><p:commandButton value="Valider" action="#{rdvbean.reporterRdv()}" update="@form,:form:growl,@widgetVar(rdvJourId),:sch" process="@form"  icon="ui-icon-check" /></center>
+                                </div>
+                                
+                            </h:form>
+                        </p:dialog>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-4">
+
+                        <div class="card card-w-title">
+                            <h:form>
+                                <center>   <h1>Rendez-vous du jour</h1> </center>
+                                <br/>
+                                <p:scrollPanel style="height:600px; min-width:350px; width:370px !important;">
+                                    <p:panel header="Activity" style="height:100%" widgetVar="rdvJourId">
+
+                                        <ul class="activity-list">
+                                            <ui:repeat var="o" value="#{rdvbean.getRdvFiltreIntervenantDuJour()}" varStatus="status">
+                                                <h:panelGroup rendered="#{status.even}">
+                                                    <li>
+                                                        <div class="count" style="background-color:#607D8B">#{o.patient.codePatient}</div>
+                                                        <div class="ui-g">
+                                                            <div class="ui-g-6">#{o.patient.nomPatient} #{o.patient.prenomPatient}</div>
+                                                            <div class="ui-g-6"><p:commandButton value="Reporter" action="#{rdvbean.reporterSelectRdv(o)}"
+                                                                                                 onclick="PF('reportWV').show();" icon="ui-icon-watch-later" update=":reportForm"/>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </h:panelGroup>
+                                                <h:panelGroup rendered="#{status.odd}">
+                                                    <li>
+                                                        <div class="count" style="background-color:#607D8B">#{o.patient.codePatient}</div>
+                                                        <div class="ui-g">
+                                                            <div class="ui-g-6">#{o.patient.nomPatient} #{o.patient.prenomPatient}</div>
+                                                            <div class="ui-g-6"><p:commandButton value="Reporter" action="#{rdvbean.reporterSelectRdv(o)}"
+                                                                                                 onclick="PF('reportWV').show();" icon="ui-icon-watch-later" update=":reportForm"/>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </h:panelGroup>
+                                            </ui:repeat>
+                                        </ul>
+                                    </p:panel>
+                                </p:scrollPanel>
+
+
+
+                            </h:form>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
 

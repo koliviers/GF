@@ -25,7 +25,7 @@
                 <div class="ui-g-12">
                     <div class="card card-w-title">
                         <p:accordionPanel widgetVar="accordPanel">
-                            <p:tab title="Classe therapeutique" >
+                            <p:tab title="Traitement Medicamenteux" >
                                 <h:form id="classform" >
 
                                     <h:inputHidden value="#{classeTherapeutiqueManagedBean.classeTherapeutique.id}" />
@@ -62,12 +62,12 @@
 
                     <div class="card card-w-title">
                         <h:form id="intformDataTable">
-                            <center>   <h1>Liste de classe therapeutique</h1> </center>
+                            <center>   <h1>Liste des traitements medicamenteux</h1> </center>
                             <p:dataTable id="intervenantDT" var="int" value="#{classeTherapeutiqueManagedBean.classeTherapeutiqueListe}" 
                                          widgetVar="intervenantWV"                                 
                                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          rowsPerPageTemplate="5,10,15"
-                                         emptyMessage="La liste de classe therapeutique est vide" reflow="true" rows="10" paginator="true">
+                                         emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true">
                                 <f:facet name="header">
                                     <p:outputPanel>
                                         <h:outputText value="Rechercher :" />

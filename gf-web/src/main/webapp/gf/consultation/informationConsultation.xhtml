@@ -1,0 +1,289 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="head">
+        <title>Information consultation</title>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <div class="ui-g ui-fluid">
+            <h:form>
+                <div class="ui-g-12 ui-lg-6">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Patient</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Nom"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.nomPatient}"/>
+
+                                    <p:outputLabel value="Prenom"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.prenomPatient}"/>
+
+                                    <p:outputLabel value="Sexe"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.sexe}"/>
+
+                                    <p:outputLabel value="Profession"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.profession}"/>
+
+                                    <p:outputLabel value="Date de naissance"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.date_naissance}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+
+                                    <p:outputLabel value="Contact"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.contact}"/>
+
+                                    <p:outputLabel value="Adresse"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.adresse}"/>
+
+                                    <p:outputLabel value="Civilite"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.civilite}"/>
+
+                                    <p:outputLabel value="Perimetre abdominal"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.tourtaille}"/>
+
+                                    <p:outputLabel  value="Poids"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.poids}"/>
+
+                                    <p:outputLabel  value="Taille"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.taille}"/>
+
+                                    <p:outputLabel  value="Tension bras gauche"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.tension}"/>
+
+                                    <p:outputLabel  value="Tension bras droit"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.tensiondroit}"/>
+
+                                    <p:outputLabel  value="Masse corporelle"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.calculMasseCorporelle()}" />
+                                </p:panelGrid>
+
+                                <br/>
+                                <br/>
+                                <center>
+                                    <p:commandButton value="Retour" action="#{consultationViewManagedBean.retour()}" styleClass="red-btn" style="width: auto;"/>
+                                </center>
+                            </div>
+
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Examen Paraclinique</h1> </center>
+
+                                <p:dataTable value="#{consultationViewManagedBean.examenParacliniqueListe}" var="ex" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Examens" >
+                                        <center><h:outputText value="#{ex.label}"/></center>
+                                    </p:column>
+
+                                    <f:facet name="footer">
+                                        <center>
+                                            <h:commandLink action="#{consultationViewManagedBean.examenParacliniqueEtat()}" >
+                                                <p:button icon="ui-icon-print" styleClass="purple-btn" style="width: auto;" />
+                                            </h:commandLink>
+                                        </center>
+                                    </f:facet>
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Ordonnance</h1> </center>
+
+                                <p:dataTable value="#{consultationViewManagedBean.ordonnanceListe}" var="ordo" emptyMessage="Liste vide">
+
+                                    <h:inputHidden value="#{ordo.id}"/>
+
+                                    <p:column headerText="Medicament" >
+                                        <center><h:outputText value="#{ordo.medicament}"/></center>
+                                    </p:column>
+
+                                    <p:column headerText="Posologie" >
+                                        <center><h:outputText value="#{ordo.posologie}"/></center>
+                                    </p:column>
+
+                                    <p:column headerText="Quantité" >
+                                        <center><h:outputText value="#{ordo.quantite}"/></center>
+                                    </p:column>
+
+                                    <f:facet name="footer">
+                                        <center>
+                                            <h:commandLink action="#{consultationViewManagedBean.ordonnanceEtat()}" >
+                                                <p:button icon="ui-icon-print" styleClass="purple-btn" style="width: auto;" />
+                                            </h:commandLink>
+                                        </center>
+                                    </f:facet>
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Traitement</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Traitement medicamenteux"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.traitementMedicamenteurx.label}"/>
+
+                                    <p:outputLabel value="Traitement non medicamenteux"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.traitementNomMedicamenteux}"/>
+
+                                    <p:outputLabel value="Intervenant"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.intervenant.nomIntervenant} #{consultationViewManagedBean.consultation.intervenant.prenomIntervenant}" style="font-weight: bold;"/>
+
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-lg-6">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Antecedant</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Antecedant personel chirugicaux"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.antChirugicaux}"/>
+
+                                    <p:outputLabel value="Antecedant Personel Medicaux"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.antMedicaux}"/>
+
+                                </p:panelGrid>
+
+                                <br/>
+
+                                <p:dataTable value="#{consultationViewManagedBean.listePathologieTampon}" var="pa" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Antecedant familial" >
+                                        <center><h:outputText value="#{pa.nomPathologie}"/></center>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Habitude Alimentaire</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel  value="Sport effectué"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.sport}"/>
+
+                                    <p:outputLabel value="Fruit / Legume Consommée"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.fruit}"/>
+
+                                </p:panelGrid>
+
+                                <br/>
+
+                                <p:dataTable value="#{consultationViewManagedBean.tamponHabitudeAlimentaire}" var="htal" emptyMessage="Liste vide">
+                                    <p:column headerText="Type consommation" >
+                                        <h:outputText value="#{htal.consommation.type_consommation.label}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Consommation" >
+                                        <h:outputText value="#{htal.consommation.label}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Nombre" >
+                                        <h:outputText value="#{htal.quantite}" />
+                                    </p:column>
+
+                                    <p:column headerText="Quantité" >
+                                        <h:outputText value="#{htal.type_habitude.label}"/>
+                                    </p:column>
+
+
+                                    <p:column headerText="Temps Conso." >
+                                        <h:outputText value="#{htal.temps}"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Examen clinique</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Signe clinique"/>
+                                    <h:outputText value="#{consultationViewManagedBean.examentClinique.signe_clinique}"/>
+
+                                    <p:outputLabel value="Etat general"/>
+                                    <h:outputText value="#{consultationViewManagedBean.examentClinique.etat_general}"/>
+
+                                    <p:outputLabel value="Etat de conscience"/>
+                                    <h:outputText value="#{consultationViewManagedBean.examentClinique.etat_consce}"/>
+
+                                    <p:outputLabel value="Palure"/>
+                                    <h:outputText value="#{consultationViewManagedBean.examentClinique.palure}"/>
+
+                                    <p:outputLabel value="Etat d'hydratation"/>
+                                    <h:outputText value="#{consultationViewManagedBean.examentClinique.etat_hydratation}"/>
+
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Diagnostique</h1> </center>
+
+                                <p:dataTable value="#{consultationViewManagedBean.diagnostiqueListe}" var="dg" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Pathologie" >
+                                        <center><h:outputText value="#{dg.label}"/></center>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Resultats</h1> </center>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                    <p:outputLabel value="Detail"/>
+                                    <h:outputText value="#{consultationViewManagedBean.consultation.detailConsultation}"/>
+
+                                </p:panelGrid>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+
+    </ui:define>
+
+</ui:composition>

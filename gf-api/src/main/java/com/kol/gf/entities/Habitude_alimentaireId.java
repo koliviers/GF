@@ -14,41 +14,41 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class Habitude_alimentaireId implements Serializable{
-    private long id_consultation;
-    private long id_Consommation;
-    private long id_type_habitude;
+    private Long id_consultation;
+    private Long id_Consommation;
+    private Long id_type_habitude;
 
     public Habitude_alimentaireId() {
     }
 
-    public Habitude_alimentaireId(long id_consultation, long id_Consommation, long id_type_habitude) {
+    public Habitude_alimentaireId(Long id_consultation, Long id_Consommation, Long id_type_habitude) {
         this.id_consultation = id_consultation;
         this.id_Consommation = id_Consommation;
         this.id_type_habitude = id_type_habitude;
     }
 
-    public long getId_consultation() {
+    public Long getId_consultation() {
         return id_consultation;
     }
 
-    public void setId_consultation(long id_consultation) {
+    public void setId_consultation(Long id_consultation) {
         this.id_consultation = id_consultation;
     }
 
 
-    public long getId_Consommation() {
+    public Long getId_Consommation() {
         return id_Consommation;
     }
 
-    public void setId_Consommation(long id_Consommation) {
+    public void setId_Consommation(Long id_Consommation) {
         this.id_Consommation = id_Consommation;
     }
 
-    public long getId_type_habitude() {
+    public Long getId_type_habitude() {
         return id_type_habitude;
     }
 
-    public void setId_type_habitude(long id_type_habitude) {
+    public void setId_type_habitude(Long id_type_habitude) {
         this.id_type_habitude = id_type_habitude;
     }
 

@@ -12,12 +12,14 @@ import com.kol.gf.entities.RendezVous;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.core.Utils.Convertiseur;
 import com.miki.webapp.core.Utils.ManipulationDate;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.miki.securite.Service.UtilisateurSessionBeanLocal;
 import com.miki.webapp.miki.securite.entities.Utilisateur;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import net.moozisms.api.client.Moozisms;
+import net.moozisms.api.client.MoozismsApiClient;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
@@ -53,6 +58,8 @@ public class RendezVousBean implements Serializable {
     private List<RendezVous> listeRdv;
     private ScheduleModel eventModel;
     private Long idRDV;
+    private Long idInterv;
+    private Long idPat;
 
     @ManagedProperty(value = "#{connexionManagedBean}")
     private ConnexionManagedBean connexionMngdB;
@@ -90,7 +97,7 @@ public class RendezVousBean implements Serializable {
             Map<Date, Integer> rdvSchedule = daoRdv.getSchedulerInfo(intervenantTampon);
 
             for (Map.Entry<Date, Integer> mp : rdvSchedule.entrySet()) {
-                eventModel.addEvent(new DefaultScheduleEvent("Rendez-vous : "+mp.getValue(), mp.getKey(), mp.getKey()));
+                eventModel.addEvent(new DefaultScheduleEvent("Rendez-vous : " + mp.getValue(), mp.getKey(), mp.getKey()));
             }
         }
 
@@ -118,6 +125,16 @@ public class RendezVousBean implements Serializable {
                         tx.commit();
 
                         Mtm.mikiMessageInfo();
+                        if (!rdv.getPatient().getContact().trim().isEmpty()) {
+                            MoozismsApiClient apisms = new Moozisms();
+                            boolean test = false;
+                            test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous pris pour"
+                                    + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+
+                            if (test) {
+                                Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                            }
+                        }
                         rdv = new RendezVous();
                     }
 
@@ -132,6 +149,17 @@ public class RendezVousBean implements Serializable {
                             tx.commit();
 
                             Mtm.mikiMessageInfo();
+
+                            if (!rdv.getPatient().getContact().trim().isEmpty()) {
+                                MoozismsApiClient apisms = new Moozisms();
+                                boolean test = false;
+                                test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
+                                        + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+
+                                if (test) {
+                                    Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                                }
+                            }
                             rdv = new RendezVous();
                         }
                     } else {
@@ -141,6 +169,17 @@ public class RendezVousBean implements Serializable {
                         tx.commit();
 
                         Mtm.mikiMessageInfo();
+
+                        if (!rdv.getPatient().getContact().trim().isEmpty()) {
+                            MoozismsApiClient apisms = new Moozisms();
+                            boolean test = false;
+                            test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
+                                    + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+
+                            if (test) {
+                                Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                            }
+                        }
                         rdv = new RendezVous();
                     }
 
@@ -166,8 +205,8 @@ public class RendezVousBean implements Serializable {
     public void annulerRdv() {
         rdv = new RendezVous();
     }
-    
-    public void selectRdvSupprimer(Long id){
+
+    public void selectRdvSupprimer(Long id) {
         idRDV = id;
     }
 
@@ -185,6 +224,8 @@ public class RendezVousBean implements Serializable {
 
     public void reporterSelectRdv(RendezVous rdv3) {
         rdvTampon = rdv3;
+        idInterv = rdv3.getIntervenant().getId();
+        idPat = rdv3.getPatient().getId();
         dateRdv = rdvTampon.getDateRdv();
     }
 
@@ -194,13 +235,34 @@ public class RendezVousBean implements Serializable {
         try {
             if (dateRdv.before(new Date())) {
                 Mtm.mikiMessageWarn("La date ou l'heure saisie est incorrecte, veuillez entrer une date ou heure supérieure à la date ou heure actuelle svp !");
-            } else if (!daoRdv.getBy("dateRdv", "intervenant", dateRdv, rdv.getIntervenant()).isEmpty()) {
+            } else if (!daoRdv.getBy("dateRdv", "intervenant", rdvTampon.getDateRdv(), rdvTampon.getIntervenant()).isEmpty()) {
                 Mtm.mikiMessageWarn("Attention : vous avez déjà un autre rendez-vous à cette date et heure !, veuillez revoir la date ou l'heure saisie svp !");
             } else {
                 tx.begin();
-                rdvTampon.setDateRdvFiltre(dateRdv);
-                rdvTampon.setDateRdv(dateRdv);
+                rdvTampon.setDateRdvFiltre(rdvTampon.getDateRdv());
+                rdvTampon.setIntervenant(intervenantServices.getOne(idInterv));
+                rdvTampon.setPatient(patientServices.getOne(idPat));
+                daoRdv.updateOne(rdvTampon);
                 tx.commit();
+
+                Mtm.mikiMessageInfo();
+                RequestContext context = RequestContext.getCurrentInstance();
+                context.execute("PF('reportWV').hide();");
+
+                if (!rdvTampon.getPatient().getContact().trim().isEmpty()) {
+                    MoozismsApiClient apisms = new Moozisms();
+                    boolean test = false;
+                    test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdvTampon.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
+                            + " le " + ManipulationDate.mediumDateFormatFR(rdvTampon.getDateRdv()) + "\n" + rdvTampon.getIntervenant().getNomIntervenant() + " " + rdvTampon.getIntervenant().getPrenomIntervenant());
+
+                    if (test) {
+                        Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                    }
+                }
+
+                rdvTampon = new RendezVous();
+                dateRdv = null;
+
             }
         } catch (Exception ex) {
             try {
@@ -244,16 +306,18 @@ public class RendezVousBean implements Serializable {
     public List<RendezVous> getRdvFiltreIntervenantDuJour() {
         Utilisateur utilisateurTampon = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
         Intervenant intervenantTampon = intervenantServices.getOneBy("utilisateur", utilisateurTampon);
+        String dateDuJour = Convertiseur.getDate(new Date());
+        
 
         if (intervenantTampon == null) {
-            listeRdv = daoRdv.getAll().stream()
-                    .filter(rd2 -> rd2.getDateRdvFiltre().equals(new Date()))
+            listeRdv = daoRdv.getAll("dateRdv", false).stream()
+                    .filter(rd2 -> Convertiseur.getDate(rd2.getDateRdvFiltre()).equals(dateDuJour))
                     .sorted(Comparator.comparing(RendezVous::getDateRdv))
                     .collect(Collectors.toList());
         } else {
             List<RendezVous> rdvListSortDesc = daoRdv.getBy("intervenant", intervenantTampon);
             listeRdv = rdvListSortDesc.stream()
-                    .filter(rd -> rd.getDateRdvFiltre().equals(new Date()))
+                    .filter(rd -> Convertiseur.getDate(rd.getDateRdvFiltre()).equals(dateDuJour))
                     .sorted(Comparator.comparing(RendezVous::getDateRdv))
                     .collect(Collectors.toList());
 
@@ -365,6 +429,22 @@ public class RendezVousBean implements Serializable {
 
     public void setIdRDV(Long idRDV) {
         this.idRDV = idRDV;
+    }
+
+    public Long getIdInterv() {
+        return idInterv;
+    }
+
+    public void setIdInterv(Long idInterv) {
+        this.idInterv = idInterv;
+    }
+
+    public Long getIdPat() {
+        return idPat;
+    }
+
+    public void setIdPat(Long idPat) {
+        this.idPat = idPat;
     }
     
     

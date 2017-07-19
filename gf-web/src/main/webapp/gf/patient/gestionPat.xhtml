@@ -59,7 +59,7 @@
                                         <p:calendar value="#{patientBean.patient.date_naissance}" widgetVar="dtPat" maxdate="dtPat.today" mask="true" pattern="dd/MM/yyyy"/>
 
 
-                                        <p:outputLabel for="contact" value="Contact "/>
+                                        <p:outputLabel for="contact" value="Contact (+228)"/>
                                         <p:inputText id="contact" value="#{patientBean.patient.contact}"/>
 
 
@@ -77,16 +77,19 @@
                                         </p:selectOneRadio>
 
                                         <p:outputLabel for="pemabdo" value="Perimetre abdominal"/>
-                                        <p:inputText id="pemabdo" value="#{patientBean.patient.tourtaille}"/>
+                                        <p:inputNumber id="pemabdo" value="#{patientBean.patient.tourtaille}" decimalSeparator="," decimalPlaces="2" symbol=" cm" symbolPosition=" 5"/>
 
-                                        <p:outputLabel for="poid" value="Poids"/>
-                                        <p:inputText id="poid" value="#{patientBean.patient.poids}"/>
+                                        <p:outputLabel for="poid" value="Poids" />
+                                        <p:inputNumber id="poid" value="#{patientBean.patient.poids}" decimalSeparator="," decimalPlaces="2" symbol=" kg" symbolPosition=" 5"/>
+                                        
+                                        <p:outputLabel  value="Taille"/>
+                                        <p:inputNumber  value="#{patientBean.patient.taille}" decimalSeparator="," symbol=" m" symbolPosition=" 5"/>
                                         
                                         <p:outputLabel for="tens" value="Tension bras gauche"/>
-                                        <p:inputNumber id="tens" value="#{patientBean.patient.tension}" decimalSeparator="," decimalPlaces=""/>
+                                        <p:inputNumber id="tens" value="#{patientBean.patient.tension}" decimalSeparator="," decimalPlaces="2" />
 
                                          <p:outputLabel for="tensd" value="Tension bras droit"/>
-                                         <p:inputNumber id="tensd" value="#{patientBean.patient.tensiondroit}" />
+                                         <p:inputNumber id="tensd" value="#{patientBean.patient.tensiondroit}" decimalSeparator="," decimalPlaces="2"/>
 
                                         
                                         
@@ -182,6 +185,10 @@
                                 
 
                                 <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Voir" action="#{patientViewManagedBean.informationPatient(int)}" styleClass="cyan-btn" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                </p:column>
+                                
+                                <p:column>                           
                                     <center><p:commandButton value="Modifier" action="#{patientBean.renvoiePatient(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
                                 </p:column>
 

@@ -30,6 +30,11 @@ public class Habitude_alimentaireServiceBean extends BaseServiceBeanImpl<Habitud
        return dao;
     }
 
+    @Override
+    public void supprimerHabitudeAlimentaire(Habitude_alimentaireId id) {
+        dao.supprimerHabitudeAlimentaire(id);
+    }
+
    
 
    

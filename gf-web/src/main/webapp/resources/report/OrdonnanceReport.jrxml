@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OrdonnanceReport" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3d60e473-4b4e-4e79-8591-3d11d68a3059">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<field name="medicament" class="java.lang.String"/>
+	<field name="posologie" class="java.lang.String"/>
+	<field name="quantite" class="java.lang.String"/>
+	<field name="nom" class="java.lang.String"/>
+	<field name="prenom" class="java.lang.String"/>
+	<field name="nomPatient" class="java.lang.String"/>
+	<field name="prenomPatient" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<rectangle>
+				<reportElement x="3" y="15" width="226" height="20" backcolor="#CCCCCC" uuid="4ed75b7f-e2eb-4fa0-9298-09a600db1ac3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="417" y="68" width="137" height="16" uuid="c3430426-3609-4177-8164-9e9ed5fd8596"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HOPITAL NOTSE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="44" width="87" height="13" uuid="3c81f58b-b19c-46b1-b44c-f42724ba3336"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Boulevard MONO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="57" width="87" height="13" uuid="e8d9f3b2-e86b-47ed-890f-1f30759ee459"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rue: Les Rochers]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="18" width="87" height="13" uuid="dc1de787-9afb-4940-864d-63987bdcad95"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ordonnance No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="18" width="41" height="13" uuid="a864e9ab-885f-4fee-9c74-7669092328f7"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[#CMD]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="18" width="89" height="13" uuid="5940d81e-e442-46ec-add2-01dd6129aa8c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="417" y="83" width="137" height="16" forecolor="#240202" uuid="f75f50c9-5b1a-4bf1-9d7d-6410e1c7b32c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Votre santé, notre métier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="85" width="172" height="13" uuid="795c7476-57a9-40bf-acde-0eb972ba17b4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Email: gesnecro@gesnecro.tg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="70" width="134" height="13" uuid="3df5426e-a639-4a80-96c7-e72b226e0ac0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tel: 91778555 / 91007040]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="102" width="552" height="1" uuid="e8c86755-ba4a-48b4-a59a-833a01697c77"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement x="455" y="0" width="63" height="67" uuid="8a8fbcfc-c41c-40f2-9fe8-03ba776bbb56"/>
+				<imageExpression><![CDATA["/home/anonymousghost/NetBeansProjects/GF/gf-web/src/main/webapp/resources/images/pharmacie.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="135" y="15" width="275" height="20" forecolor="#000000" uuid="251f5626-03bb-4b67-9e43-526b6fdaebdb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ORDONNANCE ]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement style="table_TH" x="0" y="11" width="284" height="20" uuid="79bf86e6-0a23-4949-b1b6-9d94ace3ba39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Medicament]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table 1_TH" x="284" y="11" width="149" height="20" uuid="e48e6273-4eea-4222-a61a-c4d095cb82ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Posologie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table 1_TH" x="433" y="11" width="123" height="20" uuid="45226747-a98a-46b6-bf09-34b4606d8b9f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantite]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement style="table_TD" x="0" y="0" width="284" height="20" uuid="eaf28edc-b3b1-458f-9b71-a4ad7809d2d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{medicament}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table_TD" x="284" y="0" width="149" height="20" uuid="a15fa3e6-d21e-4698-b631-abe0670ebc56"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{posologie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table_TD" x="433" y="0" width="123" height="20" uuid="059e9a9a-bcb9-4df5-bb1e-8a78daa4532b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantite}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="55" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="-1" width="552" height="1" uuid="377b1ae3-bb7b-4e2d-8ac3-c966df4a1d34"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="72" height="14" uuid="b6371997-d40a-42d8-b408-4dff15e4ad17"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Etat arrêté le :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="72" y="0" width="100" height="14" uuid="9fcecd40-698e-4a1e-838b-bd305f04d367"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="100" height="14" uuid="e718d327-9123-484f-8ab6-5fe46b9a37a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="0" width="100" height="14" uuid="ae80fabb-cc0e-481d-824a-30447450506c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prenom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="0" width="72" height="14" uuid="45e9fb7f-be45-4a17-b0b9-04c600b87904"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Intervenant :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="25" width="72" height="14" uuid="3264fd26-a9b4-4bca-9fcb-fbd953626199"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Patient :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="356" y="25" width="100" height="14" uuid="4428981d-bd64-4881-a269-2de305b4c98f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomPatient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="454" y="25" width="100" height="14" uuid="66345787-3e0d-4fd2-a265-c1902882720a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prenomPatient}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

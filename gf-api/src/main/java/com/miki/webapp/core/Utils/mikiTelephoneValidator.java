@@ -18,9 +18,9 @@ import javax.faces.validator.ValidatorException;
  *
  * @author Mikel
  */
-@FacesValidator("miki.methodes.templates.mikiTelephoneValidator")
+@FacesValidator("mikiTelephoneValidator")
 public class mikiTelephoneValidator implements Validator{
-    private Pattern p = Pattern.compile("^[+228]?[9|2][\\d]{7,}$");
+    private Pattern p = Pattern.compile("^[+228|00228]?[9|2][\\d]{7,}$");
     
     @Override
     public void validate(FacesContext facesContext, UIComponent component, Object value) throws ValidatorException{
@@ -29,7 +29,7 @@ public class mikiTelephoneValidator implements Validator{
         if(!m.matches()){
             throw new ValidatorException(new FacesMessage( 
 					FacesMessage.SEVERITY_ERROR, "Entrée non valide :", 
-					"numéro de télephone du client non valide")); 
+					"numéro de télephone du patient non valide")); 
         }
     }
     

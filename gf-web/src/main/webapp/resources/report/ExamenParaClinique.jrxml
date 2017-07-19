@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ExamenParaClinique" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="97a77811-940f-4243-9851-c8f455245d6d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<field name="examen" class="java.lang.String"/>
+	<field name="nom" class="java.lang.String"/>
+	<field name="prenom" class="java.lang.String"/>
+	<field name="nomPatient" class="java.lang.String"/>
+	<field name="prenomPatient" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="109" splitType="Stretch">
+			<staticText>
+				<reportElement x="417" y="73" width="137" height="16" uuid="3de512cc-7d74-4ac8-9148-5d0ac8f1be12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HOPITAL NOTSE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="49" width="87" height="13" uuid="09908ef4-5fbc-44a9-b7b0-0945e3b4c9eb"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Boulevard MONO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="62" width="87" height="13" uuid="13c6be91-08b8-4473-89ea-473165ce9b33"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Rue: Les Rochers]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="88" width="137" height="16" forecolor="#240202" uuid="97b87a78-d437-4d74-ad28-dfda190b803a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Votre santé, notre métier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="90" width="172" height="13" uuid="0b3df35b-3c9f-4613-b743-76494d0abdc4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Email: gesnecro@gesnecro.tg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="75" width="134" height="13" uuid="299dd07f-e5a6-44b5-8e71-d310d8fa80bb"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tel: 91778555 / 91007040]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="107" width="552" height="1" uuid="93129145-9467-4b55-8704-d1978c957da4"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement x="455" y="5" width="63" height="67" uuid="e86405e4-37b8-4f88-a1e6-f6b15bda5747"/>
+				<imageExpression><![CDATA["/home/anonymousghost/NetBeansProjects/GF/gf-web/src/main/webapp/resources/images/pharmacie.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="145" y="25" width="275" height="20" forecolor="#000000" uuid="f699129a-329d-4de8-8377-c8f09c91fcfc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[LISTE DE(S) EXAMEN(S)]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement style="table_TH" x="1" y="33" width="555" height="28" uuid="26627372-8c52-4a38-ac30-aeac7314377e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXAMEN(S)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement style="table_TD" x="1" y="0" width="555" height="26" uuid="d8d7a675-efe0-4699-aace-69c448c70fa3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{examen}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="1" width="552" height="1" uuid="1585979e-78a8-4934-b17f-b95dc6f4047e"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="71" y="2" width="100" height="14" uuid="7bd206b3-41a8-40af-bbbf-0c5d09c79c3b"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="2" width="72" height="14" uuid="e6448881-8ad2-443a-8fef-f7086af2e08c"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Etat arrêté le :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="356" y="2" width="100" height="14" uuid="1538faf7-e405-4f9b-81f5-e6fcd6257671"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="2" width="100" height="14" uuid="8a085883-4d56-402a-94a6-78a7e933eb41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prenom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="2" width="72" height="14" uuid="04e9635d-c17f-4b35-9e83-81f7037b6fbb"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Intervenant :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="27" width="72" height="14" uuid="c232fe5e-b4bf-4843-9799-d800af177b67"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Patient :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="355" y="27" width="100" height="14" uuid="73f5deba-9162-4397-9d84-b72053822e74"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomPatient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="27" width="100" height="14" uuid="be75ffb3-9fe4-46fa-b0c7-bbf2bcc05b34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prenomPatient}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

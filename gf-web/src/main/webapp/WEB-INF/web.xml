@@ -2,8 +2,32 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
    
          
+    
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ultima-green</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-ultima.taglib.xml</param-value>
+    </context-param>
+    
+    <!--Pour la configuration de jasperreports (etat)-->
+    <servlet>
+        <servlet-name>PdfServlet</servlet-name>
+        <servlet-class>net.sf.jasperreports.j2ee.servlets.PdfServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PdfServlet</servlet-name>
+        <url-pattern>/servlets/report/PDF</url-pattern>
+    </servlet-mapping>
+    
     <!--Pour la configuration de apache shiro-->
-<listener>
+    <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
     <filter>
@@ -29,26 +53,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <welcome-file-list>
-        <welcome-file>login.xhtml</welcome-file>
-    </welcome-file-list>
-    <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>ultima-green</param-value>
-    </context-param>
-    <context-param>
-        <param-name>primefaces.FONT_AWESOME</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-        <param-value>/WEB-INF/primefaces-ultima.taglib.xml</param-value>
-    </context-param>
     <filter>
         <filter-name>Character Encoding Filter</filter-name>
         <filter-class>org.primefaces.ultima.filter.CharacterEncodingFilter</filter-class>
@@ -57,10 +61,27 @@
         <filter-name>Character Encoding Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
+    
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>login.xhtml</welcome-file>
+    </welcome-file-list>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    
+    
     <mime-mapping>
         <extension>ttf</extension>
         <mime-type>application/font-sfnt</mime-type>
@@ -106,10 +127,6 @@
         <mime-type>image/svg+xml</mime-type>
     </mime-mapping>
     
-    <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/login.xhtml</location>
-    </error-page>
     <error-page>
         <error-code>400</error-code>
         <location>/error.xhtml</location>

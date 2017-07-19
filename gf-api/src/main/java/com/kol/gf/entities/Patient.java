@@ -224,6 +224,10 @@ public class Patient implements Serializable {
         this.tension = tension;
     }
     
+    public Double calculMasseCorporelle(){
+        return this.poids/(this.taille*this.taille);
+    }
+    
     
 
     @Override

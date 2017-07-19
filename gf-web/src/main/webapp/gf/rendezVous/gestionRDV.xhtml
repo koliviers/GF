@@ -40,7 +40,7 @@
                                         <h:outputText  value="Intervenant *" />
                                         <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.intervenant}"   converter="omnifaces.SelectItemsConverter">
                                             <f:selectItem  itemLabel="Selectionner un intervenant" itemValue="#{null}" noSelectionOption="true"/>
-                                            <f:selectItems value="#{rdvbean.intervenantListe}" var="intser2" itemLabel="#{intser2.nomIntervenant} #{intser2.nomIntervenant}" itemValue="#{intser2}"/>
+                                            <f:selectItems value="#{rdvbean.intervenantListe}" var="intser2" itemLabel="#{intser2.nomIntervenant} #{intser2.prenomIntervenant}" itemValue="#{intser2}"/>
                                         </p:selectOneMenu>
 
                                         <h:outputText value="Motif" />
