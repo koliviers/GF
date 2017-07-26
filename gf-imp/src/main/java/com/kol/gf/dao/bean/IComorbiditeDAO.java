@@ -5,16 +5,16 @@
  */
 package com.kol.gf.dao.bean;
 
-import com.kol.gf.entities.TraitementMedicamenteux;
+import com.kol.gf.entities.Comorbidite;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import java.io.Serializable;
 import javax.ejb.Local;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Local
-public interface TraitementDaoBeanLocal extends BaseDaoBean<TraitementMedicamenteux, Long>{
+public interface IComorbiditeDAO extends BaseDaoBean<Comorbidite, Long>{
     
 }

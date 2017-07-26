@@ -13,6 +13,7 @@ import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.Antecedent_familial;
 import com.kol.gf.entities.Antecedent_familial_Id;
 import com.kol.gf.entities.ClasseTherapeutique;
+import com.kol.gf.entities.Comorbidite;
 import com.kol.gf.entities.Consommation;
 import com.kol.gf.entities.Consultation;
 import com.kol.gf.entities.Diagnostique;
@@ -27,11 +28,13 @@ import com.kol.gf.entities.ParacliniqueConsultationId;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
-import com.kol.gf.entities.Traitement;
+import com.kol.gf.entities.TraitementMedicamenteux;
+import com.kol.gf.entities.TraitementMedicamenteuxId;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.entities.TypeHabitude;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
 import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
+import com.kol.gf.service.ComorbiditeSessionBeanLocal;
 import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
 import com.kol.gf.service.ExamenCliniqueSessionBeanLocal;
 import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
@@ -41,6 +44,7 @@ import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
+import com.kol.gf.service.TraitementMedicamenteuxSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.ManipulationDate;
@@ -51,7 +55,6 @@ import com.miki.webapp.shiro.EntityRealm;
 import com.miki.webapp.shiro.utils.constante;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -105,9 +108,13 @@ public class ConsultationBean implements Serializable {
 
     private Diagnostique diagnostique;
 
+    private Comorbidite comorbidite;
+
     private ParacliniqueConsultation paracliniqueConsultation;
 
     private ParacliniqueConsultationId paraconsultationId;
+
+    private ClasseTherapeutique classeTherapeutique;
 
     private Integer nombre;
 
@@ -125,7 +132,7 @@ public class ConsultationBean implements Serializable {
 
     private List<Ordonnance> ordonnanceListe;
 
-    private List<Traitement> traitementListe;
+    private List<TraitementMedicamenteux> traitementListe;
 
     private List<Intervenant> intervenantListe;
 
@@ -143,8 +150,19 @@ public class ConsultationBean implements Serializable {
 
     private List<ClasseTherapeutique> classeTherapeutiqueListe;
 
+    private List<Comorbidite> comorbiditeListe;
+
+    private List<TraitementMedicamenteux> traitementMedicamenteuxClasseListe;
+
+    private List<TraitementMedicamenteux> traitementMedicamenteuxClasseListeTemporaire;
+
     private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
     private List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire;
+    
+    private List<String> diagnListe ;
+    private List<String> traitMedc;
+    
+    private String agePatient;
 
     private List<TypeConsommation> liteType;
 
@@ -205,6 +223,12 @@ public class ConsultationBean implements Serializable {
     @EJB
     private ClasseTheurapetiqueServiceBeanLocal classeTherapeutiqueServices;
 
+    @EJB
+    private TraitementMedicamenteuxSessionBeanLocal traitementMedicamenteuxServices;
+
+    @EJB
+    private ComorbiditeSessionBeanLocal comorbiditeServices;
+
     public ConsultationBean() {
 
         pathologie = new Pathologie();
@@ -212,6 +236,7 @@ public class ConsultationBean implements Serializable {
         rdv = new RendezVous();
         rdvTampon = new RendezVous();
         patient = new Patient();
+        classeTherapeutique = new ClasseTherapeutique();
 
         listePatient = new ArrayList<>();
         listePathologie = new ArrayList<>();
@@ -228,10 +253,15 @@ public class ConsultationBean implements Serializable {
         consultationListe = new ArrayList<>();
         listePathologieTampon = new ArrayList<>();
         diagnostiqueListe = new ArrayList<>();
+        comorbiditeListe = new ArrayList<>();
         examenParacliniqueListe = new ArrayList<>();
         examenParacliniqueListe2 = new ArrayList<>();
         paracliniqueConsultationTamponListe = new ArrayList<>();
         classeTherapeutiqueListe = new ArrayList<>();
+        traitementMedicamenteuxClasseListe = new ArrayList<>();
+        traitementMedicamenteuxClasseListeTemporaire = new ArrayList<>();
+        diagnListe = new ArrayList<>();
+        traitMedc = new ArrayList<>();
 
         consultation = new Consultation();
         ordonnance = new Ordonnance();
@@ -241,10 +271,13 @@ public class ConsultationBean implements Serializable {
         examentClinique = new ExamenClinique();
         examenParaclinique = new ExamenParaclinique();
         diagnostique = new Diagnostique();
+        comorbidite = new Comorbidite();
         paracliniqueConsultation = new ParacliniqueConsultation();
         paraconsultationId = new ParacliniqueConsultationId();
 
         disable = false;
+        
+        agePatient = "";
 
     }
 
@@ -287,6 +320,15 @@ public class ConsultationBean implements Serializable {
                                     tx.begin();
                                     diag.setConsultation(consultation);
                                     diagnostiqueServices.saveOne(diag);
+                                    tx.commit();
+                                }
+                            }
+
+                            if (!comorbiditeListe.isEmpty()) {
+                                for (Comorbidite cm : comorbiditeListe) {
+                                    tx.begin();
+                                    cm.setConsultation(consultation);
+                                    comorbiditeServices.saveOne(cm);
                                     tx.commit();
                                 }
                             }
@@ -337,9 +379,11 @@ public class ConsultationBean implements Serializable {
 
                                 idAF.setId_pathologie(pth.getId());
                                 idAF.setId_patient(consultation.getPatient().getId());
+                                idAF.setId_consultation(consultation.getId());
 
                                 Af.setId(idAF);
                                 Af.setPathologie(pth);
+                                Af.setConsultation(consultation);
                                 Af.setPatient(consultation.getPatient());
 
                                 antecedentFamilialServices.saveOne(Af);
@@ -354,6 +398,23 @@ public class ConsultationBean implements Serializable {
                                     ord.setConsultation(consultation);
                                     ordonnanceServices.saveOne(ord);
 
+                                    tx.commit();
+                                }
+                            }
+
+                            if (!traitementMedicamenteuxClasseListe.isEmpty()) {
+                                for (TraitementMedicamenteux tmt : traitementMedicamenteuxClasseListe) {
+
+                                    tx.begin();
+                                    TraitementMedicamenteuxId idTmt = new TraitementMedicamenteuxId();
+
+                                    idTmt.setId_classeThe(tmt.getClasse().getId());
+                                    idTmt.setId_consultation(consultation.getId());
+
+                                    tmt.setId(idTmt);
+                                    tmt.setConsultation(consultation);
+
+                                    traitementMedicamenteuxServices.saveOne(tmt);
                                     tx.commit();
                                 }
                             }
@@ -394,12 +455,25 @@ public class ConsultationBean implements Serializable {
                         tx.commit();
 
                         if (!diagnostiqueListe.isEmpty()) {
-                            for (Diagnostique diag : diagnostiqueListe) {
+                            for (Diagnostique diag2 : diagnostiqueListe) {
 
-                                if (diag.getId() == null) {
+                                if (diag2.getId() == null) {
                                     tx.begin();
-                                    diag.setConsultation(consultation);
-                                    diagnostiqueServices.saveOne(diag);
+                                    diag2.setConsultation(consultation);
+                                    diagnostiqueServices.saveOne(diag2);
+                                    tx.commit();
+                                }
+
+                            }
+                        }
+
+                        if (!comorbiditeListe.isEmpty()) {
+                            for (Comorbidite cm2 : comorbiditeListe) {
+
+                                if (cm2.getId() == null) {
+                                    tx.begin();
+                                    cm2.setConsultation(consultation);
+                                    comorbiditeServices.saveOne(cm2);
                                     tx.commit();
                                 }
 
@@ -449,10 +523,12 @@ public class ConsultationBean implements Serializable {
                             Antecedent_familial Af3 = new Antecedent_familial();
 
                             idAF3.setId_pathologie(pth3.getId());
+                            idAF3.setId_consultation(consultation.getId());
                             idAF3.setId_patient(consultation.getPatient().getId());
 
                             Af3.setId(idAF3);
                             Af3.setPathologie(pth3);
+                            Af3.setConsultation(consultation);
                             Af3.setPatient(consultation.getPatient());
 
                             antecedentFamilialServices.saveOne(Af3);
@@ -472,9 +548,38 @@ public class ConsultationBean implements Serializable {
 
                         }
 
+                        if (!traitementMedicamenteuxClasseListeTemporaire.isEmpty()) {
+                            for (TraitementMedicamenteux tmt2 : traitementMedicamenteuxClasseListeTemporaire) {
+
+                                if (tmt2.getId() != null) {
+                                    tx.begin();
+                                    traitementMedicamenteuxServices.supprimerTraitementMedicamenteux(tmt2.getId());
+                                    tx.commit();
+                                }
+
+                            }
+                        }
+
+                        if (!traitementMedicamenteuxClasseListe.isEmpty()) {
+                            for (TraitementMedicamenteux tmt22 : traitementMedicamenteuxClasseListe) {
+
+                                tx.begin();
+                                TraitementMedicamenteuxId idTmt2 = new TraitementMedicamenteuxId();
+
+                                idTmt2.setId_classeThe(tmt22.getClasse().getId());
+                                idTmt2.setId_consultation(consultation.getId());
+
+                                tmt22.setId(idTmt2);
+                                tmt22.setConsultation(consultation);
+
+                                traitementMedicamenteuxServices.saveOne(tmt22);
+                                tx.commit();
+                            }
+                        }
+
                         if (!tamponHabitudeAlimentaireTemporaire.isEmpty()) {
                             for (Habitude_alimentaire bt22 : tamponHabitudeAlimentaireTemporaire) {
-                                System.out.println(bt22);
+
                                 if (bt22.getId() != null) {
                                     tx.begin();
                                     habitudeAlimentaireServices.supprimerHabitudeAlimentaire(bt22.getId());
@@ -535,12 +640,17 @@ public class ConsultationBean implements Serializable {
                 //Recuperation Habitude alimentaire
                 List<Habitude_alimentaire> habitude_Al = habitudeAlimentaireServices.getBy("consultation", consul);
 
-                System.out.println("Habitude_Al :" + habitude_Al);
                 tamponHabitudeAlimentaire = habitude_Al;
                 tamponHabitudeAlimentaireTemporaire = habitude_Al;
 
+                //Recuperation TraitementMedicamenteux
+                List<TraitementMedicamenteux> traitMedListe = traitementMedicamenteuxServices.getBy("consultation", consul);
+
+                traitementMedicamenteuxClasseListe = traitMedListe;
+                traitementMedicamenteuxClasseListeTemporaire = traitMedListe;
+
                 //Recuperation Antecedent familial
-                antecedentFamilialListe = antecedentFamilialServices.getBy("patient", consul.getPatient());
+                antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
                 List<Pathologie> pathologieRecup = new ArrayList<>();
 
                 for (Antecedent_familial antC : antecedentFamilialListe) {
@@ -557,6 +667,9 @@ public class ConsultationBean implements Serializable {
 
                 //Recuperation du Diagnostique
                 diagnostiqueListe = diagnostiqueServices.getBy("consultation", consul);
+                
+                //Recuperation de la comorbidite
+                comorbiditeListe = comorbiditeServices.getBy("consultation", consul);
 
                 //Recuperation du paracliniqueConsultation
                 paracliniqueConsultationTamponListe = paracliniqueConsultationServices.getBy("consultation", consul);
@@ -580,6 +693,7 @@ public class ConsultationBean implements Serializable {
         pathologie = new Pathologie();
         consommation = new Consommation();
         patient = new Patient();
+        classeTherapeutique = new ClasseTherapeutique();
 
         typecons = new TypeConsommation();
         listeTypeHabitude = new ArrayList<>();
@@ -587,6 +701,8 @@ public class ConsultationBean implements Serializable {
         tamponHabitudeAlimentaireTemporaire = new ArrayList<>();
         ordonnanceListe = new ArrayList<>();
         antecedentFamilialListe = new ArrayList<>();
+        traitementMedicamenteuxClasseListe = new ArrayList<>();
+        traitementMedicamenteuxClasseListeTemporaire = new ArrayList<>();
 
         consultation = new Consultation();
         ordonnance = new Ordonnance();
@@ -598,12 +714,17 @@ public class ConsultationBean implements Serializable {
         examentClinique = new ExamenClinique();
         examenParaclinique = new ExamenParaclinique();
         diagnostique = new Diagnostique();
+        comorbidite = new Comorbidite();
         paracliniqueConsultation = new ParacliniqueConsultation();
         paraconsultationId = new ParacliniqueConsultationId();
 
         diagnostiqueListe = new ArrayList<>();
+        comorbiditeListe = new ArrayList<>();
         examenParacliniqueListe = new ArrayList<>();
         paracliniqueConsultationTamponListe = new ArrayList<>();
+        listePathologieTampon = new ArrayList<>();
+        diagnListe = new ArrayList<>();
+        traitMedc = new ArrayList<>();
 
         disable = false;
     }
@@ -612,7 +733,26 @@ public class ConsultationBean implements Serializable {
         if (consultation.getPatient() == null) {
             patient = new Patient();
         } else {
-            patient = consultation.getPatient();
+            patient = consultation.getPatient();       
+            Integer intAge = patient.getAge();
+            agePatient = String.valueOf(ManipulationDate.ajouterAnnee(new Date(), -intAge).getYear()+1900);
+            
+            List<Consultation> consulListe2 = consultationServices.getBy("patient", patient);
+            
+            Consultation consultTampon = null;
+            
+            if(!consulListe2.isEmpty()){
+                consultTampon = consulListe2.stream().reduce((c1,c2) -> c1.getDateConsultation().after(c2.getDateConsultation()) ? c1 : c2).get();
+                
+                diagnListe = diagnostiqueServices.getBy("consultation", consultTampon).stream()
+                                            .map(d1 -> d1.getLabel())
+                                            .collect(Collectors.toList());
+                traitMedc = traitementMedicamenteuxServices.getBy("consultation", consultTampon).stream()
+                                        .map(t1 -> t1.getClasse().getLabel())
+                                        .collect(Collectors.toList());
+            }
+            
+            
         }
     }
 
@@ -643,10 +783,35 @@ public class ConsultationBean implements Serializable {
 
     }
 
+    public void ajouterTraitementMedicamenteux() {
+
+        if (classeTherapeutique == null) {
+            Mtm.mikiMessageWarnSelectionner("le traitement");
+        } else {
+            TraitementMedicamenteux trait = new TraitementMedicamenteux();
+
+            trait.setClasse(classeTherapeutique);
+
+            if (!traitementMedicamenteuxClasseListe.contains(trait)) {
+                traitementMedicamenteuxClasseListe.add(trait);
+            }
+        }
+
+        classeTherapeutique = new ClasseTherapeutique();
+
+    }
+
     public void ajouterDiagnostique() {
         if (diagnostique != null && !diagnostiqueListe.contains(diagnostique)) {
             diagnostiqueListe.add(diagnostique);
             diagnostique = new Diagnostique();
+        }
+    }
+
+    public void ajouterComorbidite() {
+        if (comorbidite != null && !comorbiditeListe.contains(comorbidite)) {
+            comorbiditeListe.add(comorbidite);
+            comorbidite = new Comorbidite();
         }
     }
 
@@ -658,18 +823,18 @@ public class ConsultationBean implements Serializable {
         }
     }
 
+    public void supprimerComorbidite(Comorbidite comor) {
+        if (comor.getId() == null) {
+            comorbiditeListe.remove(comor);
+        } else {
+            comorbiditeServices.deleteOne(comor.getId());
+        }
+    }
+
     public List<Consultation> getConsulationFiltrerIntervenant() {
-        Utilisateur utilisateurTampon = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
-        Intervenant intervenantTampon = intervenantServices.getOneBy("utilisateur", utilisateurTampon);
         List<Consultation> consultationListeTampon = new ArrayList<>();
 
-        if (intervenantTampon == null) {
-            consultationListeTampon = consultationServices.getAll("dateConsultation", false);
-        } else {
-            consultationListeTampon = consultationServices.getBy("intervenant", intervenantTampon).stream()
-                    .sorted(Comparator.comparing(Consultation::getDateConsultation).reversed())
-                    .collect(Collectors.toList());
-        }
+        consultationListeTampon = consultationServices.getAll("dateConsultation", false);
 
         return consultationListeTampon;
 
@@ -687,6 +852,20 @@ public class ConsultationBean implements Serializable {
             Mtm.mikiMessageError();
         }
 
+    }
+
+    public void supprimerTraitementMedicamenteux(TraitementMedicamenteux traitMed) {
+        try {
+            if (traitMed.getId() == null) {
+                traitementMedicamenteuxClasseListe.remove(traitMed);
+            } else {
+                traitementMedicamenteuxServices.supprimerTraitementMedicamenteux(traitMed.getId());
+                traitementMedicamenteuxClasseListeTemporaire.remove(traitMed);
+
+            }
+        } catch (Exception e) {
+            Mtm.mikiMessageError();
+        }
     }
 
     public void ajouterAntecedentFamilial() {
@@ -953,11 +1132,11 @@ public class ConsultationBean implements Serializable {
         this.ordonnanceListe = ordonnanceListe;
     }
 
-    public List<Traitement> getTraitementListe() {
+    public List<TraitementMedicamenteux> getTraitementListe() {
         return traitementServices.getAll("label", true);
     }
 
-    public void setTraitementListe(List<Traitement> traitementListe) {
+    public void setTraitementListe(List<TraitementMedicamenteux> traitementListe) {
         this.traitementListe = traitementListe;
     }
 
@@ -1224,5 +1403,87 @@ public class ConsultationBean implements Serializable {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
+
+    public List<TraitementMedicamenteux> getTraitementMedicamenteuxClasseListe() {
+        return traitementMedicamenteuxClasseListe;
+    }
+
+    public void setTraitementMedicamenteuxClasseListe(List<TraitementMedicamenteux> traitementMedicamenteuxClasseListe) {
+        this.traitementMedicamenteuxClasseListe = traitementMedicamenteuxClasseListe;
+    }
+
+    public ClasseTherapeutique getClasseTherapeutique() {
+        return classeTherapeutique;
+    }
+
+    public void setClasseTherapeutique(ClasseTherapeutique classeTherapeutique) {
+        this.classeTherapeutique = classeTherapeutique;
+    }
+
+    public TraitementMedicamenteuxSessionBeanLocal getTraitementMedicamenteuxServices() {
+        return traitementMedicamenteuxServices;
+    }
+
+    public void setTraitementMedicamenteuxServices(TraitementMedicamenteuxSessionBeanLocal traitementMedicamenteuxServices) {
+        this.traitementMedicamenteuxServices = traitementMedicamenteuxServices;
+    }
+
+    public ComorbiditeSessionBeanLocal getComorbiditeServices() {
+        return comorbiditeServices;
+    }
+
+    public void setComorbiditeServices(ComorbiditeSessionBeanLocal comorbiditeServices) {
+        this.comorbiditeServices = comorbiditeServices;
+    }
+
+    public List<TraitementMedicamenteux> getTraitementMedicamenteuxClasseListeTemporaire() {
+        return traitementMedicamenteuxClasseListeTemporaire;
+    }
+
+    public void setTraitementMedicamenteuxClasseListeTemporaire(List<TraitementMedicamenteux> traitementMedicamenteuxClasseListeTemporaire) {
+        this.traitementMedicamenteuxClasseListeTemporaire = traitementMedicamenteuxClasseListeTemporaire;
+    }
+
+    public Comorbidite getComorbidite() {
+        return comorbidite;
+    }
+
+    public void setComorbidite(Comorbidite comorbidite) {
+        this.comorbidite = comorbidite;
+    }
+
+    public List<Comorbidite> getComorbiditeListe() {
+        return comorbiditeListe;
+    }
+
+    public void setComorbiditeListe(List<Comorbidite> comorbiditeListe) {
+        this.comorbiditeListe = comorbiditeListe;
+    }
+
+    public String getAgePatient() {
+        return agePatient;
+    }
+
+    public void setAgePatient(String agePatient) {
+        this.agePatient = agePatient;
+    }
+
+    public List<String> getDiagnListe() {
+        return diagnListe;
+    }
+
+    public void setDiagnListe(List<String> diagnListe) {
+        this.diagnListe = diagnListe;
+    }
+
+    public List<String> getTraitMedc() {
+        return traitMedc;
+    }
+
+    public void setTraitMedc(List<String> traitMedc) {
+        this.traitMedc = traitMedc;
+    }
+    
+    
 
 }

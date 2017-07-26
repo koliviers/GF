@@ -6,7 +6,7 @@
 package com.kol.gf.imp.service;
 
 import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
-import com.kol.gf.entities.Traitement;
+import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.service.TraitementServiceBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
@@ -19,13 +19,13 @@ import javax.ejb.Stateless;
  * @author koliviers
  */
 @Stateless
-public class TraitementServiceBean extends BaseServiceBeanImpl<Traitement, Long> implements TraitementServiceBeanLocal {
+public class TraitementServiceBean extends BaseServiceBeanImpl<TraitementMedicamenteux, Long> implements TraitementServiceBeanLocal {
 
     @EJB
     private TraitementDaoBeanLocal dao;
 
     @Override
-    protected BaseDaoBean<Traitement, Long> getDao() {
+    protected BaseDaoBean<TraitementMedicamenteux, Long> getDao() {
         return this.dao;
 
     }

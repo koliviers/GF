@@ -29,18 +29,25 @@ public class Antecedent_familial implements Serializable{
     private Patient patient;
     
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_consultation", nullable = false, insertable = false, updatable = false)
+    private Consultation consultation;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pathologie", nullable = false, insertable = false, updatable = false)
     private Pathologie pathologie;
 
     public Antecedent_familial() {
     }
 
-    
-    public Antecedent_familial(Antecedent_familial_Id id, Patient patient, Pathologie pathologie) {
+    public Antecedent_familial(Antecedent_familial_Id id, Patient patient, Consultation consultation, Pathologie pathologie) {
         this.id = id;
         this.patient = patient;
+        this.consultation = consultation;
         this.pathologie = pathologie;
     }
+
+    
+    
 
     public Antecedent_familial_Id getId() {
         return id;
@@ -65,6 +72,16 @@ public class Antecedent_familial implements Serializable{
     public void setPathologie(Pathologie pathologie) {
         this.pathologie = pathologie;
     }
+
+    public Consultation getConsultation() {
+        return consultation;
+    }
+
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -93,10 +110,9 @@ public class Antecedent_familial implements Serializable{
 
     @Override
     public String toString() {
-        return "Antecedent_familial{" + "id=" + id + ", patient=" + patient + ", pathologie=" + pathologie + '}';
+        return "Antecedent_familial{" + "id=" + id + ", patient=" + patient + ", consultation=" + consultation + ", pathologie=" + pathologie + '}';
     }
-    
-    
+
     
     
 }

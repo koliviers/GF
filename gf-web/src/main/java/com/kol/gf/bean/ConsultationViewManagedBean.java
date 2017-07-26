@@ -11,6 +11,7 @@ import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
 import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.Antecedent_familial;
+import com.kol.gf.entities.Comorbidite;
 import com.kol.gf.entities.Consultation;
 import com.kol.gf.entities.Diagnostique;
 import com.kol.gf.entities.ExamenClinique;
@@ -21,8 +22,11 @@ import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.ParacliniqueConsultation;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
+import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
 import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
+import com.kol.gf.service.ComorbiditeSessionBeanLocal;
+import com.kol.gf.service.DecesServiceBeanLocal;
 import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
 import com.kol.gf.service.ExamenCliniqueSessionBeanLocal;
 import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
@@ -32,7 +36,9 @@ import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
+import com.kol.gf.service.TraitementMedicamenteuxSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
+import com.miki.webapp.core.Utils.ManipulationDate;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.miki.securite.Service.UtilisateurSessionBeanLocal;
 import com.miki.webapp.miki.securite.entities.Utilisateur;
@@ -42,6 +48,7 @@ import com.miki.webapp.shiro.utils.constante;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +73,7 @@ public class ConsultationViewManagedBean implements Serializable {
     private Patient patient;
     private Utilisateur utilisateurTampon2;
     private Intervenant intervenantTampon2;
+    private String etat;
 
     private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
     private List<Pathologie> listePathologieTampon;
@@ -74,6 +82,10 @@ public class ConsultationViewManagedBean implements Serializable {
     private List<Diagnostique> diagnostiqueListe;
     private List<ParacliniqueConsultation> paracliniqueConsultationTamponListe;
     private List<ExamenParaclinique> examenParacliniqueListe;
+
+    private List<Comorbidite> comorbiditeListe;
+
+    private List<TraitementMedicamenteux> traitementMedicamenteuxClasseListe;
 
     @ManagedProperty(value = "#{connexionManagedBean}")
     private ConnexionManagedBean connexionMngdB;
@@ -132,6 +144,15 @@ public class ConsultationViewManagedBean implements Serializable {
     @EJB
     private ClasseTheurapetiqueServiceBeanLocal classeTherapeutiqueServices;
 
+    @EJB
+    private TraitementMedicamenteuxSessionBeanLocal traitementMedicamenteuxServices;
+
+    @EJB
+    private ComorbiditeSessionBeanLocal comorbiditeServices;
+
+    @EJB
+    private DecesServiceBeanLocal decesServices;
+
     public ConsultationViewManagedBean() {
 
         patient = new Patient();
@@ -147,12 +168,18 @@ public class ConsultationViewManagedBean implements Serializable {
 
         paracliniqueConsultationTamponListe = new ArrayList<>();
 
+        comorbiditeListe = new ArrayList<>();
+
+        traitementMedicamenteuxClasseListe = new ArrayList<>();
+
         consultation = new Consultation();
 
         utilisateurTampon2 = new Utilisateur();
         intervenantTampon2 = new Intervenant();
 
         examentClinique = new ExamenClinique();
+
+        etat = "";
 
     }
 
@@ -173,7 +200,7 @@ public class ConsultationViewManagedBean implements Serializable {
 
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE) && intervenantTampon2 != null) {
             try {
-                
+
                 this.annulerConsultation();
                 consultation = consul;
                 examentClinique = consul.getExamen_Clinique();
@@ -184,8 +211,13 @@ public class ConsultationViewManagedBean implements Serializable {
 
                 tamponHabitudeAlimentaire = habitude_Al;
 
+                //Recuperation TraitementMedicamenteux
+                List<TraitementMedicamenteux> traitMedListe = traitementMedicamenteuxServices.getBy("consultation", consul);
+
+                traitementMedicamenteuxClasseListe = traitMedListe;
+
                 //Recuperation Antecedent familial
-                antecedentFamilialListe = antecedentFamilialServices.getBy("patient", consul.getPatient());
+                antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
                 List<Pathologie> pathologieRecup = new ArrayList<>();
 
                 for (Antecedent_familial antC : antecedentFamilialListe) {
@@ -200,14 +232,134 @@ public class ConsultationViewManagedBean implements Serializable {
                 //Recuperation du Diagnostique
                 diagnostiqueListe = diagnostiqueServices.getBy("consultation", consul);
 
+                //Recuperation de la comorbidite
+                comorbiditeListe = comorbiditeServices.getBy("consultation", consul);
+
                 //Recuperation du paracliniqueConsultation
                 paracliniqueConsultationTamponListe = paracliniqueConsultationServices.getBy("consultation", consul);
 
                 for (ParacliniqueConsultation pr : paracliniqueConsultationTamponListe) {
                     examenParacliniqueListe.add(pr.getExamen());
                 }
+                
+                //Recuperation de l'etat du patient;
+                if (decesServices.getOneBy("patient", patient) == null) {
+
+                    List<Consultation> consulListe2 = consultationServices.getBy("patient", patient);
+
+                    if (consulListe2.isEmpty()) {
+
+                        etat = "En vie";
+
+                    } else {
+
+                        Date dateLimitePerduDeVu = ManipulationDate.ajouterMois(new Date(), -3);
+
+                        Date dateDernierConsul = consulListe2.stream()
+                                .reduce((c1, c2) -> c1.getDateConsultation().after(c2.getDateConsultation()) ? c1 : c2).get().getDateConsultation();
+
+                        if (dateLimitePerduDeVu.after(dateDernierConsul)) {
+                            etat = "Perdu de vue";
+                        } else {
+                            etat = "En vie";
+                        }
+                    }
+
+                } else {
+                    etat = "Décédé";
+                }
 
                 page = "/gf/consultation/informationConsultation.xhtml";
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Mtm.mikiMessageError();
+                page = null;
+            }
+
+        } else {
+            Mtm.mikiMessageErrorPerso("Opération interrompue :vous n'etes pas un intervenant donc vous ne pouvez pas effectuer cette opération !");
+            page = null;
+        }
+
+        return page;
+    }
+
+    public String informationConsultation2(Consultation consul) {
+        String page = null;
+
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE) && intervenantTampon2 != null) {
+            try {
+
+                this.annulerConsultation();
+                consultation = consul;
+                examentClinique = consul.getExamen_Clinique();
+                patient = consul.getPatient();
+
+                //Recuperation Habitude alimentaire
+                List<Habitude_alimentaire> habitude_Al = habitudeAlimentaireServices.getBy("consultation", consul);
+
+                tamponHabitudeAlimentaire = habitude_Al;
+
+                //Recuperation TraitementMedicamenteux
+                List<TraitementMedicamenteux> traitMedListe = traitementMedicamenteuxServices.getBy("consultation", consul);
+
+                traitementMedicamenteuxClasseListe = traitMedListe;
+
+                //Recuperation Antecedent familial
+                antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
+                List<Pathologie> pathologieRecup = new ArrayList<>();
+
+                for (Antecedent_familial antC : antecedentFamilialListe) {
+                    pathologieRecup.add(antC.getPathologie());
+                }
+
+                listePathologieTampon = pathologieRecup;
+
+                //Recuperation de l'ordonnance
+                ordonnanceListe = ordonnanceServices.getBy("consultation", consul);
+
+                //Recuperation du Diagnostique
+                diagnostiqueListe = diagnostiqueServices.getBy("consultation", consul);
+
+                //Recuperation de la comorbidite
+                comorbiditeListe = comorbiditeServices.getBy("consultation", consul);
+
+                //Recuperation du paracliniqueConsultation
+                paracliniqueConsultationTamponListe = paracliniqueConsultationServices.getBy("consultation", consul);
+
+                for (ParacliniqueConsultation pr : paracliniqueConsultationTamponListe) {
+                    examenParacliniqueListe.add(pr.getExamen());
+                }
+                
+                //Recuperation de l'etat du patient;
+                if (decesServices.getOneBy("patient", patient) == null) {
+
+                    List<Consultation> consulListe22 = consultationServices.getBy("patient", patient);
+
+                    if (consulListe22.isEmpty()) {
+
+                        etat = "En vie";
+
+                    } else {
+
+                        Date dateLimitePerduDeVu2 = ManipulationDate.ajouterMois(new Date(), -3);
+
+                        Date dateDernierConsul2 = consulListe22.stream()
+                                .reduce((c1, c2) -> c1.getDateConsultation().after(c2.getDateConsultation()) ? c1 : c2).get().getDateConsultation();
+
+                        if (dateLimitePerduDeVu2.after(dateDernierConsul2)) {
+                            etat = "Perdu de vue";
+                        } else {
+                            etat = "En vie";
+                        }
+                    }
+
+                } else {
+                    etat = "Décédé";
+                }
+
+                page = "/gf/suivi/informationConsultation.xhtml";
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -249,7 +401,7 @@ public class ConsultationViewManagedBean implements Serializable {
     }
 
     public String retour2() {
-        return "/gf/consultation/informationConsultation.xhtml?faces-redirect=true";
+        return "/gf/suivi/gestionSuivi.xhtml?faces-redirect=true";
     }
 
     public String retour3() {
@@ -555,5 +707,55 @@ public class ConsultationViewManagedBean implements Serializable {
     public void setClasseTherapeutiqueServices(ClasseTheurapetiqueServiceBeanLocal classeTherapeutiqueServices) {
         this.classeTherapeutiqueServices = classeTherapeutiqueServices;
     }
+
+    public TraitementMedicamenteuxSessionBeanLocal getTraitementMedicamenteuxServices() {
+        return traitementMedicamenteuxServices;
+    }
+
+    public void setTraitementMedicamenteuxServices(TraitementMedicamenteuxSessionBeanLocal traitementMedicamenteuxServices) {
+        this.traitementMedicamenteuxServices = traitementMedicamenteuxServices;
+    }
+
+    public ComorbiditeSessionBeanLocal getComorbiditeServices() {
+        return comorbiditeServices;
+    }
+
+    public void setComorbiditeServices(ComorbiditeSessionBeanLocal comorbiditeServices) {
+        this.comorbiditeServices = comorbiditeServices;
+    }
+
+    public List<Comorbidite> getComorbiditeListe() {
+        return comorbiditeListe;
+    }
+
+    public void setComorbiditeListe(List<Comorbidite> comorbiditeListe) {
+        this.comorbiditeListe = comorbiditeListe;
+    }
+
+    public List<TraitementMedicamenteux> getTraitementMedicamenteuxClasseListe() {
+        return traitementMedicamenteuxClasseListe;
+    }
+
+    public void setTraitementMedicamenteuxClasseListe(List<TraitementMedicamenteux> traitementMedicamenteuxClasseListe) {
+        this.traitementMedicamenteuxClasseListe = traitementMedicamenteuxClasseListe;
+    }
+
+    public DecesServiceBeanLocal getDecesServices() {
+        return decesServices;
+    }
+
+    public void setDecesServices(DecesServiceBeanLocal decesServices) {
+        this.decesServices = decesServices;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
+    }
+    
+    
 
 }

@@ -81,6 +81,14 @@ public class mikiSecuriteFilter implements Filter {
                         request2.getRequestDispatcher(PAGE_ERROR).forward(request, response);
                     }
                     break;
+                    
+                case "gf/suivi/gestionSuivi.xhtml":
+                    if (EntityRealm.getSubject().isPermitted(constante.ROLE_CONSULTER_CONSULTATION_CLE)) {
+                        request2.getRequestDispatcher("gestionSuivi.xhtml").forward(request, response);
+                    } else {
+                        request2.getRequestDispatcher(PAGE_ERROR).forward(request, response);
+                    }
+                    break;
 
                 case "dashboard.xhtml":
                     InitialContext context = new InitialContext();

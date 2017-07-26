@@ -6,20 +6,14 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -43,9 +37,8 @@ public class Patient implements Serializable {
     @Column(name = "codePatient", nullable = true)
     private String codePatient;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date_naissance", nullable = true)
-    private Date date_naissance;
+    @Column(name = "age", nullable = true)
+    private Integer age;
 
     @Column(name = "sexe", nullable = false)
     private String sexe;
@@ -82,11 +75,11 @@ public class Patient implements Serializable {
     public Patient() {
     }
 
-    public Patient(String nomPatient, String prenomPatient, String codePatient, Date date_naissance, String sexe, String contact, String civilite, String profession, String adresse, double taille, double poids, double tourtaille, double tensiondroit, double tension) {
+    public Patient(String nomPatient, String prenomPatient, String codePatient, Integer age, String sexe, String contact, String civilite, String profession, String adresse, double taille, double poids, double tourtaille, double tensiondroit, double tension) {
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
         this.codePatient = codePatient;
-        this.date_naissance = date_naissance;
+        this.age = age;
         this.sexe = sexe;
         this.contact = contact;
         this.civilite = civilite;
@@ -98,6 +91,10 @@ public class Patient implements Serializable {
         this.tensiondroit = tensiondroit;
         this.tension = tension;
     }
+
+   
+
+    
 
    
 
@@ -125,14 +122,6 @@ public class Patient implements Serializable {
 
     public void setPrenomPatient(String prenomPatient) {
         this.prenomPatient = prenomPatient;
-    }
-
-    public Date getDate_naissance() {
-        return date_naissance;
-    }
-
-    public void setDate_naissance(Date date_naissance) {
-        this.date_naissance = date_naissance;
     }
 
 
@@ -227,6 +216,16 @@ public class Patient implements Serializable {
     public Double calculMasseCorporelle(){
         return this.poids/(this.taille*this.taille);
     }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+    
+    
     
     
 
@@ -257,7 +256,7 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", date_naissance=" + date_naissance + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tension=" + tension + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", age=" + age + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tension=" + tension + '}';
     }
 
     

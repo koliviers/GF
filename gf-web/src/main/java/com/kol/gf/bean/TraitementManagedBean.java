@@ -5,22 +5,14 @@
  */
 package com.kol.gf.bean;
 
-import com.kol.gf.entities.Traitement;
+import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.service.TraitementServiceBeanLocal;
-import com.miki.webapp.core.Transaction.TransactionManager;
-import com.miki.webapp.core.Utils.Mtm;
-import com.miki.webapp.shiro.EntityRealm;
-import com.miki.webapp.shiro.utils.constante;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 /**
  *
@@ -30,57 +22,57 @@ import javax.transaction.UserTransaction;
 @ViewScoped
 public class TraitementManagedBean implements Serializable {
 
-    private Traitement traitement;
-    private List<Traitement> traitementListe;
+    private TraitementMedicamenteux traitement;
+    private List<TraitementMedicamenteux> traitementListe;
 
     @EJB
     private TraitementServiceBeanLocal traitementServices;
 
     public TraitementManagedBean() {
-        traitement = new Traitement();
+        traitement = new TraitementMedicamenteux();
         traitementListe = new ArrayList<>();
     }
 
-    public void gestionTraitement() {
-        UserTransaction tx = TransactionManager.getUserTransaction();
-
-        try {
-            if (traitement.getLabel().trim().isEmpty()) {
-                Mtm.mikiMessageWarnSaisir("le nom du traitement");
-            } else {
-                if (traitement.getId() == null) {
-                    tx.begin();
-                    traitementServices.saveOne(traitement);
-                    tx.commit();
-                } else {
-                    tx.begin();
-                    traitementServices.updateOne(traitement);
-                    tx.commit();
-                }
-
-                Mtm.mikiMessageInfo();
-                traitement = new Traitement();
-            }
-        } catch (Exception ex) {
-            try {
-                tx.rollback();
-            } catch (IllegalStateException ex1) {
-                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SecurityException ex1) {
-                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            } catch (SystemException ex1) {
-                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            Mtm.mikiMessageError();
-        }
-    }
+//    public void gestionTraitement() {
+//        UserTransaction tx = TransactionManager.getUserTransaction();
+//
+//        try {
+//            if (traitement.getLabel().trim().isEmpty()) {
+//                Mtm.mikiMessageWarnSaisir("le nom du traitement");
+//            } else {
+//                if (traitement.getId() == null) {
+//                    tx.begin();
+//                    traitementServices.saveOne(traitement);
+//                    tx.commit();
+//                } else {
+//                    tx.begin();
+//                    traitementServices.updateOne(traitement);
+//                    tx.commit();
+//                }
+//
+//                Mtm.mikiMessageInfo();
+//                traitement = new TraitementMedicamenteux();
+//            }
+//        } catch (Exception ex) {
+//            try {
+//                tx.rollback();
+//            } catch (IllegalStateException ex1) {
+//                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+//            } catch (SecurityException ex1) {
+//                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+//            } catch (SystemException ex1) {
+//                Logger.getLogger(TraitementManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+//            }
+//            Mtm.mikiMessageError();
+//        }
+//    }
     
-    public void renvoieTraitement(Traitement trait){
+    public void renvoieTraitement(TraitementMedicamenteux trait){
         traitement = trait;
     }
 
     public void annulerTraitement(){
-        traitement = new Traitement();
+        traitement = new TraitementMedicamenteux();
     }
     
     
@@ -89,19 +81,19 @@ public class TraitementManagedBean implements Serializable {
     
     
     
-    public Traitement getTraitement() {
+    public TraitementMedicamenteux getTraitement() {
         return traitement;
     }
 
-    public void setTraitement(Traitement traitement) {
+    public void setTraitement(TraitementMedicamenteux traitement) {
         this.traitement = traitement;
     }
 
-    public List<Traitement> getTraitementListe() {
+    public List<TraitementMedicamenteux> getTraitementListe() {
         return traitementServices.getAll("label", true);
     }
 
-    public void setTraitementListe(List<Traitement> traitementListe) {
+    public void setTraitementListe(List<TraitementMedicamenteux> traitementListe) {
         this.traitementListe = traitementListe;
     }
 

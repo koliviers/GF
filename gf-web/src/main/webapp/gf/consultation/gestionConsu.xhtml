@@ -40,7 +40,7 @@
                                             <p:selectOneMenu   value="#{consBean.consultation.patient}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="pati" value="#{consBean.listePatient}" itemValue="#{pati}" itemLabel="#{pati.nomPatient} #{pati.prenomPatient}"/> 
-                                                <p:ajax update=":patienForm" listener="#{consBean.listenerPatient}"/>
+                                                <p:ajax update=":patienForm, :consForm" listener="#{consBean.listenerPatient}"/>
                                             </p:selectOneMenu>
 
                                             <p:outputLabel for="chir" value="Antecedant Personelle Chirugicaux"/>
@@ -293,17 +293,44 @@
                                         <br/>
                                         <br/>
 
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                            <p:outputLabel  value="Comorbidite"/>
+
+                                            <p:selectOneMenu id="pathlist3" style="margin-bottom:10px;" value="#{consBean.comorbidite.label}" >
+                                                <f:selectItem itemLabel="Selectionner une comorbidite" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{consBean.listePathologie}" var="rpat22" itemLabel="#{rpat22.nomPathologie}" itemValue="#{rpat22.nomPathologie}"/>
+                                            </p:selectOneMenu>
+                                        </p:panelGrid>
+
+                                        <br/>
+
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterComorbidite()}" style="width: auto;" update="@form:pathlist3,@form:comorbiditeTamponId"/></center>
+
+                                        <br/>
+
+                                        <p:dataTable value="#{consBean.comorbiditeListe}" var="dg2" id="comorbiditeTamponId" emptyMessage="Liste vide" >
+
+                                            <p:column headerText="Comorbidite" >
+                                                <center><h:outputText value="#{dg2.label}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Action" >
+                                                <center>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerComorbidite(dg2)}" update="@form:comorbiditeTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                </center>
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                        <br/>
+                                        <br/>
+
                                     </p:tab>
 
                                     <p:tab id="traitem" title="Traitement">
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                            <p:outputLabel  value="Traitement medicamenteux" />
-                                            <p:selectOneMenu   value="#{consBean.consultation.traitementMedicamenteurx}" converter="omnifaces.SelectItemsIndexConverter">
-                                                <f:selectItem itemLabel="Selectionner une classe" itemValue="#{null}" noSelectionOption="true"/>
-                                                <f:selectItems var="tr" value="#{consBean.classeTherapeutiqueListe}" itemValue="#{tr}" itemLabel="#{tr.label}"/>                              
-                                            </p:selectOneMenu>
 
                                             <p:outputLabel  value="Traitement non medicamenteux" />
                                             <p:inputTextarea value="#{consBean.consultation.traitementNomMedicamenteux}" />
@@ -313,25 +340,37 @@
                                                 <f:selectItem itemLabel="Selectionner l'intervenant" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="intervn" value="#{consBean.intervenantListe}" itemValue="#{intervn}" itemLabel="#{intervn.nomIntervenant} #{intervn.prenomIntervenant}"/>                              
                                             </p:selectOneMenu>
+
+                                            <p:outputLabel  value="Traitement medicamenteux" />
+                                            <p:selectOneMenu id="traitMId"  value="#{consBean.classeTherapeutique}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une classe" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tr2" value="#{consBean.classeTherapeutiqueListe}" itemValue="#{tr2}" itemLabel="#{tr2.label}"/>                              
+                                            </p:selectOneMenu>
+
                                         </p:panelGrid> 
 
                                         <br/>
-                                        <br/>
 
-                                    </p:tab>
-
-                                    <p:tab id="rslt" title="Resultat">
-
-                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
-
-                                            <p:outputLabel  value="Resultat"/>
-                                            <p:inputTextarea  value="#{consBean.consultation.detailConsultation}"/>
-
-                                        </p:panelGrid>
+                                        <center> <p:commandButton value="Ajouter traitement"  action="#{consBean.ajouterTraitementMedicamenteux()}" style="width: auto;" update="@form:traitMId,@form:traitMedTamponId"/></center>
 
                                         <br/>
-                                        <br/>
 
+                                        <p:dataTable value="#{consBean.traitementMedicamenteuxClasseListe}" var="pa3" id="traitMedTamponId" emptyMessage="Liste vide" >
+
+                                            <p:column headerText="Traitement" >
+                                                <center><h:outputText value="#{pa3.classe.label}"/></center>
+                                            </p:column>
+
+                                            <p:column headerText="Action" >
+                                                <center>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerTraitementMedicamenteux(pa3)}" update="@form:traitMedTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                </center>
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                        <br/>
+                                        <br/>
 
                                     </p:tab>
 
@@ -444,31 +483,11 @@
                                     <p:outputLabel value="Sexe"/>
                                     <h:outputText value="#{consBean.patient.sexe}"/>
 
-                                    <p:outputLabel value="Profession"/>
-                                    <h:outputText value="#{consBean.patient.profession}"/>
-
-                                    <p:outputLabel value="Date de naissance"/>
-                                    <h:outputText value="#{consBean.patient.date_naissance}">
-                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                    </h:outputText>
-
-                                    <p:outputLabel value="Contact"/>
-                                    <h:outputText value="#{consBean.patient.contact}"/>
-
-                                    <p:outputLabel value="Adresse"/>
-                                    <h:outputText value="#{consBean.patient.adresse}"/>
-
-                                    <p:outputLabel value="Civilite"/>
-                                    <h:outputText value="#{consBean.patient.civilite}"/>
-
-                                    <p:outputLabel value="Perimetre abdominal"/>
-                                    <h:outputText value="#{consBean.patient.tourtaille}"/>
-
-                                    <p:outputLabel  value="Poids"/>
-                                    <h:outputText value="#{consBean.patient.poids}"/>
-
-                                    <p:outputLabel  value="Taille"/>
-                                    <h:outputText value="#{consBean.patient.taille}"/>
+                                    <p:outputLabel value="Age"/>
+                                    <h:outputText value="#{consBean.patient.age} ans"/>
+                                    
+                                    <p:outputLabel value="Né(e) en "/>
+                                    <h:outputText value="#{consBean.agePatient}"/>
 
                                     <p:outputLabel  value="Tension bras gauche"/>
                                     <h:outputText value="#{consBean.patient.tension}"/>
@@ -483,6 +502,36 @@
                             </h:form>
                         </div>
                     </div>
+                    
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <center> <h1>Consultation</h1> </center>
+
+                            <h:form id="consForm">
+
+                                <p:dataTable value="#{consBean.diagnListe}" var="ex1" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Diagnostique(s)" >
+                                        <center><h:outputText value="#{ex1}"/></center>
+                                    </p:column>
+                                    
+                                </p:dataTable>
+                                
+                                <br/>
+                                
+                                <p:dataTable value="#{consBean.traitMedc}" var="ex2" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Traitement Medicamenteux" >
+                                        <center><h:outputText value="#{ex2}"/></center>
+                                    </p:column>
+
+                                   
+                                </p:dataTable>
+
+                            </h:form>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -522,26 +571,32 @@
                                 </p:column>
 
 
-                                <p:column headerText="Traitement Medic" sortBy="#{int.traitementMedicamenteurx.label}"
-                                          filterMatchMode="contains" filterBy="#{int.traitementMedicamenteurx.label}">
-                                    <h:outputText value="#{int.traitementMedicamenteurx.label}" />
-                                </p:column>
-
                                 <p:column headerText="Traitement Non Medic" sortBy="#{int.traitementNomMedicamenteux}"
                                           filterMatchMode="contains" filterBy="#{int.traitementNomMedicamenteux}">
                                     <h:outputText value="#{int.traitementNomMedicamenteux}" />
                                 </p:column>
-
-                                <p:column headerText="Detail" sortBy="#{int.detailConsultation}"
-                                          filterMatchMode="contains" filterBy="#{int.detailConsultation}">
-                                    <h:outputText value="#{int.detailConsultation}" />
+                                
+                                <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
+                                    <h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" />
                                 </p:column>
+                                
+                                <p:column headerText="Signe clinique" sortBy="#{int.examen_Clinique.signe_clinique}"
+                                          filterMatchMode="contains" filterBy="#{int.examen_Clinique.signe_clinique}">
+                                    <h:outputText value="#{int.examen_Clinique.signe_clinique}" />
+                                </p:column>
+                                
+                                <p:column headerText="Etat Csce" sortBy="#{int.examen_Clinique.etat_consce}"
+                                          filterMatchMode="contains" filterBy="#{int.examen_Clinique.etat_consce}">
+                                    <h:outputText value="#{int.examen_Clinique.etat_consce}" />
+                                </p:column>
+
 
 
                                 <p:column  headerText="Action">                           
                                     <center><p:commandButton value="Voir" action="#{consultationViewManagedBean.informationConsultation(int)}" styleClass="cyan-btn" style="width: auto;"/></center>
                                 </p:column>
-                                
+
                                 <p:column>                           
                                     <center><p:commandButton value="Modifier" action="#{consBean.renvoieConsultation(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel),:patienForm,:form:growl"/></center>
                                 </p:column>

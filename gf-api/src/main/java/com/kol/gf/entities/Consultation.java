@@ -65,9 +65,6 @@ public class Consultation implements Serializable {
     @JoinColumn(name = "id_intervenant", nullable = true)
     private Intervenant intervenant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_classeTherapeutique", nullable = true)
-    private ClasseTherapeutique traitementMedicamenteurx;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_examenClinique", nullable = true)
@@ -76,7 +73,7 @@ public class Consultation implements Serializable {
     public Consultation() {
     }
 
-    public Consultation(String detailConsultation, String traitementNomMedicamenteux, Date dateConsultation, String sport, String fruit, String antMedicaux, String antChirugicaux, Patient patient, Intervenant intervenant, ClasseTherapeutique traitementMedicamenteurx, ExamenClinique examen_Clinique) {
+    public Consultation(String detailConsultation, String traitementNomMedicamenteux, Date dateConsultation, String sport, String fruit, String antMedicaux, String antChirugicaux, Patient patient, Intervenant intervenant, ExamenClinique examen_Clinique) {
         this.detailConsultation = detailConsultation;
         this.traitementNomMedicamenteux = traitementNomMedicamenteux;
         this.dateConsultation = dateConsultation;
@@ -86,9 +83,10 @@ public class Consultation implements Serializable {
         this.antChirugicaux = antChirugicaux;
         this.patient = patient;
         this.intervenant = intervenant;
-        this.traitementMedicamenteurx = traitementMedicamenteurx;
         this.examen_Clinique = examen_Clinique;
     }
+
+    
 
     
 
@@ -158,13 +156,6 @@ public class Consultation implements Serializable {
         this.traitementNomMedicamenteux = traitementNomMedicamenteux;
     }
 
-    public ClasseTherapeutique getTraitementMedicamenteurx() {
-        return traitementMedicamenteurx;
-    }
-
-    public void setTraitementMedicamenteurx(ClasseTherapeutique traitementMedicamenteurx) {
-        this.traitementMedicamenteurx = traitementMedicamenteurx;
-    }
 
     public String getSport() {
         return sport;
@@ -235,9 +226,10 @@ public class Consultation implements Serializable {
 
     @Override
     public String toString() {
-        return "Consultation{" + "id=" + id + ", detailConsultation=" + detailConsultation + ", traitementNomMedicamenteux=" + traitementNomMedicamenteux + ", dateConsultation=" + dateConsultation + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", patient=" + patient + ", intervenant=" + intervenant + ", traitementMedicamenteurx=" + traitementMedicamenteurx + ", examen_Clinique=" + examen_Clinique + '}';
+        return "Consultation{" + "id=" + id + ", detailConsultation=" + detailConsultation + ", traitementNomMedicamenteux=" + traitementNomMedicamenteux + ", dateConsultation=" + dateConsultation + ", sport=" + sport + ", fruit=" + fruit + ", antMedicaux=" + antMedicaux + ", antChirugicaux=" + antChirugicaux + ", patient=" + patient + ", intervenant=" + intervenant + ", examen_Clinique=" + examen_Clinique + '}';
     }
 
+ 
    
 
 }

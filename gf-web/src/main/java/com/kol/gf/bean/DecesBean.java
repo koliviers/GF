@@ -9,11 +9,17 @@ import com.kol.gf.dao.bean.DecesDaoBeanLocal;
 import com.kol.gf.dao.bean.PatientDaoBeanLocal;
 import com.kol.gf.entities.Deces;
 import com.kol.gf.entities.Patient;
+import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.core.Utils.Mtm;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -44,25 +50,46 @@ public class DecesBean implements Serializable {
     }
 
     public void addDeces() {
-
+        UserTransaction tx = TransactionManager.getUserTransaction();
         try {
+            if (deces.getPatient() == null) {
+                Mtm.mikiMessageWarnSelectionner("le patient décédé");
+            } else {
+                if (deces.getId() == null) {
+                    tx.begin();
+                    this.daoDeces.saveOne(deces);
+                    tx.commit();
+                } else {
+                    tx.begin();
+                    this.daoDeces.updateOne(deces);
+                    tx.commit();
+                }
 
-            this.daoDeces.saveOne(deces);
-        } catch (Exception e) {
+                Mtm.mikiMessageInfo();
+                deces = new Deces();
+            }
+        } catch (Exception ex) {
+            try {
+                tx.rollback();
+            } catch (IllegalStateException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SecurityException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SystemException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Mtm.mikiMessageError();
         }
     }
     
-    public List<Deces> getAllDeces(){
-        
-     listDeces=this.daoDeces.getAll();
-     return listDeces;
+    public void renvoieDeces(Deces dc){
+        deces = dc;
     }
     
-    public List<Patient> getAllPatient(){
-        listpatient=this.daopatient.getAll();
-        
-        return listpatient;
+    public void annulerDeces(){
+        deces = new Deces();
     }
+
 
     /**
      * @return the deces
@@ -96,8 +123,7 @@ public class DecesBean implements Serializable {
      * @return the listDeces
      */
     public List<Deces> getListDeces() {
-      listDeces=this.daoDeces.getAll();
-        return listDeces;
+        return daoDeces.getAll("datedeces", false);
     }
 
     /**
@@ -111,7 +137,7 @@ public class DecesBean implements Serializable {
      * @return the listpatient
      */
     public List<Patient> getListpatient() {
-        return listpatient;
+        return daopatient.getAll("nomPatient", true);
     }
 
     /**

@@ -3,7 +3,9 @@
   <persistence-unit name="gfPU" transaction-type="JTA">
     <jta-data-source>jdbc/gf</jta-data-source>
     <class>com.kol.gf.entities.Antecedent_familial</class>
+    <class>com.kol.gf.entities.Categorie</class>
     <class>com.kol.gf.entities.ClasseTherapeutique</class>
+    <class>com.kol.gf.entities.Comorbidite</class>
     <class>com.kol.gf.entities.Consommation</class>
     <class>com.kol.gf.entities.Consultation</class>
     <class>com.kol.gf.entities.Deces</class>
@@ -18,7 +20,7 @@
     <class>com.kol.gf.entities.Patient</class>
     <class>com.kol.gf.entities.RendezVous</class>
     <class>com.kol.gf.entities.Services</class>
-    <class>com.kol.gf.entities.Traitement</class>
+    <class>com.kol.gf.entities.TraitementMedicamenteux</class>
     <class>com.kol.gf.entities.TypeConsommation</class>
     <class>com.kol.gf.entities.TypeHabitude</class>
     <class>com.kol.gf.entities.TypeIntervenant</class>

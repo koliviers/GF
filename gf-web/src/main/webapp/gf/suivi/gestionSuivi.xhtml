@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="head">
+        <title>Suivi</title>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <h:form id="form">
+            <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
+            <p:growl id="growl" showDetail="true" sticky="true" />
+        </h:form>
+
+
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:accordionPanel widgetVar="accordPanel">
+                            <p:tab title="Suivi" >
+                                <h:form id="classform" >
+
+                                    <br/>
+
+                                    <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                        <p:outputLabel  value="Patient"/>
+                                        <p:selectOneMenu   value="#{suiviManagedBean.patient}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <f:selectItem itemLabel="Selectionner le patient" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems var="pat" value="#{suiviManagedBean.patientListe}" itemValue="#{pat}" itemLabel="#{pat.nomPatient} #{pat.prenomPatient}"/>
+                                            <p:ajax update=":intformDataTable, @form:etatId"  listener="#{suiviManagedBean.listenerPatient}"/>
+                                        </p:selectOneMenu>
+
+                                    </p:panelGrid>
+
+                                    <br/>
+
+                                    <center>
+                                        <p:selectOneRadio value="#{suiviManagedBean.etat}" id="etatId" layout="responsive" style="border: 2px" columns="2"  styleClass="form-group" disabled="true">
+                                            <f:selectItem  itemLabel="Perdu de vue" itemValue="perdu" />
+                                            <f:selectItem  itemLabel="Décédé" itemValue="decede" />
+                                        </p:selectOneRadio>
+                                    </center>
+
+
+                                    <br/>
+
+                                    <div class="ui-g-12">
+                                        <center><p:commandButton value="Annuler" action="#{suiviManagedBean.annulerSuivi()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+
+                    <div class="card card-w-title">
+                        <h:form id="intformDataTable">
+                            <center>   <h1>Liste des consultations</h1> </center>
+                            <p:dataTable id="intervenantDT" var="int" value="#{suiviManagedBean.getConsultationListeFiltre()}" 
+                                         widgetVar="intervenantWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste de consultation est vide" reflow="true" rows="10" paginator="true">
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Rechercher:" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Patient" sortBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}"
+                                          filterMatchMode="contains" filterBy="#{int.patient.nomPatient} #{int.patient.prenomPatient}">
+                                    <h:outputText value="#{int.patient.nomPatient} #{int.patient.prenomPatient}" />
+                                </p:column>
+
+                                <p:column headerText="Sexe" sortBy="#{int.patient.sexe}"
+                                          filterMatchMode="contains" filterBy="#{int.patient.sexe}">
+                                    <h:outputText value="#{int.patient.sexe}" />
+                                </p:column>
+
+                                <p:column headerText="Date" sortBy="#{rdvbean.dateFormatRdv(int.dateConsultation)}" 
+                                          filterMatchMode="contains" filterBy="#{rdvbean.dateFormatRdv(int.dateConsultation)}">
+                                    <h:outputText value="#{rdvbean.dateFormatRdv(int.dateConsultation)}" />
+                                </p:column>
+
+
+                                <p:column headerText="Traitement Non Medic" sortBy="#{int.traitementNomMedicamenteux}"
+                                          filterMatchMode="contains" filterBy="#{int.traitementNomMedicamenteux}">
+                                    <h:outputText value="#{int.traitementNomMedicamenteux}" />
+                                </p:column>
+
+                                <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
+                                          filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
+                                    <h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" />
+                                </p:column>
+
+                                <p:column headerText="Signe clinique" sortBy="#{int.examen_Clinique.signe_clinique}"
+                                          filterMatchMode="contains" filterBy="#{int.examen_Clinique.signe_clinique}">
+                                    <h:outputText value="#{int.examen_Clinique.signe_clinique}" />
+                                </p:column>
+
+                                <p:column headerText="Etat Csce" sortBy="#{int.examen_Clinique.etat_consce}"
+                                          filterMatchMode="contains" filterBy="#{int.examen_Clinique.etat_consce}">
+                                    <h:outputText value="#{int.examen_Clinique.etat_consce}" />
+                                </p:column>
+
+                                <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Voir" action="#{consultationViewManagedBean.informationConsultation2(int)}" styleClass="cyan-btn" style="width: auto;"/></center>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+
+                    </div> 
+
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

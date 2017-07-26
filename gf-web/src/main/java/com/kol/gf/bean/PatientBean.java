@@ -61,8 +61,8 @@ public class PatientBean implements Serializable {
                     Mtm.mikiMessageWarnSaisir("le prenom du patient");
                 } else if (patient.getSexe().isEmpty()) {
                     Mtm.mikiMessageWarnSelectionner("le sexe du patient");
-                } else if (patient.getDate_naissance() == null) {
-                    Mtm.mikiMessageWarnSaisir("la date de naissance du patient");
+                } else if (patient.getAge() == 0) {
+                    Mtm.mikiMessageWarnSaisir("l'age du patient");
                 } else {
                     if (patient.getId() == null) {
                         if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {

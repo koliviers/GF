@@ -23,12 +23,12 @@ import javax.persistence.Table;
  * @author anonymousghost
  */
 @Entity
-@Table(name = "EXAMEN_PARACLINIQUE")
-public class ExamenParaclinique implements Serializable{
-    
+@Table(name = "Comorbidite")
+public class Comorbidite implements Serializable {
+
     @Id
-    @SequenceGenerator(name = "examenParaCliSeq", sequenceName = "EXAMEN_PARACLI_SEQ", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "examenParaCliSeq")
+    @SequenceGenerator(name = "comorbiditeSeq", sequenceName = "COMORBIDITE_SEQ", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "comorbiditeSeq")
     @Column(name = "ID", nullable = false)
     private Long id;
     
@@ -36,24 +36,17 @@ public class ExamenParaclinique implements Serializable{
     private String label;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_categorie",  nullable = true)
-    private Categorie categorie;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_service", nullable = true)
-    private Services service;
+    @JoinColumn(name = "id_consultation", nullable = false)
+    private Consultation consultation;
 
-    public ExamenParaclinique() {
+    public Comorbidite() {
     }
 
-    public ExamenParaclinique(String label, Categorie categorie, Services service) {
+    public Comorbidite(String label, Consultation consultation) {
         this.label = label;
-        this.categorie = categorie;
-        this.service = service;
+        this.consultation = consultation;
     }
 
-    
-    
     public Long getId() {
         return id;
     }
@@ -70,28 +63,19 @@ public class ExamenParaclinique implements Serializable{
         this.label = label;
     }
 
-    public Categorie getCategorie() {
-        return categorie;
+    public Consultation getConsultation() {
+        return consultation;
     }
 
-    public void setCategorie(Categorie categorie) {
-        this.categorie = categorie;
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
     }
-
-    public Services getService() {
-        return service;
-    }
-
-    public void setService(Services service) {
-        this.service = service;
-    }
-    
-    
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.id);
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + Objects.hashCode(this.label);
         return hash;
     }
 
@@ -106,7 +90,10 @@ public class ExamenParaclinique implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ExamenParaclinique other = (ExamenParaclinique) obj;
+        final Comorbidite other = (Comorbidite) obj;
+        if (!Objects.equals(this.label, other.label)) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -115,9 +102,8 @@ public class ExamenParaclinique implements Serializable{
 
     @Override
     public String toString() {
-        return "ExamenParaclinique{" + "id=" + id + ", label=" + label + ", categorie=" + categorie + ", service=" + service + '}';
+        return "Comorbidite{" + "id=" + id + ", label=" + label + ", consultation=" + consultation + '}';
     }
-
     
     
 }

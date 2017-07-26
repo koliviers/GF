@@ -6,78 +6,59 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Entity
-@Table(name = "Traitement")
-public class Traitement implements Serializable{
+@Table(name = "Categorie")
+public class Categorie implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @SequenceGenerator(name = "categorieSeq", sequenceName = "CATEGORIE_SEQ", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "categorieSeq")
     private Long id;
     
-    @Column(name = "label", nullable = false)
+    @Column(name = "label",nullable = false)
     private String label;
 
-    public Traitement() {
+    public Categorie() {
     }
 
-    public Traitement(String label) {
+    public Categorie(String label) {
         this.label = label;
     }
 
-   
-
-    /**
-     * @return the id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * @return the label
-     */
     public String getLabel() {
         return label;
     }
 
-    /**
-     * @param label the label to set
-     */
     public void setLabel(String label) {
         this.label = label;
     }
 
-    /**
-     * @return the classeTherapeutique
-     */
-    
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 43 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -92,8 +73,8 @@ public class Traitement implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Traitement other = (Traitement) obj;
-        if (this.id != other.id) {
+        final Categorie other = (Categorie) obj;
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -101,10 +82,8 @@ public class Traitement implements Serializable{
 
     @Override
     public String toString() {
-        return "Traitement{" + "id=" + id + ", label=" + label + '}';
+        return "Categorie{" + "id=" + id + ", label=" + label + '}';
     }
-
-    
     
     
 }

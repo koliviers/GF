@@ -55,8 +55,8 @@
                                         <p:inputText id="prof" value="#{patientBean.patient.profession}"/>
 
 
-                                        <p:outputLabel  value="Date de naissance "/>
-                                        <p:calendar value="#{patientBean.patient.date_naissance}" widgetVar="dtPat" maxdate="dtPat.today" mask="true" pattern="dd/MM/yyyy"/>
+                                        <p:outputLabel  value="Age "/>
+                                        <p:inputNumber value="#{patientBean.patient.age}" decimalPlaces="0" decimalSeparator="" emptyValue="0" maxlength="3"/>
 
 
                                         <p:outputLabel for="contact" value="Contact (+228)"/>
@@ -156,10 +156,8 @@
                                     <h:outputText value="#{int.sexe}" />
                                 </p:column>
                                 
-                                <p:column headerText="Date de naissance">
-                                    <h:outputText value="#{int.date_naissance}" >
-                                        <f:convertDateTime dateStyle="full" locale="fr_FR"/>
-                                    </h:outputText>
+                                <p:column headerText="Age">
+                                    <h:outputText value="#{int.age} ans" />
                                 </p:column>
                                 
                                 <p:column headerText="Contact" sortBy="#{int.contact}"

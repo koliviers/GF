@@ -6,7 +6,7 @@
 package com.kol.gf.bean;
 
 import com.kol.gf.entities.ClasseTherapeutique;
-import com.kol.gf.entities.Traitement;
+import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
 import com.kol.gf.service.TraitementServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;

@@ -39,6 +39,23 @@
                                             <f:validateLength minimum="2"/>
                                         </p:inputText>
 
+                                        <p:outputLabel  value="Categorie" />
+                                        <h:panelGroup>
+                                            <p:selectOneMenu id="categId" widgetVar="categWV"  value="#{examenParaCliniqueManagedBean.examenParaclinique.categorie}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <f:selectItem itemLabel="Selectionner une categorie" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems var="tr2" value="#{examenParaCliniqueManagedBean.categorieListe}" itemValue="#{tr2}" itemLabel="#{tr2.label}"/>                              
+                                            </p:selectOneMenu>
+                                            <br/>
+                                            <center><p:commandButton type="button" onclick="PF('categorieWV').show()" icon="ui-icon-add" /></center>
+                                        </h:panelGroup>
+
+
+                                        <p:outputLabel  value="Service" />
+                                        <p:selectOneMenu   value="#{examenParaCliniqueManagedBean.examenParaclinique.service}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <f:selectItem itemLabel="Selectionner un service" itemValue="#{null}" noSelectionOption="true"/>
+                                            <f:selectItems var="tr22" value="#{examenParaCliniqueManagedBean.serviceListe}" itemValue="#{tr22}" itemLabel="#{tr22.nomService}"/>                              
+                                        </p:selectOneMenu>
+
 
                                     </p:panelGrid>
 
@@ -79,6 +96,16 @@
                                           filterMatchMode="contains" filterBy="#{int.label}">
                                     <center><h:outputText value="#{int.label}" /></center>
                                 </p:column>
+                                
+                                <p:column headerText="Categorie" sortBy="#{int.categorie.label}"
+                                          filterMatchMode="contains" filterBy="#{int.categorie.label}">
+                                    <center><h:outputText value="#{int.categorie.label}" /></center>
+                                </p:column>
+                                
+                                <p:column headerText="Service" sortBy="#{int.service.nomService}"
+                                          filterMatchMode="contains" filterBy="#{int.service.nomService}">
+                                    <center><h:outputText value="#{int.service.nomService}" /></center>
+                                </p:column>
 
                                 <p:column  headerText="Action">                           
                                     <center><p:commandButton value="Modifier" action="#{examenParaCliniqueManagedBean.renvoieExamenParaclinique(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
@@ -92,6 +119,59 @@
                 </div>
             </div>
         </div>
+        
+        
+         <p:dialog header="Categorie" widgetVar="categorieWV" modal="true" width="800" closable="true" responsive="true">
+            <h:form id="jnlModal">
+                <div class="ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <h:inputHidden value="#{examenParaCliniqueManagedBean.categorie.id}"/>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel value="Libelle *" />
+                                <h:inputText  value="#{examenParaCliniqueManagedBean.categorie.label}"/>
+                            </p:panelGrid>
+
+                            <br/>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <center><p:commandButton value="Annuler" action="#{examenParaCliniqueManagedBean.annulerCategorie()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <center><p:commandButton value="Valider" action="#{examenParaCliniqueManagedBean.gestionCategorie()}" update="@form,:form:growl,@widgetVar(categWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                            </div> 
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <p:dataTable var="typ" value="#{examenParaCliniqueManagedBean.categorieListeModal}" 
+                                         widgetVar="typWV"                                 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15"
+                                         emptyMessage="La liste de type intervenant est vide" reflow="true" rows="10" paginator="true">
+
+
+                                <p:column headerText="Libelle" sortBy="#{typ.label}"
+                                          filterMatchMode="contains" filterBy="#{typ.label}">
+                                    <h:outputText value="#{typ.label}" />
+                                </p:column>
+
+
+                                <p:column  headerText="Action">                           
+                                    <center><p:commandButton value="Modifier" action="#{examenParaCliniqueManagedBean.renvoieCategorie(typ)}" styleClass="purple-btn flat" style="width: auto;" update="@form"/></center>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
 
     </ui:define>
 

@@ -5,16 +5,15 @@
  */
 package com.kol.gf.service;
 
-import com.kol.gf.entities.TraitementMedicamenteux;
+import com.kol.gf.entities.Categorie;
 import com.miki.webapp.core.Service.BaseServiceBean;
-import java.io.Serializable;
 import javax.ejb.Local;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Local
-public interface TraitementServiceBeanLocal extends BaseServiceBean<TraitementMedicamenteux, Long>{
+public interface CategorieSessionBeanLocal extends BaseServiceBean<Categorie, Long>{
     
 }

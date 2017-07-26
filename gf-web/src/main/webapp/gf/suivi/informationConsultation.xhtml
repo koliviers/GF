@@ -70,7 +70,7 @@
                                 <br/>
                                 <br/>
                                 <center>
-                                    <p:commandButton value="Retour" action="#{consultationViewManagedBean.retour()}" styleClass="red-btn" style="width: auto;"/>
+                                    <p:commandButton value="Retour" action="#{consultationViewManagedBean.retour2()}" styleClass="red-btn" style="width: auto;"/>
                                 </center>
                             </div>
 
@@ -134,7 +134,7 @@
                             <div class="card card-w-title">
                                 <center> <h1>Traitement</h1> </center>
 
-                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >                                    
                                     <p:outputLabel value="Traitement non medicamenteux"/>
                                     <h:outputText value="#{consultationViewManagedBean.consultation.traitementNomMedicamenteux}"/>
 
@@ -145,6 +145,7 @@
 
                             </div>
                         </div>
+
 
                         <div class="ui-g-12">
                             <div class="card card-w-title">
@@ -179,7 +180,7 @@
 
                             </div>
                         </div>
-
+                        
                         <div class="ui-g-12">
                             <div class="card card-w-title">
                                 <center> <h1>Antecedant</h1> </center>
@@ -307,7 +308,7 @@
 
                         <div class="ui-g-12">
                             <div class="card card-w-title">
-                                <center> <h1>Resultats</h1> </center>
+                                <center> <h1>Aide mémoire</h1> </center>
 
                                 <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
                                     <p:outputLabel value="Detail"/>

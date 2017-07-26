@@ -5,8 +5,12 @@
  */
 package com.kol.gf.bean;
 
+import com.kol.gf.entities.Categorie;
 import com.kol.gf.entities.ExamenParaclinique;
+import com.kol.gf.entities.Services;
+import com.kol.gf.service.CategorieSessionBeanLocal;
 import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
+import com.kol.gf.service.ServiceServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.Mtm;
 import java.io.Serializable;
@@ -29,16 +33,34 @@ import javax.transaction.UserTransaction;
 public class ExamenParaCliniqueManagedBean implements Serializable{
 
     private ExamenParaclinique examenParaclinique;
+    private Categorie categorie;
+    
     private List<ExamenParaclinique> examenParacliniqueListe;
+    private List<Services> serviceListe;
+    private List<Categorie> categorieListe;
+    private List<Categorie> categorieListeModal;
+    
     
     @EJB
     private ExamenParacliniqueSessionBeanLocal examenParacliniqueServices;
+    
+    @EJB
+    private ServiceServiceBeanLocal servicesServices;
+    
+    @EJB
+    private CategorieSessionBeanLocal categorieServices;
     
     
     public ExamenParaCliniqueManagedBean() {
         examenParaclinique = new ExamenParaclinique();
         
         examenParacliniqueListe = new ArrayList<>();
+        
+        categorieListe = new ArrayList<>();
+        
+        categorieListeModal = new ArrayList<>();
+        
+        categorie = new Categorie();
     }
     
     public void gestionExamenParaclinique() {
@@ -47,7 +69,11 @@ public class ExamenParaCliniqueManagedBean implements Serializable{
         try {
             if (examenParaclinique.getLabel().trim().isEmpty()) {
                 Mtm.mikiMessageWarnSaisir("le nom de l'examen paraclinique");
-            } else {
+            }else if(examenParaclinique.getCategorie() == null){
+                Mtm.mikiMessageWarnSelectionner("la catégorie de l'examen");
+            }else if(examenParaclinique.getService() == null){
+                Mtm.mikiMessageWarnSelectionner("le service où s'éffectuera l'examen");
+            }else {
                 if (examenParaclinique.getId() == null) {
                     tx.begin();
                     examenParacliniqueServices.saveOne(examenParaclinique);
@@ -83,6 +109,48 @@ public class ExamenParaCliniqueManagedBean implements Serializable{
         examenParaclinique = new ExamenParaclinique();
     }
     
+    public void gestionCategorie(){
+        UserTransaction tx = TransactionManager.getUserTransaction();
+        
+        try {
+            if(categorie.getLabel().trim().isEmpty()){
+                Mtm.mikiMessageWarnSaisir("le nom de la categorie");
+            }else{
+                if(categorie.getId() == null){
+                    tx.begin();
+                    categorieServices.saveOne(categorie);
+                    tx.commit();
+                }else{
+                    tx.begin();
+                    categorieServices.updateOne(categorie);
+                    tx.commit();
+                }
+                
+                Mtm.mikiMessageInfo();
+                categorie = new Categorie();
+            }
+        } catch (Exception ex) {
+            try {
+                tx.rollback();
+            } catch (IllegalStateException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SecurityException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (SystemException ex1) {
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Mtm.mikiMessageError();
+        }
+    }
+    
+    public void renvoieCategorie(Categorie categ){
+        categorie = categ;
+    }
+    
+    public void annulerCategorie(){
+        categorie = new Categorie();
+    }
+    
 
     public ExamenParaclinique getExamenParaclinique() {
         return examenParaclinique;
@@ -106,6 +174,54 @@ public class ExamenParaCliniqueManagedBean implements Serializable{
 
     public void setExamenParacliniqueServices(ExamenParacliniqueSessionBeanLocal examenParacliniqueServices) {
         this.examenParacliniqueServices = examenParacliniqueServices;
+    }
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(Categorie categorie) {
+        this.categorie = categorie;
+    }
+
+    public List<Services> getServiceListe() {
+        return servicesServices.getAll("nomService", true);
+    }
+
+    public void setServiceListe(List<Services> serviceListe) {
+        this.serviceListe = serviceListe;
+    }
+
+    public List<Categorie> getCategorieListe() {
+        return categorieServices.getAll("label", true);
+    }
+
+    public void setCategorieListe(List<Categorie> categorieListe) {
+        this.categorieListe = categorieListe;
+    }
+
+    public List<Categorie> getCategorieListeModal() {
+        return categorieServices.getAll("label", true);
+    }
+
+    public void setCategorieListeModal(List<Categorie> categorieListeModal) {
+        this.categorieListeModal = categorieListeModal;
+    }
+
+    public ServiceServiceBeanLocal getServicesServices() {
+        return servicesServices;
+    }
+
+    public void setServicesServices(ServiceServiceBeanLocal servicesServices) {
+        this.servicesServices = servicesServices;
+    }
+
+    public CategorieSessionBeanLocal getCategorieServices() {
+        return categorieServices;
+    }
+
+    public void setCategorieServices(CategorieSessionBeanLocal categorieServices) {
+        this.categorieServices = categorieServices;
     }
     
     
