@@ -42,6 +42,9 @@ public class Patient implements Serializable {
 
     @Column(name = "sexe", nullable = false)
     private String sexe;
+    
+    @Column(name = "accessibilite", nullable = true)
+    private String accessibilite;
 
     @Column(name = "contact", nullable = true)
     private String contact;
@@ -54,51 +57,27 @@ public class Patient implements Serializable {
 
     @Column(name = "adresse", nullable = true)
     private String adresse;
-    
-     @Column(name = "taille", nullable = true)
-    private double taille;
-
-    @Column(name = "poids", nullable = true)
-    private double poids;
-
-    @Column(name = "tourtaille", nullable = true)
-    private double tourtaille;
-    
-    @Column(name = "tensiondroit", nullable = true)
-    private double tensiondroit;
-
-    @Column(name = "tension", nullable = true)
-    private double tension;
-
 
 
     public Patient() {
     }
 
-    public Patient(String nomPatient, String prenomPatient, String codePatient, Integer age, String sexe, String contact, String civilite, String profession, String adresse, double taille, double poids, double tourtaille, double tensiondroit, double tension) {
+    public Patient(String nomPatient, String prenomPatient, String codePatient, Integer age, String sexe, String accessibilite, String contact, String civilite, String profession, String adresse) {
         this.nomPatient = nomPatient;
         this.prenomPatient = prenomPatient;
         this.codePatient = codePatient;
         this.age = age;
         this.sexe = sexe;
+        this.accessibilite = accessibilite;
         this.contact = contact;
         this.civilite = civilite;
         this.profession = profession;
         this.adresse = adresse;
-        this.taille = taille;
-        this.poids = poids;
-        this.tourtaille = tourtaille;
-        this.tensiondroit = tensiondroit;
-        this.tension = tension;
     }
-
-   
 
     
 
    
-
-
 
     public Long getId() {
         return id;
@@ -173,56 +152,20 @@ public class Patient implements Serializable {
         this.codePatient = codePatient;
     }
 
-    public double getTaille() {
-        return taille;
-    }
-
-    public void setTaille(double taille) {
-        this.taille = taille;
-    }
-
-    public double getPoids() {
-        return poids;
-    }
-
-    public void setPoids(double poids) {
-        this.poids = poids;
-    }
-
-    public double getTourtaille() {
-        return tourtaille;
-    }
-
-    public void setTourtaille(double tourtaille) {
-        this.tourtaille = tourtaille;
-    }
-
-    public double getTensiondroit() {
-        return tensiondroit;
-    }
-
-    public void setTensiondroit(double tensiondroit) {
-        this.tensiondroit = tensiondroit;
-    }
-
-    public double getTension() {
-        return tension;
-    }
-
-    public void setTension(double tension) {
-        this.tension = tension;
-    }
-    
-    public Double calculMasseCorporelle(){
-        return this.poids/(this.taille*this.taille);
-    }
-
     public Integer getAge() {
         return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getAccessibilite() {
+        return accessibilite;
+    }
+
+    public void setAccessibilite(String accessibilite) {
+        this.accessibilite = accessibilite;
     }
     
     
@@ -256,7 +199,7 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", age=" + age + ", sexe=" + sexe + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tension=" + tension + '}';
+        return "Patient{" + "id=" + id + ", nomPatient=" + nomPatient + ", prenomPatient=" + prenomPatient + ", codePatient=" + codePatient + ", age=" + age + ", sexe=" + sexe + ", accessibilite=" + accessibilite + ", contact=" + contact + ", civilite=" + civilite + ", profession=" + profession + ", adresse=" + adresse + '}';
     }
 
     

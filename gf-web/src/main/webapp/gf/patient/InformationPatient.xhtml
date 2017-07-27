@@ -9,6 +9,285 @@
 
     <ui:define name="head">
         <title>Information patient</title>
+
+        <script type="text/javascript">
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBar() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinArea() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#FFC107', '#4CAF50'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBubble() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BubbleRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinZoom() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinPie() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77',
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    renderer: $.jqplot.PieRenderer,
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinDonut() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77',
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    renderer: $.jqplot.DonutRenderer,
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBarAndLine() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 5,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinMeterGauge() {
+                this.cfg.title = '';
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 5,
+                    renderer: $.jqplot.MeterGaugeRenderer,
+                    rendererOptions: {
+                        shadow: false,
+                        min: 100,
+                        max: 800,
+                        intervals: [200, 300, 400, 500, 600, 700, 800],
+                        intervalColors: ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107', '#03A9F4', '#E91E63', '#4CAF50']
+                    }
+                }
+            }
+
+            function skinMultiAxis() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+        </script>
+        <style type="text/css">
+            .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+                color: #757575; 
+            }
+
+            table.jqplot-table-legend {
+                background-color: #ffffff;
+                color: #757575;
+                border-color: #bdbdbd;
+            }
+        </style>
     </ui:define>
 
     <ui:define name="content">
@@ -39,6 +318,9 @@
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </h:outputText>
 
+                                    <p:outputLabel value="Accessibilite geographique"/>
+                                    <h:outputText value="#{patientViewManagedBean.patient.accessibilite}"/>
+                                    
                                     <p:outputLabel value="Contact"/>
                                     <h:outputText value="#{patientViewManagedBean.patient.contact}"/>
 
@@ -56,34 +338,82 @@
                                 </center>
                             </div>
 
+                            <br/>
+
+                            <div class="card">
+                                <h1 class="centerText">Masse corporelle</h1>
+                                <p:chart id="line" type="line" model="#{patientViewManagedBean.lineModel1}" style="width: 600px;" responsive="true"/>
+                            </div>
+
+                            <br/>
+
+                            <div class="card">
+                                <h1 class="centerText">Tension</h1>
+                                <p:chart id="bar" type="bar" model="#{patientViewManagedBean.barModel}" style="width: 600px;" responsive="true"/>
+                            </div>
+
                         </div>
+
 
 
                         <div class="ui-g-12  ui-lg-6">
-                            <div class="card card-w-title">
-                                <center> <h1>Constantes</h1> </center>
+                            <ui:repeat var="o" value="#{patientViewManagedBean.suivieListePatient}" varStatus="status">
+                                <h:panelGroup rendered="#{status.even}">
+                                    <div class="card card-w-title">
+                                        <center> <h1>Constantes</h1> </center>
 
-                                <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
-                                    <p:outputLabel value="Perimetre abdominal"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.tourtaille}"/>
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                            <p:outputLabel value="Perimetre abdominal"/>
+                                            <h:outputText value="#{o.tourtaille} cm"/>
 
-                                    <p:outputLabel  value="Poids"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.poids}"/>
+                                            <p:outputLabel  value="Poids"/>
+                                            <h:outputText value="#{o.poids} kg"/>
 
-                                    <p:outputLabel  value="Taille"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.taille}"/>
+                                            <p:outputLabel  value="Taille"/>
+                                            <h:outputText value="#{o.taille} m"/>
 
-                                    <p:outputLabel  value="Tension bras gauche"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.tension}"/>
+                                            <p:outputLabel  value="Tension bras gauche"/>
+                                            <h:outputText value="#{o.tensiongauche}"/>
 
-                                    <p:outputLabel  value="Tension bras droit"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.tensiondroit}"/>
+                                            <p:outputLabel  value="Tension bras droit"/>
+                                            <h:outputText value="#{o.tensiondroit}"/>
+                                            
+                                            <p:outputLabel  value="Masse corporelle"/>
+                                            <h:outputText value="#{o.calculMasse()}"/>
 
-                                    <p:outputLabel  value="Masse corporelle"/>
-                                    <h:outputText value="#{patientViewManagedBean.patient.calculMasseCorporelle()}" />
-                                </p:panelGrid>
-                            </div>
+                                        </p:panelGrid>
+                                    </div>
+                                    <br/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{status.odd}">
+                                    <div class="card card-w-title">
+                                        <center> <h1>Constantes</h1> </center>
+
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                            <p:outputLabel value="Perimetre abdominal"/>
+                                            <h:outputText value="#{o.tourtaille} cm"/>
+
+                                            <p:outputLabel  value="Poids"/>
+                                            <h:outputText value="#{o.poids} kg"/>
+
+                                            <p:outputLabel  value="Taille"/>
+                                            <h:outputText value="#{o.taille} m"/>
+
+                                            <p:outputLabel  value="Tension bras gauche"/>
+                                            <h:outputText value="#{o.tensiongauche}"/>
+
+                                            <p:outputLabel  value="Tension bras droit"/>
+                                            <h:outputText value="#{o.tensiondroit}"/>
+                                            
+                                            <p:outputLabel  value="Masse corporelle"/>
+                                            <h:outputText value="#{o.calculMasse()}"/>
+                                        </p:panelGrid>
+                                    </div>
+                                    <br/>
+                                </h:panelGroup>
+                            </ui:repeat>
                         </div>
+
                     </div>
                 </div>
 

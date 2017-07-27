@@ -27,7 +27,8 @@
                             <center> <h1>Consultation</h1> </center>
 
                             <h:form id="patform">
-                                <p:wizard flowListener="#{userWizard.onFlowProcess}" widgetVar="accordPanel">
+                                <p:tabView widgetVar="accordPanel">
+
                                     <h:inputHidden value="#{consBean.consultation.id}"/>
                                     <h:inputHidden value="#{consBean.examentClinique.id}" />
 
@@ -57,19 +58,19 @@
 
                                             <p:outputLabel  value="Antecedant familiale"/>
 
-                                            <p:selectOneMenu id="pathlist" style="margin-bottom:10px;" value="#{consBean.pathologie}"   converter="omnifaces.SelectItemsConverter">
+                                            <p:selectOneMenu widgetVar="pathlistWV" style="margin-bottom:10px;" value="#{consBean.pathologie}"   converter="omnifaces.SelectItemsConverter">
                                                 <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
-                                                <f:selectItems value="#{consBean.listePathologie}" var="rpat" itemLabel="#{rpat.nomPathologie}" itemValue="#{rpat}"/>
+                                                <f:selectItems value="#{consBean.cimListe}" var="rpat" itemLabel="#{rpat.label}" itemValue="#{rpat}"/>
                                             </p:selectOneMenu>
                                         </p:panelGrid>
 
                                         <br/>
 
-                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterAntecedentFamilial()}" style="width: auto;" update="@form:pathlist,@form:pathologieTamponId"/></center>
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterAntecedentFamilial()}" style="width: auto;" update="@widgetVar(pathlistWV),@widgetVar(pathologieTamponWV)"/></center>
 
                                         <br/>
 
-                                        <p:dataTable value="#{consBean.listePathologieTampon}" var="pa" id="pathologieTamponId" emptyMessage="Liste vide" >
+                                        <p:dataTable value="#{consBean.listePathologieTampon}" var="pa" widgetVar="pathologieTamponWV" emptyMessage="Liste vide" >
 
                                             <p:column headerText="Pathologie" >
                                                 <center><h:outputText value="#{pa.nomPathologie}"/></center>
@@ -77,7 +78,7 @@
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerAntecedentFamilial(pa)}" update="@form:pathologieTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerAntecedentFamilial(pa)}" update="@widgetVar(pathologieTamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
 
@@ -89,7 +90,6 @@
 
 
                                     </p:tab>
-
 
                                     <p:tab id="halimentaire" title="Habitude allimentaire">
 
@@ -105,29 +105,21 @@
                                                 <f:selectItem itemLabel="Aucun" itemValue="Aucun" /> 
                                             </p:selectOneRadio>
 
-                                            <p:outputLabel for="frt" value="Fruit / Legume Consommée" />
-                                            <p:selectOneRadio  id="frt" layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.consultation.fruit}">
-                                                <f:selectItem itemLabel="Normal(5/j)" itemValue="normal"  />
-                                                <f:selectItem itemLabel="Moyen (3/j)" itemValue="Moyen" />
-                                                <f:selectItem itemLabel="faible (1/j)" itemValue="faible" />
-                                                <f:selectItem itemLabel="Aucun" itemValue="Aucun" />                                            
-                                            </p:selectOneRadio>
-
                                             <p:outputLabel for="typcsl" value="Type consommation" />
-                                            <p:selectOneMenu  id="typcsl" value="#{consBean.typecons}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <p:selectOneMenu  id="typcsl" widgetVar="typcslWV" value="#{consBean.typecons}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="tpc" value="#{consBean.liteType}" itemValue="#{tpc}" itemLabel="#{tpc.label}"/>  
-                                                <p:ajax update="@form:cns,@form:typhb" />
+                                                <p:ajax update="@widgetVar(typhbWV),@widgetVar(cnsWV)" />
                                             </p:selectOneMenu>
 
                                             <p:outputLabel for="cns" value="Consommation" />
-                                            <p:selectOneMenu  id="cns" value="#{consBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <p:selectOneMenu  id="cns" widgetVar="cnsWV" value="#{consBean.consommation}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner une consommation" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="cs" value="#{consBean.listeConsommation}" itemValue="#{cs}" itemLabel="#{cs.label}"/>                              
                                             </p:selectOneMenu>
 
                                             <p:outputLabel for="typhb" value="Quantité" />
-                                            <p:selectOneMenu  id="typhb" value="#{consBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <p:selectOneMenu  id="typhb" widgetVar="typhbWV" value="#{consBean.typeHabitude}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner une quantité" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="tph" value="#{consBean.listeTypeHabitude}" itemValue="#{tph}" itemLabel="#{tph.label}"/>                              
                                             </p:selectOneMenu>
@@ -149,13 +141,13 @@
                                         <br/>
 
                                         <center>
-                                            <p:commandButton value="Ajouter" action="#{consBean.ajouterHabitudeAlimentaire()}" style="width: auto;" update="@form:cns,@form:typhb,@form:typcsl,@form:tamponId" />
+                                            <p:commandButton value="Ajouter" action="#{consBean.ajouterHabitudeAlimentaire()}" style="width: auto;" update="@widgetVar(typhbWV),@widgetVar(cnsWV),@widgetVar(typcslWV),@widgetVar(tamponWV)" />
                                         </center>
 
 
                                         <div class="ui-g-12">
 
-                                            <p:dataTable value="#{consBean.tamponHabitudeAlimentaire}" var="htal" id="tamponId" emptyMessage="Liste vide">
+                                            <p:dataTable value="#{consBean.tamponHabitudeAlimentaire}" var="htal" widgetVar="tamponWV" emptyMessage="Liste vide">
                                                 <p:column headerText="Type consommation" >
                                                     <h:outputText value="#{htal.consommation.type_consommation.label}"/>
                                                 </p:column>
@@ -179,7 +171,7 @@
 
                                                 <p:column headerText="Action" >
                                                     <center>
-                                                        <p:commandButton  value="Supprimer" action="#{consBean.supprimerHabitudeAlimentaire(htal)}" update="@form:tamponId" styleClass="red-btn" style="width: auto;"/>
+                                                        <p:commandButton  value="Supprimer" action="#{consBean.supprimerHabitudeAlimentaire(htal)}" update="@widgetVar(tamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                     </center>
                                                 </p:column>
                                             </p:dataTable>
@@ -216,10 +208,11 @@
                                             </p:selectOneRadio>
 
 
-                                            <p:outputLabel  value="Palure" />
-                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="2" value="#{consBean.examentClinique.palure}">
-                                                <f:selectItem itemLabel="Moyenne" itemValue="Moyenne"  />
-                                                <f:selectItem itemLabel="Sévère" itemValue="Sévère" />                                           
+                                            <p:outputLabel  value="Etat de conjonctivité" />
+                                            <p:selectOneRadio  layout="responsive" style="border: 3px;" styleClass="form-group" columns="3" value="#{consBean.examentClinique.palure}">
+                                                <f:selectItem itemLabel="Normal" itemValue="Normal"  />
+                                                <f:selectItem itemLabel="Paleure modéré" itemValue="Paleure modéré" />                                           
+                                                <f:selectItem itemLabel="Paleure sévère" itemValue="Paleure sévère" />                                           
                                             </p:selectOneRadio>
 
 
@@ -256,6 +249,7 @@
 
                                     </p:tab>
 
+
                                     <p:tab id="diagn" title="Diagnostique">
 
                                         <!--<p:panel style="height: 400px">-->
@@ -264,7 +258,7 @@
 
                                             <p:outputLabel  value="Diagnostique"/>
 
-                                            <p:selectOneMenu id="pathlist2" style="margin-bottom:10px;" value="#{consBean.diagnostique.label}" >
+                                            <p:selectOneMenu id="pathlist2" widgetVar="pathlist2WV" style="margin-bottom:10px;" value="#{consBean.diagnostique.label}" >
                                                 <f:selectItem itemLabel="Selectionner une pathologie" itemValue="#{null}" noSelectionOption="true" />
                                                 <f:selectItems value="#{consBean.listePathologie}" var="rpat2" itemLabel="#{rpat2.nomPathologie}" itemValue="#{rpat2.nomPathologie}"/>
                                             </p:selectOneMenu>
@@ -272,11 +266,11 @@
 
                                         <br/>
 
-                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterDiagnostique()}" style="width: auto;" update="@form:pathlist2,@form:diagnostiqueTamponId"/></center>
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterDiagnostique()}" style="width: auto;" update="@widgetVar(pathlist2WV),@widgetVar(diagnostiqueTamponWV)"/></center>
 
                                         <br/>
 
-                                        <p:dataTable value="#{consBean.diagnostiqueListe}" var="dg" id="diagnostiqueTamponId" emptyMessage="Liste vide" >
+                                        <p:dataTable value="#{consBean.diagnostiqueListe}" var="dg" widgetVar="diagnostiqueTamponWV" emptyMessage="Liste vide" >
 
                                             <p:column headerText="Pathologie" >
                                                 <center><h:outputText value="#{dg.label}"/></center>
@@ -284,7 +278,7 @@
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerDiagnostique(dg)}" update="@form:diagnostiqueTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerDiagnostique(dg)}" update="@widgetVar(diagnostiqueTamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
 
@@ -297,19 +291,19 @@
 
                                             <p:outputLabel  value="Comorbidite"/>
 
-                                            <p:selectOneMenu id="pathlist3" style="margin-bottom:10px;" value="#{consBean.comorbidite.label}" >
+                                            <p:selectOneMenu id="pathlist3" widgetVar="pathlist3WV" style="margin-bottom:10px;" value="#{consBean.comorbidite.label}" >
                                                 <f:selectItem itemLabel="Selectionner une comorbidite" itemValue="#{null}" noSelectionOption="true" />
-                                                <f:selectItems value="#{consBean.listePathologie}" var="rpat22" itemLabel="#{rpat22.nomPathologie}" itemValue="#{rpat22.nomPathologie}"/>
+                                                <f:selectItems value="#{consBean.cimListe}" var="rpat22" itemLabel="#{rpat22.label}" itemValue="#{rpat22.label}"/>
                                             </p:selectOneMenu>
                                         </p:panelGrid>
 
                                         <br/>
 
-                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterComorbidite()}" style="width: auto;" update="@form:pathlist3,@form:comorbiditeTamponId"/></center>
+                                        <center> <p:commandButton value="Ajouter"  action="#{consBean.ajouterComorbidite()}" style="width: auto;" update="@widgetVar(pathlist3WV),@widgetVar(comorbiditeTamponWV)"/></center>
 
                                         <br/>
 
-                                        <p:dataTable value="#{consBean.comorbiditeListe}" var="dg2" id="comorbiditeTamponId" emptyMessage="Liste vide" >
+                                        <p:dataTable value="#{consBean.comorbiditeListe}" var="dg2" widgetVar="comorbiditeTamponWV" emptyMessage="Liste vide" >
 
                                             <p:column headerText="Comorbidite" >
                                                 <center><h:outputText value="#{dg2.label}"/></center>
@@ -317,7 +311,7 @@
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerComorbidite(dg2)}" update="@form:comorbiditeTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerComorbidite(dg2)}" update="@widgetVar(comorbiditeTamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
 
@@ -342,7 +336,7 @@
                                             </p:selectOneMenu>
 
                                             <p:outputLabel  value="Traitement medicamenteux" />
-                                            <p:selectOneMenu id="traitMId"  value="#{consBean.classeTherapeutique}" converter="omnifaces.SelectItemsIndexConverter">
+                                            <p:selectOneMenu id="traitMId" widgetVar="traitMWV" value="#{consBean.classeTherapeutique}" converter="omnifaces.SelectItemsIndexConverter">
                                                 <f:selectItem itemLabel="Selectionner une classe" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems var="tr2" value="#{consBean.classeTherapeutiqueListe}" itemValue="#{tr2}" itemLabel="#{tr2.label}"/>                              
                                             </p:selectOneMenu>
@@ -351,11 +345,11 @@
 
                                         <br/>
 
-                                        <center> <p:commandButton value="Ajouter traitement"  action="#{consBean.ajouterTraitementMedicamenteux()}" style="width: auto;" update="@form:traitMId,@form:traitMedTamponId"/></center>
+                                        <center> <p:commandButton value="Ajouter traitement"  action="#{consBean.ajouterTraitementMedicamenteux()}" style="width: auto;" update="@widgetVar(traitMWV),@widgetVar(traitMedTamponWV)"/></center>
 
                                         <br/>
 
-                                        <p:dataTable value="#{consBean.traitementMedicamenteuxClasseListe}" var="pa3" id="traitMedTamponId" emptyMessage="Liste vide" >
+                                        <p:dataTable value="#{consBean.traitementMedicamenteuxClasseListe}" var="pa3" widgetVar="traitMedTamponWV" emptyMessage="Liste vide" >
 
                                             <p:column headerText="Traitement" >
                                                 <center><h:outputText value="#{pa3.classe.label}"/></center>
@@ -363,7 +357,7 @@
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerTraitementMedicamenteux(pa3)}" update="@form:traitMedTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerTraitementMedicamenteux(pa3)}" update="@widgetVar(traitMedTamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
 
@@ -379,23 +373,23 @@
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                             <p:outputLabel  value="Medicament"/>
-                                            <p:inputText id="medoc" value="#{consBean.ordonnance.medicament}"/>
+                                            <p:inputText id="medoc" widgetVar="medocWV" value="#{consBean.ordonnance.medicament}"/>
 
                                             <p:outputLabel  value="Posologie"/>
-                                            <p:inputText id="poso" value="#{consBean.ordonnance.posologie}"/>
+                                            <p:inputText id="poso" widgetVar="posoWV" value="#{consBean.ordonnance.posologie}"/>
 
                                             <p:outputLabel  value="Quantité"/>
-                                            <p:inputNumber id="poso2" value="#{consBean.ordonnance.quantite}"/>
+                                            <p:inputNumber id="poso2" widgetVar="poso2WV" value="#{consBean.ordonnance.quantite}"/>
 
                                         </p:panelGrid>
 
                                         <br/>
 
-                                        <center> <p:commandButton value="Ajouter" action="#{consBean.ajouterOrdonnance()}" style="width: auto;" update="@form:medoc,@form:poso,@form:ordonnanceTamponId"/></center>
+                                        <center> <p:commandButton value="Ajouter" action="#{consBean.ajouterOrdonnance()}" style="width: auto;" update="@widgetVar(medocWV),@widgetVar(posoWV),@widgetVar(poso2WV),@widgetVar(ordonnanceTamponWV)"/></center>
 
                                         <br/>
 
-                                        <p:dataTable value="#{consBean.ordonnanceListe}" var="ordo" id="ordonnanceTamponId" emptyMessage="Liste vide">
+                                        <p:dataTable value="#{consBean.ordonnanceListe}" var="ordo" widgetVar="ordonnanceTamponWV" emptyMessage="Liste vide">
 
                                             <h:inputHidden value="#{ordo.id}"/>
 
@@ -413,7 +407,7 @@
 
                                             <p:column headerText="Action" >
                                                 <center>
-                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerOrdonnance(ordo)}" update="@form:ordonnanceTamponId" styleClass="red-btn" style="width: auto;"/>
+                                                    <p:commandButton  value="Supprimer" action="#{consBean.supprimerOrdonnance(ordo)}" update="@widgetVar(ordonnanceTamponWV)" styleClass="red-btn" style="width: auto;"/>
                                                 </center>
                                             </p:column>
                                         </p:dataTable>
@@ -441,7 +435,8 @@
 
                                     </p:tab>
 
-                                </p:wizard>
+                                </p:tabView>
+
 
                                 <br/>
                                 <br/>
@@ -451,7 +446,7 @@
                                 </div>
 
                                 <div class="ui-g-12 ui-md-6">
-                                    <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV),:patienForm" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    <center><p:commandButton value="Valider" action="#{consBean.gestionConsultation()}" update="@form,:form:growl,@widgetVar(intervenantWV),:patienForm,:consForm" styleClass="amber-btn flat" style="width:auto;margin-bottom:10px;" process="@form"/></center>
                                 </div>
 
                                 <br/>
@@ -485,24 +480,24 @@
 
                                     <p:outputLabel value="Age"/>
                                     <h:outputText value="#{consBean.patient.age} ans"/>
-                                    
+
                                     <p:outputLabel value="Né(e) en "/>
                                     <h:outputText value="#{consBean.agePatient}"/>
 
                                     <p:outputLabel  value="Tension bras gauche"/>
-                                    <h:outputText value="#{consBean.patient.tension}"/>
+                                    <h:outputText value="#{consBean.suivie.tensiongauche}"/>
 
                                     <p:outputLabel  value="Tension bras droit"/>
-                                    <h:outputText value="#{consBean.patient.tensiondroit}"/>
+                                    <h:outputText value="#{consBean.suivie.tensiondroit}"/>
 
                                     <p:outputLabel  value="Masse corporelle"/>
-                                    <h:outputText value="#{consBean.patient.calculMasseCorporelle()}" />
+                                    <h:outputText value="#{consBean.suivie.calculMasse()}" />
                                 </p:panelGrid>
 
                             </h:form>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12">
                         <div class="card card-w-title">
                             <center> <h1>Consultation</h1> </center>
@@ -514,24 +509,24 @@
                                     <p:column headerText="Diagnostique(s)" >
                                         <center><h:outputText value="#{ex1}"/></center>
                                     </p:column>
-                                    
+
                                 </p:dataTable>
-                                
+
                                 <br/>
-                                
+
                                 <p:dataTable value="#{consBean.traitMedc}" var="ex2" emptyMessage="Liste vide" >
 
                                     <p:column headerText="Traitement Medicamenteux" >
                                         <center><h:outputText value="#{ex2}"/></center>
                                     </p:column>
 
-                                   
+
                                 </p:dataTable>
 
                             </h:form>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -575,17 +570,17 @@
                                           filterMatchMode="contains" filterBy="#{int.traitementNomMedicamenteux}">
                                     <h:outputText value="#{int.traitementNomMedicamenteux}" />
                                 </p:column>
-                                
+
                                 <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
                                           filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
                                     <h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" />
                                 </p:column>
-                                
+
                                 <p:column headerText="Signe clinique" sortBy="#{int.examen_Clinique.signe_clinique}"
                                           filterMatchMode="contains" filterBy="#{int.examen_Clinique.signe_clinique}">
                                     <h:outputText value="#{int.examen_Clinique.signe_clinique}" />
                                 </p:column>
-                                
+
                                 <p:column headerText="Etat Csce" sortBy="#{int.examen_Clinique.etat_consce}"
                                           filterMatchMode="contains" filterBy="#{int.examen_Clinique.etat_consce}">
                                     <h:outputText value="#{int.examen_Clinique.etat_consce}" />

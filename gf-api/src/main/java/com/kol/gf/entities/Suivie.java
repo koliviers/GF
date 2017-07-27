@@ -6,6 +6,8 @@
 package com.kol.gf.entities;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -47,6 +51,10 @@ public class Suivie implements Serializable {
     @Column(name = "tensiongauche", nullable = true)
     private String tensiongauche;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_suivie", nullable = true)
+    private Date date_suivie;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_patient", nullable = false)
     private Patient patient;
@@ -54,13 +62,13 @@ public class Suivie implements Serializable {
     public Suivie() {
     }
 
-    public Suivie(Long id, double taille, double poids, double tourtaille, String tensiondroit, String tensiongauche, Patient patient) {
-        this.id = id;
+    public Suivie(double taille, double poids, double tourtaille, String tensiondroit, String tensiongauche, Date date_suivie, Patient patient) {
         this.taille = taille;
         this.poids = poids;
         this.tourtaille = tourtaille;
         this.tensiondroit = tensiondroit;
         this.tensiongauche = tensiongauche;
+        this.date_suivie = date_suivie;
         this.patient = patient;
     }
 
@@ -89,9 +97,12 @@ public class Suivie implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Suivie{" + "id=" + getId() + ", taille=" + getTaille() + ", poids=" + getPoids() + ", tourtaille=" + getTourtaille() + ", tensiondroit=" + getTensiondroit() + ", tensiongauche=" + getTensiongauche() + ", patient=" + getPatient() + '}';
+    public Date getDate_suivie() {
+        return date_suivie;
+    }
+
+    public void setDate_suivie(Date date_suivie) {
+        this.date_suivie = date_suivie;
     }
 
     /**
@@ -191,11 +202,21 @@ public class Suivie implements Serializable {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
-    
-    
-    
-    
 
-    
+    @Override
+    public String toString() {
+        return "Suivie{" + "id=" + id + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tensiongauche=" + tensiongauche + ", date_suivie=" + date_suivie + ", patient=" + patient + '}';
+    }
+
+    public Double calculMasse() {
+
+        double m = 0;
+
+        m = ((this.poids) / (this.taille * this.taille));
+
+        Double s = Double.parseDouble(String.valueOf(((int)(m*100))/100));
+
+        return s;
+    }
 
 }

@@ -23,178 +23,298 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card card-w-title">
-                        <center> <h1>Patient</h1> </center>
+                        <p:tabView>
 
-                        <p:accordionPanel widgetVar="accordPanel">
-                            
-                            <p:tab id="personelle" title="Etat civil">
-                                <!--<p:panel style="height: 500px">-->
-                                
-                                <h:form id="patform">
-                                    
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+                            <p:tab title="Patient">
 
-                                        <p:outputLabel  value="Code patient"/>
-                                        <p:inputText  value="#{patientBean.patient.codePatient}"/>
-                                        
-                                        <p:outputLabel for="nompat" value="Nom"/>
-                                        <p:inputText id="nompat" value="#{patientBean.patient.nomPatient}"/>
+                                <p:accordionPanel widgetVar="accordPanel">
 
+                                    <p:tab id="personelle" title="Etat civil">
+                                        <!--<p:panel style="height: 500px">-->
 
-                                        <p:outputLabel for="prepat" value="Prenom "/>
-                                        <p:inputText id="prepat" value="#{patientBean.patient.prenomPatient}"/>
+                                        <h:form id="patform">
+                                            
+                                            <h:inputHidden value="#{patientBean.patient.id}" />
+                                            
+                                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
-                                        <p:outputLabel for="sexe" value="Sexe" />
-                                        <p:selectOneRadio  id="sexe" layout="responsive" style="border: 2px" columns="3" value="#{patientBean.patient.sexe}" styleClass="form-group">
-                                            <f:selectItem itemLabel="Feminin" itemValue="F" />
-                                            <f:selectItem itemLabel="Masculin" itemValue="M" />
-                                        </p:selectOneRadio>
+                                                <p:outputLabel  value="Code patient"/>
+                                                <p:inputText  value="#{patientBean.patient.codePatient}"/>
+
+                                                <p:outputLabel for="nompat" value="Nom"/>
+                                                <p:inputText id="nompat" value="#{patientBean.patient.nomPatient}"/>
 
 
-                                        <p:outputLabel for="prof" value="Profession "/>
-                                        <p:inputText id="prof" value="#{patientBean.patient.profession}"/>
+                                                <p:outputLabel for="prepat" value="Prenom "/>
+                                                <p:inputText id="prepat" value="#{patientBean.patient.prenomPatient}"/>
+
+                                                <p:outputLabel for="sexe" value="Sexe" />
+                                                <p:selectOneRadio  id="sexe" layout="responsive" style="border: 2px" columns="3" value="#{patientBean.patient.sexe}" styleClass="form-group">
+                                                    <f:selectItem itemLabel="Feminin" itemValue="F" />
+                                                    <f:selectItem itemLabel="Masculin" itemValue="M" />
+                                                </p:selectOneRadio>
 
 
-                                        <p:outputLabel  value="Age "/>
-                                        <p:inputNumber value="#{patientBean.patient.age}" decimalPlaces="0" decimalSeparator="" emptyValue="0" maxlength="3"/>
+                                                <p:outputLabel for="prof" value="Profession "/>
+                                                <p:inputText id="prof" value="#{patientBean.patient.profession}"/>
 
 
-                                        <p:outputLabel for="contact" value="Contact (+228)"/>
-                                        <p:inputText id="contact" value="#{patientBean.patient.contact}"/>
+                                                <p:outputLabel  value="Age "/>
+                                                <p:inputNumber value="#{patientBean.patient.age}" decimalPlaces="0" decimalSeparator="" emptyValue="0" maxlength="3"/>
+
+                                                
+                                                <p:outputLabel  value="Accessibilite geographique" />
+                                                <p:selectOneRadio   layout="responsive" style="border: 2px" columns="2" value="#{patientBean.patient.accessibilite}" styleClass="form-group">
+                                                    <f:selectItem itemLabel="moins de 5km" itemValue="moins de 5km" />
+                                                    <f:selectItem itemLabel="plus de 5km" itemValue="plus de 5km" />
+                                                </p:selectOneRadio>
+                                                
+                                                <p:outputLabel for="contact" value="Contact (+228)"/>
+                                                <p:inputText id="contact" value="#{patientBean.patient.contact}"/>
 
 
-                                        <p:outputLabel for="adr" value="Adresse "/>
-                                        <p:inputText id="adr" value="#{patientBean.patient.adresse}"/>
+                                                <p:outputLabel for="adr" value="Adresse "/>
+                                                <p:inputText id="adr" value="#{patientBean.patient.adresse}"/>
 
 
-                                        <p:outputLabel for="stm" value="Civilité" />
-                                        <p:selectOneRadio  id="stm" layout="responsive" columns="3" value="#{patientBean.patient.civilite}" styleClass="form-group">
-                                            <f:selectItem itemLabel="Marié" itemValue="marié" />
-                                            <f:selectItem itemLabel="Celibataire" itemValue="Celibataire" />
-                                            <f:selectItem itemLabel="Divorcé(e)" itemValue="Divorcé(e)" />
-                                            <f:selectItem itemLabel="Veuf" itemValue="Veuf" />
-                                            <f:selectItem itemLabel="Fiancée" itemValue="Fiancé(e)" />
-                                        </p:selectOneRadio>
+                                                <p:outputLabel for="stm" value="Civilité" />
+                                                <p:selectOneRadio  id="stm" layout="responsive" columns="3" value="#{patientBean.patient.civilite}" styleClass="form-group">
+                                                    <f:selectItem itemLabel="Marié" itemValue="marié" />
+                                                    <f:selectItem itemLabel="Celibataire" itemValue="Celibataire" />
+                                                    <f:selectItem itemLabel="Divorcé(e)" itemValue="Divorcé(e)" />
+                                                    <f:selectItem itemLabel="Veuf" itemValue="Veuf" />
+                                                    <f:selectItem itemLabel="Fiancée" itemValue="Fiancé(e)" />
+                                                </p:selectOneRadio>
 
-                                        <p:outputLabel for="pemabdo" value="Perimetre abdominal"/>
-                                        <p:inputNumber id="pemabdo" value="#{patientBean.patient.tourtaille}" decimalSeparator="," decimalPlaces="2" symbol=" cm" symbolPosition=" 5"/>
+                                            </p:panelGrid>
 
-                                        <p:outputLabel for="poid" value="Poids" />
-                                        <p:inputNumber id="poid" value="#{patientBean.patient.poids}" decimalSeparator="," decimalPlaces="2" symbol=" kg" symbolPosition=" 5"/>
-                                        
-                                        <p:outputLabel  value="Taille"/>
-                                        <p:inputNumber  value="#{patientBean.patient.taille}" decimalSeparator="," symbol=" m" symbolPosition=" 5"/>
-                                        
-                                        <p:outputLabel for="tens" value="Tension bras gauche"/>
-                                        <p:inputNumber id="tens" value="#{patientBean.patient.tension}" decimalSeparator="," decimalPlaces="2" />
 
-                                         <p:outputLabel for="tensd" value="Tension bras droit"/>
-                                         <p:inputNumber id="tensd" value="#{patientBean.patient.tensiondroit}" decimalSeparator="," decimalPlaces="2"/>
+                                            <br/>
 
-                                        
-                                        
-                                    </p:panelGrid>
-                                    
-                                    
-                                    <br/>
+                                            <div class="ui-g-12 ui-md-6">
+                                                <center><p:commandButton value="Annuler" action="#{patientBean.annulerPatient()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                            </div>
 
-                                    <div class="ui-g-12 ui-md-6">
-                                        <center><p:commandButton value="Annuler" action="#{patientBean.annulerPatient()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
-                                    </div>
+                                            <div class="ui-g-12 ui-md-6">
+                                                <center><p:commandButton value="Valider" action="#{patientBean.gestionPatient()}" update="@form,:form:growl,@widgetVar(intervenantWV),@widgetVar(patientSvWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                            </div>
 
-                                    <div class="ui-g-12 ui-md-6">
-                                        <center><p:commandButton value="Valider" action="#{patientBean.gestionPatient()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
-                                    </div>
-                                    
+                                        </h:form>
+
+                                        <!--</p:panel>-->
+                                    </p:tab>
+
+                                </p:accordionPanel>
+
+                                <br/>
+                                <br/>
+
+                                <h:form id="intformDataTable">
+                                    <center>   <h1>Liste des Patients</h1> </center>
+                                    <p:dataTable id="intervenantDT" var="int" value="#{patientBean.listePatient}" 
+                                                 widgetVar="intervenantWV"                                 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste de patient est vide" reflow="true" rows="10" paginator="true">
+                                        <f:facet name="header">
+                                            <p:outputPanel>
+                                                <h:outputText value="Rechercher:" />
+                                                <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
+                                            </p:outputPanel>
+                                        </f:facet>
+
+                                        <p:column headerText="Code " sortBy="#{int.codePatient}"
+                                                  filterMatchMode="contains" filterBy="#{int.codePatient}">
+                                            <h:outputText value="#{int.codePatient}" />
+                                        </p:column>
+
+                                        <p:column headerText="Nom" sortBy="#{int.nomPatient}"
+                                                  filterMatchMode="contains" filterBy="#{int.nomPatient}">
+                                            <h:outputText value="#{int.nomPatient}" />
+                                        </p:column>
+
+                                        <p:column headerText="Prenom" sortBy="#{int.prenomPatient}"
+                                                  filterMatchMode="contains" filterBy="#{int.prenomPatient}">
+                                            <h:outputText value="#{int.prenomPatient}" />
+                                        </p:column>
+
+                                        <p:column headerText="Sexe" sortBy="#{int.sexe}"
+                                                  filterMatchMode="contains" filterBy="#{int.sexe}">
+                                            <h:outputText value="#{int.sexe}" />
+                                        </p:column>
+
+                                        <p:column headerText="Age">
+                                            <h:outputText value="#{int.age} ans" />
+                                        </p:column>
+
+                                        <p:column headerText="Contact" sortBy="#{int.contact}"
+                                                  filterMatchMode="contains" filterBy="#{int.contact}">
+                                            <h:outputText value="#{int.contact}" />
+                                        </p:column>
+
+                                        <p:column headerText="Civilite" sortBy="#{int.civilite}"
+                                                  filterMatchMode="contains" filterBy="#{int.civilite}">
+                                            <h:outputText value="#{int.civilite}" />
+                                        </p:column>
+
+                                        <p:column headerText="Profession" sortBy="#{int.profession}"
+                                                  filterMatchMode="contains" filterBy="#{int.profession}">
+                                            <h:outputText value="#{int.profession}" />
+                                        </p:column>
+
+                                        <p:column headerText="Adresse" sortBy="#{int.adresse}"
+                                                  filterMatchMode="contains" filterBy="#{int.adresse}">
+                                            <h:outputText value="#{int.adresse}" />
+                                        </p:column>
+
+
+
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Voir" action="#{patientViewManagedBean.informationPatient(int)}" styleClass="cyan-btn" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                        </p:column>
+
+                                        <p:column>                           
+                                            <center><p:commandButton value="Modifier" action="#{patientBean.renvoiePatient(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                        </p:column>
+
+                                    </p:dataTable>
                                 </h:form>
 
-                                <!--</p:panel>-->
                             </p:tab>
-                            
-                        </p:accordionPanel>
 
-                        
 
-                       
+                            <p:tab title="Constante">
+
+                                <p:accordionPanel widgetVar="accordPanelConstante">
+
+                                    <p:tab id="constanteId" title="Données">
+                                        <!--<p:panel style="height: 500px">-->
+
+                                        <h:form id="constform">
+
+                                            <h:inputHidden value="#{suivieBean.suivie.id}" />
+
+                                            <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                                <p:outputLabel  value="Patient" />
+                                                <p:selectOneMenu widgetVar="patientSvWV"   value="#{suivieBean.suivie.patient}" converter="omnifaces.SelectItemsIndexConverter">
+                                                    <f:selectItem itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems var="patie" value="#{suivieBean.patientListe}" itemValue="#{patie}" itemLabel="#{patie.nomPatient} #{patie.prenomPatient}"/> 
+                                                </p:selectOneMenu>
+
+                                                <p:outputLabel for="pemabdo" value="Perimetre abdominal"/>
+                                                <p:inputNumber id="pemabdo" value="#{suivieBean.suivie.tourtaille}" decimalSeparator="," decimalPlaces="2" symbol=" cm" symbolPosition=" 5"/>
+
+                                                <p:outputLabel for="poid" value="Poids" />
+                                                <p:inputNumber id="poid" value="#{suivieBean.suivie.poids}" decimalSeparator="," decimalPlaces="2" symbol=" kg" symbolPosition=" 5"/>
+
+                                                <p:outputLabel  value="Taille"/>
+                                                <p:inputNumber  value="#{suivieBean.suivie.taille}" decimalSeparator="," symbol=" m" symbolPosition=" 5"/>
+
+                                                <p:outputLabel  value="Tension bras gauche"/>
+                                                <p:selectOneRadio  layout="responsive" columns="3" value="#{suivieBean.suivie.tensiongauche}" styleClass="form-group">
+                                                    <f:selectItem itemLabel="Diastolique" itemValue="Diastolique" />
+                                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
+                                                    <f:selectItem itemLabel="Systolique" itemValue="Systolique" />
+                                                </p:selectOneRadio>
+
+                                                <p:outputLabel value="Tension bras droit"/>
+                                                <p:selectOneRadio  layout="responsive" columns="3" value="#{suivieBean.suivie.tensiondroit}" styleClass="form-group">
+                                                    <f:selectItem itemLabel="Diastolique" itemValue="Diastolique" />
+                                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
+                                                    <f:selectItem itemLabel="Systolique" itemValue="Systolique" />
+                                                </p:selectOneRadio>
+
+                                            </p:panelGrid>
+
+
+                                            <br/>
+
+                                            <div class="ui-g-12 ui-md-6">
+                                                <center><p:commandButton value="Annuler" action="#{suivieBean.annulerSuivie()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                            </div>
+
+                                            <div class="ui-g-12 ui-md-6">
+                                                <center><p:commandButton value="Valider" action="#{suivieBean.gestionSuivie()}" update="@form,:form:growl,@widgetVar(constanteWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                            </div>
+
+                                        </h:form>
+
+                                        <!--</p:panel>-->
+                                    </p:tab>
+
+                                </p:accordionPanel>
+
+
+                                <br/>
+                                <br/>
+                                
+                                <h:form>
+                                    <center>   <h1>Liste des Constantes</h1> </center>
+                                    <p:dataTable id="constanteDT" var="int2" value="#{suivieBean.suivieListe}" 
+                                                 widgetVar="constanteWV"                                 
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true">
+                                        <f:facet name="header">
+                                            <p:outputPanel>
+                                                <h:outputText value="Rechercher:" />
+                                                <p:inputText id="globalFilter" onkeyup="PF('constanteWV').filter()" style="width:150px" placeholder=""/>
+                                            </p:outputPanel>
+                                        </f:facet>
+
+                                        <p:column headerText="Patient " sortBy="#{int2.patient.nomPatient} #{int2.patient.prenomPatient}"
+                                                  filterMatchMode="contains" filterBy="#{int2.patient.nomPatient} #{int2.patient.prenomPatient}">
+                                            <center><h:outputText value="#{int2.patient.nomPatient} #{int2.patient.prenomPatient}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Sexe" sortBy="#{int2.patient.sexe}"
+                                                  filterMatchMode="contains" filterBy="#{int2.patient.sexe}">
+                                            <center><h:outputText value="#{int2.patient.sexe}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Perimetre abdominal" sortBy="#{int2.tourtaille}"
+                                                  filterMatchMode="contains" filterBy="#{int2.tourtaille}">
+                                            <center><h:outputText value="#{int2.tourtaille}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Poids" sortBy="#{int2.poids}"
+                                                  filterMatchMode="contains" filterBy="#{int2.poids}">
+                                           <center> <h:outputText value="#{int2.poids}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Taille" sortBy="#{int2.taille}"
+                                                  filterMatchMode="contains" filterBy="#{int2.taille}">
+                                           <center> <h:outputText value="#{int2.taille}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Tension B.G" sortBy="#{int2.tensiongauche}"
+                                                  filterMatchMode="contains" filterBy="#{int2.tensiongauche}">
+                                            <center><h:outputText value="#{int2.tensiongauche}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Tension B.D" sortBy="#{int2.tensiondroit}"
+                                                  filterMatchMode="contains" filterBy="#{int2.tensiondroit}">
+                                           <center> <h:outputText value="#{int2.tensiondroit}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Date" sortBy="#{suivieBean.dateFormatRdv(int2.date_suivie)}"
+                                                  filterMatchMode="contains" filterBy="#{suivieBean.dateFormatRdv(int2.date_suivie)}">
+                                            <center><h:outputText value="#{suivieBean.dateFormatRdv(int2.date_suivie)}" /></center>
+                                        </p:column>
+
+                                        <p:column headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{suivieBean.renvoieSuivie(int2)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanelConstante)"/></center>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:form>
+                                
+                            </p:tab>
+
+                        </p:tabView>
+
                     </div>
-                </div>
-                
-                <div class="ui-g-12">
-
-                    <div class="card card-w-title">
-                        <h:form id="intformDataTable">
-                            <center>   <h1>Liste des Patients</h1> </center>
-                            <p:dataTable id="intervenantDT" var="int" value="#{patientBean.listePatient}" 
-                                         widgetVar="intervenantWV"                                 
-                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                         rowsPerPageTemplate="5,10,15"
-                                         emptyMessage="La liste de patient est vide" reflow="true" rows="10" paginator="true">
-                                <f:facet name="header">
-                                    <p:outputPanel>
-                                        <h:outputText value="Rechercher:" />
-                                        <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
-                                    </p:outputPanel>
-                                </f:facet>
-
-                                <p:column headerText="Code " sortBy="#{int.codePatient}"
-                                          filterMatchMode="contains" filterBy="#{int.codePatient}">
-                                    <h:outputText value="#{int.codePatient}" />
-                                </p:column>
-                                
-                                <p:column headerText="Nom" sortBy="#{int.nomPatient}"
-                                          filterMatchMode="contains" filterBy="#{int.nomPatient}">
-                                    <h:outputText value="#{int.nomPatient}" />
-                                </p:column>
-                                
-                                <p:column headerText="Prenom" sortBy="#{int.prenomPatient}"
-                                          filterMatchMode="contains" filterBy="#{int.prenomPatient}">
-                                    <h:outputText value="#{int.prenomPatient}" />
-                                </p:column>
-                                
-                                <p:column headerText="Sexe" sortBy="#{int.sexe}"
-                                          filterMatchMode="contains" filterBy="#{int.sexe}">
-                                    <h:outputText value="#{int.sexe}" />
-                                </p:column>
-                                
-                                <p:column headerText="Age">
-                                    <h:outputText value="#{int.age} ans" />
-                                </p:column>
-                                
-                                <p:column headerText="Contact" sortBy="#{int.contact}"
-                                          filterMatchMode="contains" filterBy="#{int.contact}">
-                                    <h:outputText value="#{int.contact}" />
-                                </p:column>
-                                
-                                <p:column headerText="Civilite" sortBy="#{int.civilite}"
-                                          filterMatchMode="contains" filterBy="#{int.civilite}">
-                                    <h:outputText value="#{int.civilite}" />
-                                </p:column>
-                                
-                                <p:column headerText="Profession" sortBy="#{int.profession}"
-                                          filterMatchMode="contains" filterBy="#{int.profession}">
-                                    <h:outputText value="#{int.profession}" />
-                                </p:column>
-                                
-                                <p:column headerText="Adresse" sortBy="#{int.adresse}"
-                                          filterMatchMode="contains" filterBy="#{int.adresse}">
-                                    <h:outputText value="#{int.adresse}" />
-                                </p:column>
-
-                                
-
-                                <p:column  headerText="Action">                           
-                                    <center><p:commandButton value="Voir" action="#{patientViewManagedBean.informationPatient(int)}" styleClass="cyan-btn" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
-                                </p:column>
-                                
-                                <p:column>                           
-                                    <center><p:commandButton value="Modifier" action="#{patientBean.renvoiePatient(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
-                                </p:column>
-
-                            </p:dataTable>
-                        </h:form>
-
-                    </div> 
-
                 </div>
             </div>
         </div>

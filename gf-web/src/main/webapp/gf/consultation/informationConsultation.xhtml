@@ -38,7 +38,9 @@
                                     <p:outputLabel value="Age"/>
                                     <h:outputText value="#{consultationViewManagedBean.patient.age} ans"/>
                                         
-
+                                    <p:outputLabel value="Accessibilite geographique"/>
+                                    <h:outputText value="#{consultationViewManagedBean.patient.accessibilite}"/>
+                                    
                                     <p:outputLabel value="Contact"/>
                                     <h:outputText value="#{consultationViewManagedBean.patient.contact}"/>
 
@@ -48,23 +50,6 @@
                                     <p:outputLabel value="Civilite"/>
                                     <h:outputText value="#{consultationViewManagedBean.patient.civilite}"/>
 
-                                    <p:outputLabel value="Perimetre abdominal"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tourtaille}"/>
-
-                                    <p:outputLabel  value="Poids"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.poids}"/>
-
-                                    <p:outputLabel  value="Taille"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.taille}"/>
-
-                                    <p:outputLabel  value="Tension bras gauche"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tension}"/>
-
-                                    <p:outputLabel  value="Tension bras droit"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tensiondroit}"/>
-
-                                    <p:outputLabel  value="Masse corporelle"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.calculMasseCorporelle()}" />
                                 </p:panelGrid>
 
                                 <br/>
@@ -214,8 +199,6 @@
                                     <p:outputLabel  value="Sport effectué"/>
                                     <h:outputText value="#{consultationViewManagedBean.consultation.sport}"/>
 
-                                    <p:outputLabel value="Fruit / Legume Consommée"/>
-                                    <h:outputText value="#{consultationViewManagedBean.consultation.fruit}"/>
 
                                 </p:panelGrid>
 
@@ -263,7 +246,7 @@
                                     <p:outputLabel value="Etat de conscience"/>
                                     <h:outputText value="#{consultationViewManagedBean.examentClinique.etat_consce}"/>
 
-                                    <p:outputLabel value="Palure"/>
+                                    <p:outputLabel value="Etat de conjonctivité"/>
                                     <h:outputText value="#{consultationViewManagedBean.examentClinique.palure}"/>
 
                                     <p:outputLabel value="Etat d'hydratation"/>

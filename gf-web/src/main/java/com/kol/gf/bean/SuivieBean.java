@@ -9,10 +9,14 @@ import com.kol.gf.dao.bean.Isuivie;
 import com.kol.gf.dao.bean.PatientDaoBeanLocal;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.Suivie;
+import com.kol.gf.service.SuiviSessionBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.core.Utils.Convertiseur;
+import com.miki.webapp.core.Utils.ManipulationDate;
 import com.miki.webapp.core.Utils.Mtm;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,41 +30,39 @@ import javax.transaction.UserTransaction;
  *
  * @author koliviers
  */
-
 @ManagedBean(name = "suivieBean")
 @ViewScoped
-public class SuivieBean implements Serializable{
-    
+public class SuivieBean implements Serializable {
+
     private Suivie suivie;
     private List<Patient> patientListe;
     private List<Suivie> suivieListe;
-    
+
     @EJB
-    private Isuivie mysuivie;
-    
-     @EJB
-     private PatientDaoBeanLocal mypatient;
-    
-    
-    public SuivieBean(){
-        
-        suivie=new Suivie();
-        
-        patientListe=new ArrayList<>();
-        suivieListe=new ArrayList<>();
+    private SuiviSessionBeanLocal mysuivie;
+
+    @EJB
+    private PatientDaoBeanLocal mypatient;
+
+    public SuivieBean() {
+
+        suivie = new Suivie();
+
+        patientListe = new ArrayList<>();
+        suivieListe = new ArrayList<>();
     }
 
-    
-    public void gestionSuivie(){
-        
-                UserTransaction tx = TransactionManager.getUserTransaction();
-                
+    public void gestionSuivie() {
+
+        UserTransaction tx = TransactionManager.getUserTransaction();
+
         try {
-            if (suivie.getPatient().getNomPatient().trim().isEmpty()) {
-                Mtm.mikiMessageWarnSaisir("le nom du patient est obligatoire");
+            if (suivie.getPatient() == null) {
+                Mtm.mikiMessageWarnSelectionner("le patient");
             } else {
                 if (suivie.getId() == null) {
                     tx.begin();
+                    suivie.setDate_suivie(new Date());
                     mysuivie.saveOne(suivie);
                     tx.commit();
                 } else {
@@ -83,12 +85,23 @@ public class SuivieBean implements Serializable{
                 Logger.getLogger(PatientBean.class.getName()).log(Level.SEVERE, null, ex1);
             }
             Mtm.mikiMessageError();
-        }        
-                
+        }
 
-        
     }
     
+    public void renvoieSuivie(Suivie suivi){
+        suivie = suivi;
+    }
+    
+    public void annulerSuivie(){
+        suivie = new Suivie();
+    }
+    
+    public String dateFormatRdv(Date dat) {
+        return Convertiseur.getDate(dat);
+    }
+    
+
     public Suivie getSuivie() {
         return suivie;
     }
@@ -98,12 +111,18 @@ public class SuivieBean implements Serializable{
     }
 
     public List<Suivie> getSuivieListe() {
-        return mysuivie.getAll();
+        return mysuivie.getAll("id", false);
     }
 
-    public Isuivie getMysuivie() {
+    public SuiviSessionBeanLocal getMysuivie() {
         return mysuivie;
     }
+
+    public void setMysuivie(SuiviSessionBeanLocal mysuivie) {
+        this.mysuivie = mysuivie;
+    }
+
+   
 
     public void setSuivie(Suivie suivie) {
         this.suivie = suivie;
@@ -117,9 +136,6 @@ public class SuivieBean implements Serializable{
         this.suivieListe = suivieListe;
     }
 
-    public void setMysuivie(Isuivie mysuivie) {
-        this.mysuivie = mysuivie;
-    }
 
     public PatientDaoBeanLocal getMypatient() {
         return mypatient;
@@ -128,13 +144,10 @@ public class SuivieBean implements Serializable{
     public void setMypatient(PatientDaoBeanLocal mypatient) {
         this.mypatient = mypatient;
     }
-    
-    
-     public void annuleSuivie() {
-        suivie=new Suivie();
+
+    public void annuleSuivie() {
+        suivie = new Suivie();
 
     }
 
-    
-    
 }

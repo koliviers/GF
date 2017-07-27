@@ -12,6 +12,7 @@ import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.Antecedent_familial;
 import com.kol.gf.entities.Antecedent_familial_Id;
+import com.kol.gf.entities.Cim10;
 import com.kol.gf.entities.ClasseTherapeutique;
 import com.kol.gf.entities.Comorbidite;
 import com.kol.gf.entities.Consommation;
@@ -28,11 +29,13 @@ import com.kol.gf.entities.ParacliniqueConsultationId;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
+import com.kol.gf.entities.Suivie;
 import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.entities.TraitementMedicamenteuxId;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.entities.TypeHabitude;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
+import com.kol.gf.service.Cim10SessionBeanLocal;
 import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
 import com.kol.gf.service.ComorbiditeSessionBeanLocal;
 import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
@@ -44,6 +47,7 @@ import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
+import com.kol.gf.service.SuiviSessionBeanLocal;
 import com.kol.gf.service.TraitementMedicamenteuxSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
@@ -55,6 +59,7 @@ import com.miki.webapp.shiro.EntityRealm;
 import com.miki.webapp.shiro.utils.constante;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -81,6 +86,8 @@ public class ConsultationBean implements Serializable {
     private Pathologie pathologie;
 
     private Patient patient;
+    
+    private Suivie suivie;
 
     private boolean disable;
 
@@ -159,6 +166,8 @@ public class ConsultationBean implements Serializable {
     private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
     private List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire;
     
+    private List<Cim10> cimListe;
+    
     private List<String> diagnListe ;
     private List<String> traitMedc;
     
@@ -228,6 +237,12 @@ public class ConsultationBean implements Serializable {
 
     @EJB
     private ComorbiditeSessionBeanLocal comorbiditeServices;
+    
+    @EJB
+    private SuiviSessionBeanLocal suivieServices;
+    
+    @EJB
+    private Cim10SessionBeanLocal cimServices;
 
     public ConsultationBean() {
 
@@ -237,12 +252,14 @@ public class ConsultationBean implements Serializable {
         rdvTampon = new RendezVous();
         patient = new Patient();
         classeTherapeutique = new ClasseTherapeutique();
+        suivie = new Suivie();
 
         listePatient = new ArrayList<>();
         listePathologie = new ArrayList<>();
         listeConsommation = new ArrayList<>();
         typecons = new TypeConsommation();
         liteType = new ArrayList<>();
+        cimListe = new ArrayList<>();
         listeTypeHabitude = new ArrayList<>();
         tamponHabitudeAlimentaire = new ArrayList<>();
         tamponHabitudeAlimentaireTemporaire = new ArrayList<>();
@@ -694,6 +711,7 @@ public class ConsultationBean implements Serializable {
         consommation = new Consommation();
         patient = new Patient();
         classeTherapeutique = new ClasseTherapeutique();
+        suivie = new Suivie();
 
         typecons = new TypeConsommation();
         listeTypeHabitude = new ArrayList<>();
@@ -732,10 +750,20 @@ public class ConsultationBean implements Serializable {
     public void listenerPatient() {
         if (consultation.getPatient() == null) {
             patient = new Patient();
+            suivie = new Suivie();
         } else {
             patient = consultation.getPatient();       
             Integer intAge = patient.getAge();
             agePatient = String.valueOf(ManipulationDate.ajouterAnnee(new Date(), -intAge).getYear()+1900);
+            
+            List<Suivie> suivieListTampon = suivieServices.getBy("patient", patient);
+            
+            if(suivieListTampon.isEmpty()){
+                suivie = new Suivie();
+            }else{
+                suivie = suivieListTampon.stream()
+                    .reduce((s1,s2) -> s1.getDate_suivie().after(s2.getDate_suivie()) ? s1:s2).get();
+            }
             
             List<Consultation> consulListe2 = consultationServices.getBy("patient", patient);
             
@@ -1482,6 +1510,38 @@ public class ConsultationBean implements Serializable {
 
     public void setTraitMedc(List<String> traitMedc) {
         this.traitMedc = traitMedc;
+    }
+
+    public Suivie getSuivie() {
+        return suivie;
+    }
+
+    public void setSuivie(Suivie suivie) {
+        this.suivie = suivie;
+    }
+
+    public SuiviSessionBeanLocal getSuivieServices() {
+        return suivieServices;
+    }
+
+    public void setSuivieServices(SuiviSessionBeanLocal suivieServices) {
+        this.suivieServices = suivieServices;
+    }
+
+    public List<Cim10> getCimListe() {
+        return cimServices.getAll("label", true);
+    }
+
+    public void setCimListe(List<Cim10> cimListe) {
+        this.cimListe = cimListe;
+    }
+
+    public Cim10SessionBeanLocal getCimServices() {
+        return cimServices;
+    }
+
+    public void setCimServices(Cim10SessionBeanLocal cimServices) {
+        this.cimServices = cimServices;
     }
     
     

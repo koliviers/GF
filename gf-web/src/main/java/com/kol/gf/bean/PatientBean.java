@@ -30,9 +30,7 @@ import javax.transaction.UserTransaction;
 @ViewScoped
 public class PatientBean implements Serializable {
 
-    private Patient patient;
-
-    
+    private Patient patient;   
 
     private List<Patient> listePatient;
 
