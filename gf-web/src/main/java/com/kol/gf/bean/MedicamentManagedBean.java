@@ -5,12 +5,11 @@
  */
 package com.kol.gf.bean;
 
-import com.kol.gf.entities.Cim10;
+import com.kol.gf.entities.Medicament;
 import com.kol.gf.entities.Pathologie;
-import com.kol.gf.service.PathologieServiceBeanLocal;
+import com.kol.gf.service.MedicamentSessionBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.Mtm;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -22,8 +21,6 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -38,67 +35,67 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean
 @ViewScoped
-public class PathologieManagedBean implements Serializable {
+public class MedicamentManagedBean implements Serializable {
 
-    private Pathologie pathologie;
+    private Medicament medicament;
 
-    private Pathologie pathologieExcell;
+    private Medicament medicamentExcell;
 
-    private List<Pathologie> pathologieListe;
+    private List<Medicament> medicamentListe;
 
     private InputStream inptStrm;
 
     @EJB
-    private PathologieServiceBeanLocal pathologieService;
+    private MedicamentSessionBeanLocal medicamentServices;
 
-    public PathologieManagedBean() {
-        pathologie = new Pathologie();
+    public MedicamentManagedBean() {
+        medicament = new Medicament();
 
-        pathologieExcell = new Pathologie();
+        medicamentExcell = new Medicament();
 
-        pathologieListe = new ArrayList<>();
+        medicamentListe = new ArrayList<>();
     }
 
-    public void gestionPathologie() {
+    public void gestionMedicament() {
         UserTransaction tx = TransactionManager.getUserTransaction();
 
         try {
-            if (pathologie.getNomPathologie().trim().isEmpty()) {
-                Mtm.mikiMessageWarnSaisir("le nom de la pathologie");
+            if (medicament.getLabel().trim().isEmpty()) {
+                Mtm.mikiMessageWarnSaisir("le nom du medicament");
             } else {
-                if (pathologie.getId() == null) {
+                if (medicament.getId() == null) {
                     tx.begin();
-                    pathologieService.saveOne(pathologie);
+                    medicamentServices.saveOne(medicament);
                     tx.commit();
                 } else {
                     tx.begin();
-                    pathologieService.updateOne(pathologie);
+                    medicamentServices.updateOne(medicament);
                     tx.commit();
                 }
 
                 Mtm.mikiMessageInfo();
-                pathologie = new Pathologie();
+                medicament = new Medicament();
             }
         } catch (Exception ex) {
             try {
                 tx.rollback();
             } catch (IllegalStateException ex1) {
-                Logger.getLogger(PathologieManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (SecurityException ex1) {
-                Logger.getLogger(PathologieManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (SystemException ex1) {
-                Logger.getLogger(PathologieManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(ClasseTherapeutiqueManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
             }
             Mtm.mikiMessageError();
         }
     }
 
-    public void renvoiePathologie(Pathologie patho) {
-        pathologie = patho;
+    public void renvoieMedicament(Medicament medoc) {
+        medicament = medoc;
     }
 
-    public void annulerPathologie() {
-        pathologie = new Pathologie();
+    public void annulerMedicament() {
+        medicament = new Medicament();
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -143,16 +140,14 @@ public class PathologieManagedBean implements Serializable {
 
                         if (!values.get(0).trim().isEmpty()) {
 
-                            if (pathologieService.getBy("nomPathologie", values.get(0)).isEmpty()) {
-
-                                pathologieExcell.setNomPathologie(values.get(0));
+                            if (medicamentServices.getBy("label", values.get(0)).isEmpty()) {
+                                medicamentExcell.setLabel(values.get(0));
 
                                 tx.begin();
-                                pathologieService.saveOne(pathologieExcell);
+                                medicamentServices.saveOne(medicamentExcell);
                                 tx.commit();
 
-                                pathologieExcell = new Pathologie();
-
+                                medicamentExcell = new Medicament();
                             }
 
                         } else {
@@ -194,28 +189,43 @@ public class PathologieManagedBean implements Serializable {
         inptStrm = null;
     }
 
-    public Pathologie getPathologie() {
-        return pathologie;
+    public Medicament getMedicament() {
+        return medicament;
     }
 
-    public void setPathologie(Pathologie pathologie) {
-        this.pathologie = pathologie;
+    public void setMedicament(Medicament medicament) {
+        this.medicament = medicament;
     }
 
-    public List<Pathologie> getPathologieListe() {
-        return pathologieService.getAll("nomPathologie", true);
+    public List<Medicament> getMedicamentListe() {
+        
+        try {
+            return medicamentServices.getAll("label",true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 
-    public void setPathologieListe(List<Pathologie> pathologieListe) {
-        this.pathologieListe = pathologieListe;
+    public void setMedicamentListe(List<Medicament> medicamentListe) {
+        this.medicamentListe = medicamentListe;
     }
 
-    public PathologieServiceBeanLocal getPathologieService() {
-        return pathologieService;
+    public MedicamentSessionBeanLocal getMedicamentServices() {
+        return medicamentServices;
     }
 
-    public void setPathologieService(PathologieServiceBeanLocal pathologieService) {
-        this.pathologieService = pathologieService;
+    public void setMedicamentServices(MedicamentSessionBeanLocal medicamentServices) {
+        this.medicamentServices = medicamentServices;
+    }
+
+    public Medicament getMedicamentExcell() {
+        return medicamentExcell;
+    }
+
+    public void setMedicamentExcell(Medicament medicamentExcell) {
+        this.medicamentExcell = medicamentExcell;
     }
 
     public InputStream getInptStrm() {
@@ -224,14 +234,6 @@ public class PathologieManagedBean implements Serializable {
 
     public void setInptStrm(InputStream inptStrm) {
         this.inptStrm = inptStrm;
-    }
-
-    public Pathologie getPathologieExcell() {
-        return pathologieExcell;
-    }
-
-    public void setPathologieExcell(Pathologie pathologieExcell) {
-        this.pathologieExcell = pathologieExcell;
     }
 
 }

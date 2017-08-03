@@ -45,11 +45,17 @@ public class Suivie implements Serializable {
     @Column(name = "tourtaille", nullable = true)
     private double tourtaille;
 
-    @Column(name = "tensiondroit", nullable = true)
-    private String tensiondroit;
+    @Column(name = "diastoliqueBD", nullable = true)
+    private double diastoliqueBD;
 
-    @Column(name = "tensiongauche", nullable = true)
-    private String tensiongauche;
+    @Column(name = "diastoliqueBG", nullable = true)
+    private double diastoliqueBG;
+    
+    @Column(name = "systoliqueBD", nullable = true)
+    private double systoliqueBD;
+    
+    @Column(name = "systoliqueBG", nullable = true)
+    private double systoliqueBG;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_suivie", nullable = true)
@@ -62,15 +68,23 @@ public class Suivie implements Serializable {
     public Suivie() {
     }
 
-    public Suivie(double taille, double poids, double tourtaille, String tensiondroit, String tensiongauche, Date date_suivie, Patient patient) {
+    public Suivie(double taille, double poids, double tourtaille, double diastoliqueBD, double diastoliqueBG, double systoliqueBD, double systoliqueBG, Date date_suivie, Patient patient) {
         this.taille = taille;
         this.poids = poids;
         this.tourtaille = tourtaille;
-        this.tensiondroit = tensiondroit;
-        this.tensiongauche = tensiongauche;
+        this.diastoliqueBD = diastoliqueBD;
+        this.diastoliqueBG = diastoliqueBG;
+        this.systoliqueBD = systoliqueBD;
+        this.systoliqueBG = systoliqueBG;
         this.date_suivie = date_suivie;
         this.patient = patient;
     }
+
+    public Suivie(Patient patient) {
+        this.patient = patient;
+    }
+
+    
 
     @Override
     public int hashCode() {
@@ -161,34 +175,39 @@ public class Suivie implements Serializable {
         this.tourtaille = tourtaille;
     }
 
-    /**
-     * @return the tensiondroit
-     */
-    public String getTensiondroit() {
-        return tensiondroit;
+    public double getDiastoliqueBD() {
+        return diastoliqueBD;
     }
 
-    /**
-     * @param tensiondroit the tensiondroit to set
-     */
-    public void setTensiondroit(String tensiondroit) {
-        this.tensiondroit = tensiondroit;
+    public void setDiastoliqueBD(double diastoliqueBD) {
+        this.diastoliqueBD = diastoliqueBD;
     }
 
-    /**
-     * @return the tensiongauche
-     */
-    public String getTensiongauche() {
-        return tensiongauche;
+    public double getDiastoliqueBG() {
+        return diastoliqueBG;
     }
 
-    /**
-     * @param tensiongauche the tensiongauche to set
-     */
-    public void setTensiongauche(String tensiongauche) {
-        this.tensiongauche = tensiongauche;
+    public void setDiastoliqueBG(double diastoliqueBG) {
+        this.diastoliqueBG = diastoliqueBG;
     }
 
+    public double getSystoliqueBD() {
+        return systoliqueBD;
+    }
+
+    public void setSystoliqueBD(double systoliqueBD) {
+        this.systoliqueBD = systoliqueBD;
+    }
+
+    public double getSystoliqueBG() {
+        return systoliqueBG;
+    }
+
+    public void setSystoliqueBG(double systoliqueBG) {
+        this.systoliqueBG = systoliqueBG;
+    }
+
+    
     /**
      * @return the patient
      */
@@ -205,8 +224,10 @@ public class Suivie implements Serializable {
 
     @Override
     public String toString() {
-        return "Suivie{" + "id=" + id + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", tensiondroit=" + tensiondroit + ", tensiongauche=" + tensiongauche + ", date_suivie=" + date_suivie + ", patient=" + patient + '}';
+        return "Suivie{" + "id=" + id + ", taille=" + taille + ", poids=" + poids + ", tourtaille=" + tourtaille + ", diastoliqueBD=" + diastoliqueBD + ", diastoliqueBG=" + diastoliqueBG + ", systoliqueBD=" + systoliqueBD + ", systoliqueBG=" + systoliqueBG + ", date_suivie=" + date_suivie + ", patient=" + patient + '}';
     }
+
+      
 
     public Double calculMasse() {
 

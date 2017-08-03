@@ -96,11 +96,6 @@
                                 </p:column>
 
 
-                                <p:column headerText="Traitement Non Medic" sortBy="#{int.traitementNomMedicamenteux}"
-                                          filterMatchMode="contains" filterBy="#{int.traitementNomMedicamenteux}">
-                                    <h:outputText value="#{int.traitementNomMedicamenteux}" />
-                                </p:column>
-
                                 <p:column headerText="Intervenant" sortBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}"
                                           filterMatchMode="contains" filterBy="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}">
                                     <h:outputText value="#{int.intervenant.nomIntervenant} #{int.intervenant.prenomIntervenant}" />

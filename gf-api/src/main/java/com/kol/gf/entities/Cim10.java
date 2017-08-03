@@ -13,13 +13,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author anonymousghost
  */
 @Entity
-@Table(name = "Cim10")
+@Table(name = "Cim10", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"label"})
+})
 public class Cim10 implements Serializable{
     
     @Id

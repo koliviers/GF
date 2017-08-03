@@ -23,6 +23,7 @@ import com.kol.gf.entities.ExamenParaclinique;
 import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Habitude_alimentaireId;
 import com.kol.gf.entities.Intervenant;
+import com.kol.gf.entities.Medicament;
 import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.ParacliniqueConsultation;
 import com.kol.gf.entities.ParacliniqueConsultationId;
@@ -30,8 +31,11 @@ import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
 import com.kol.gf.entities.Suivie;
+import com.kol.gf.entities.TraitNonMed_Consultation;
+import com.kol.gf.entities.TraitNonMed_ConsultationId;
 import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.entities.TraitementMedicamenteuxId;
+import com.kol.gf.entities.TraitementNonMedicamenteux;
 import com.kol.gf.entities.TypeConsommation;
 import com.kol.gf.entities.TypeHabitude;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
@@ -42,13 +46,16 @@ import com.kol.gf.service.DiagnostiqueSessionBeanLocal;
 import com.kol.gf.service.ExamenCliniqueSessionBeanLocal;
 import com.kol.gf.service.ExamenParacliniqueSessionBeanLocal;
 import com.kol.gf.service.Habitude_alimentaireServiceBeanLocal;
+import com.kol.gf.service.MedicamentSessionBeanLocal;
 import com.kol.gf.service.OrdonnanceSessionBeanLocal;
 import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
 import com.kol.gf.service.SuiviSessionBeanLocal;
+import com.kol.gf.service.TraitNonMed_ConsultationSessionBeanLocal;
 import com.kol.gf.service.TraitementMedicamenteuxSessionBeanLocal;
+import com.kol.gf.service.TraitementNonMedicamenteuxSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
 import com.miki.webapp.core.Utils.ManipulationDate;
@@ -59,7 +66,6 @@ import com.miki.webapp.shiro.EntityRealm;
 import com.miki.webapp.shiro.utils.constante;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -86,7 +92,7 @@ public class ConsultationBean implements Serializable {
     private Pathologie pathologie;
 
     private Patient patient;
-    
+
     private Suivie suivie;
 
     private boolean disable;
@@ -127,11 +133,15 @@ public class ConsultationBean implements Serializable {
 
     private String tempsHabitude;
 
+    private TraitementNonMedicamenteux traitementNonMedicamenteux;
+
     private List<Patient> listePatient;
 
     private List<Pathologie> listePathologie;
 
-    private List<Pathologie> listePathologieTampon;
+    private List<Cim10> listePathologieTampon;
+
+    private List<TraitementNonMedicamenteux> traitementNonMedicamenteuxListe;
 
     private List<Consommation> listeConsommation;
 
@@ -163,15 +173,24 @@ public class ConsultationBean implements Serializable {
 
     private List<TraitementMedicamenteux> traitementMedicamenteuxClasseListeTemporaire;
 
+    private List<TraitNonMed_Consultation> traitNonMedConsultationListe;
+
+    private List<TraitNonMed_Consultation> traitNonMedConsultationListeTemporaire;
+
     private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
     private List<Habitude_alimentaire> tamponHabitudeAlimentaireTemporaire;
-    
+
     private List<Cim10> cimListe;
-    
-    private List<String> diagnListe ;
+
+    private List<String> diagnListe;
     private List<String> traitMedc;
-    
+    private List<String> traitNonMedc;
+
+    private List<Medicament> medicamentListe;
+
     private String agePatient;
+
+    private Cim10 cim1;
 
     private List<TypeConsommation> liteType;
 
@@ -237,12 +256,21 @@ public class ConsultationBean implements Serializable {
 
     @EJB
     private ComorbiditeSessionBeanLocal comorbiditeServices;
-    
+
     @EJB
     private SuiviSessionBeanLocal suivieServices;
-    
+
     @EJB
     private Cim10SessionBeanLocal cimServices;
+
+    @EJB
+    private MedicamentSessionBeanLocal medicamentServices;
+
+    @EJB
+    private TraitementNonMedicamenteuxSessionBeanLocal traitementNonMedicamenteuxServices;
+
+    @EJB
+    private TraitNonMed_ConsultationSessionBeanLocal traitementNonMedic_ConsultationServices;
 
     public ConsultationBean() {
 
@@ -253,6 +281,8 @@ public class ConsultationBean implements Serializable {
         patient = new Patient();
         classeTherapeutique = new ClasseTherapeutique();
         suivie = new Suivie();
+
+        cim1 = new Cim10();
 
         listePatient = new ArrayList<>();
         listePathologie = new ArrayList<>();
@@ -279,6 +309,13 @@ public class ConsultationBean implements Serializable {
         traitementMedicamenteuxClasseListeTemporaire = new ArrayList<>();
         diagnListe = new ArrayList<>();
         traitMedc = new ArrayList<>();
+        traitNonMedc = new ArrayList<>();
+        medicamentListe = new ArrayList<>();
+        traitementNonMedicamenteuxListe = new ArrayList<>();
+        traitementNonMedicamenteux = new TraitementNonMedicamenteux();
+
+        traitNonMedConsultationListe = new ArrayList<>();
+        traitNonMedConsultationListeTemporaire = new ArrayList<>();
 
         consultation = new Consultation();
         ordonnance = new Ordonnance();
@@ -293,7 +330,7 @@ public class ConsultationBean implements Serializable {
         paraconsultationId = new ParacliniqueConsultationId();
 
         disable = false;
-        
+
         agePatient = "";
 
     }
@@ -388,18 +425,18 @@ public class ConsultationBean implements Serializable {
 
                             }
 
-                            for (Pathologie pth : listePathologieTampon) {
+                            for (Cim10 pth : listePathologieTampon) {
                                 tx.begin();
 
                                 Antecedent_familial_Id idAF = new Antecedent_familial_Id();
                                 Antecedent_familial Af = new Antecedent_familial();
 
-                                idAF.setId_pathologie(pth.getId());
+                                idAF.setId_cm10(pth.getId());
                                 idAF.setId_patient(consultation.getPatient().getId());
                                 idAF.setId_consultation(consultation.getId());
 
                                 Af.setId(idAF);
-                                Af.setPathologie(pth);
+                                Af.setCim10(pth);
                                 Af.setConsultation(consultation);
                                 Af.setPatient(consultation.getPatient());
 
@@ -432,6 +469,23 @@ public class ConsultationBean implements Serializable {
                                     tmt.setConsultation(consultation);
 
                                     traitementMedicamenteuxServices.saveOne(tmt);
+                                    tx.commit();
+                                }
+                            }
+                            
+                            if (!traitNonMedConsultationListe.isEmpty()) {
+                                for (TraitNonMed_Consultation tnmCons : traitNonMedConsultationListe) {
+
+                                    tx.begin();
+                                    TraitNonMed_ConsultationId idTntC = new TraitNonMed_ConsultationId();
+
+                                    idTntC.setId_traitNonMedc(tnmCons.getTraitementNonMedicamenteux().getId());
+                                    idTntC.setId_consultation(consultation.getId());
+
+                                    tnmCons.setId(idTntC);
+                                    tnmCons.setConsultation(consultation);
+
+                                    traitementNonMedic_ConsultationServices.saveOne(tnmCons);
                                     tx.commit();
                                 }
                             }
@@ -533,18 +587,18 @@ public class ConsultationBean implements Serializable {
 
                         }
 
-                        for (Pathologie pth3 : listePathologieTampon) {
+                        for (Cim10 pth3 : listePathologieTampon) {
                             tx.begin();
 
                             Antecedent_familial_Id idAF3 = new Antecedent_familial_Id();
                             Antecedent_familial Af3 = new Antecedent_familial();
 
-                            idAF3.setId_pathologie(pth3.getId());
+                            idAF3.setId_cm10(pth3.getId());
                             idAF3.setId_consultation(consultation.getId());
                             idAF3.setId_patient(consultation.getPatient().getId());
 
                             Af3.setId(idAF3);
-                            Af3.setPathologie(pth3);
+                            Af3.setCim10(pth3);
                             Af3.setConsultation(consultation);
                             Af3.setPatient(consultation.getPatient());
 
@@ -593,6 +647,36 @@ public class ConsultationBean implements Serializable {
                                 tx.commit();
                             }
                         }
+                        
+                        if (!traitNonMedConsultationListeTemporaire.isEmpty()) {
+                            for (TraitNonMed_Consultation tnmCo : traitNonMedConsultationListeTemporaire) {
+
+                                if (tnmCo.getId() != null) {
+                                    tx.begin();
+                                    traitementNonMedic_ConsultationServices.supprimerTraitementNonMedicamenteux(tnmCo.getId());
+                                    tx.commit();
+                                }
+
+                            }
+                        }
+                        
+                        if (!traitNonMedConsultationListe.isEmpty()) {
+                                for (TraitNonMed_Consultation tnmCons2 : traitNonMedConsultationListe) {
+
+                                    tx.begin();
+                                    TraitNonMed_ConsultationId idTntC2 = new TraitNonMed_ConsultationId();
+
+                                    idTntC2.setId_traitNonMedc(tnmCons2.getTraitementNonMedicamenteux().getId());
+                                    idTntC2.setId_consultation(consultation.getId());
+
+                                    tnmCons2.setId(idTntC2);
+                                    tnmCons2.setConsultation(consultation);
+
+                                    traitementNonMedic_ConsultationServices.saveOne(tnmCons2);
+                                    tx.commit();
+                                }
+                            }
+                        
 
                         if (!tamponHabitudeAlimentaireTemporaire.isEmpty()) {
                             for (Habitude_alimentaire bt22 : tamponHabitudeAlimentaireTemporaire) {
@@ -665,13 +749,19 @@ public class ConsultationBean implements Serializable {
 
                 traitementMedicamenteuxClasseListe = traitMedListe;
                 traitementMedicamenteuxClasseListeTemporaire = traitMedListe;
+                
+                //Recuperation TraitementNonMedicamenteux
+                List<TraitNonMed_Consultation> traitNonMedListe = traitementNonMedic_ConsultationServices.getBy("consultation", consul);
+                
+                traitNonMedConsultationListe = traitNonMedListe;
+                traitNonMedConsultationListeTemporaire = traitNonMedListe;
 
                 //Recuperation Antecedent familial
                 antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
-                List<Pathologie> pathologieRecup = new ArrayList<>();
+                List<Cim10> pathologieRecup = new ArrayList<>();
 
                 for (Antecedent_familial antC : antecedentFamilialListe) {
-                    pathologieRecup.add(antC.getPathologie());
+                    pathologieRecup.add(antC.getCim10());
                 }
 
                 listePathologieTampon = pathologieRecup;
@@ -684,7 +774,7 @@ public class ConsultationBean implements Serializable {
 
                 //Recuperation du Diagnostique
                 diagnostiqueListe = diagnostiqueServices.getBy("consultation", consul);
-                
+
                 //Recuperation de la comorbidite
                 comorbiditeListe = comorbiditeServices.getBy("consultation", consul);
 
@@ -713,6 +803,8 @@ public class ConsultationBean implements Serializable {
         classeTherapeutique = new ClasseTherapeutique();
         suivie = new Suivie();
 
+        cim1 = new Cim10();
+
         typecons = new TypeConsommation();
         listeTypeHabitude = new ArrayList<>();
         tamponHabitudeAlimentaire = new ArrayList<>();
@@ -726,6 +818,13 @@ public class ConsultationBean implements Serializable {
         ordonnance = new Ordonnance();
         rdv = new RendezVous();
         rdvTampon = new RendezVous();
+
+        medicamentListe = new ArrayList<>();
+        traitementNonMedicamenteuxListe = new ArrayList<>();
+        traitementNonMedicamenteux = new TraitementNonMedicamenteux();
+
+        traitNonMedConsultationListe = new ArrayList<>();
+        traitNonMedConsultationListeTemporaire = new ArrayList<>();
 
         consultation.setIntervenant(intervenantTampon2);
 
@@ -743,6 +842,7 @@ public class ConsultationBean implements Serializable {
         listePathologieTampon = new ArrayList<>();
         diagnListe = new ArrayList<>();
         traitMedc = new ArrayList<>();
+        traitNonMedc = new ArrayList<>();
 
         disable = false;
     }
@@ -751,36 +851,41 @@ public class ConsultationBean implements Serializable {
         if (consultation.getPatient() == null) {
             patient = new Patient();
             suivie = new Suivie();
+            diagnListe = new ArrayList<>();
+            traitMedc = new ArrayList<>();
+            traitNonMedc = new ArrayList<>();
         } else {
-            patient = consultation.getPatient();       
+            patient = consultation.getPatient();
             Integer intAge = patient.getAge();
-            agePatient = String.valueOf(ManipulationDate.ajouterAnnee(new Date(), -intAge).getYear()+1900);
-            
+            agePatient = String.valueOf(ManipulationDate.ajouterAnnee(new Date(), -intAge).getYear() + 1900);
+
             List<Suivie> suivieListTampon = suivieServices.getBy("patient", patient);
-            
-            if(suivieListTampon.isEmpty()){
+
+            if (suivieListTampon.isEmpty()) {
                 suivie = new Suivie();
-            }else{
+            } else {
                 suivie = suivieListTampon.stream()
-                    .reduce((s1,s2) -> s1.getDate_suivie().after(s2.getDate_suivie()) ? s1:s2).get();
+                        .reduce((s1, s2) -> s1.getDate_suivie().after(s2.getDate_suivie()) ? s1 : s2).get();
             }
-            
+
             List<Consultation> consulListe2 = consultationServices.getBy("patient", patient);
-            
+
             Consultation consultTampon = null;
-            
-            if(!consulListe2.isEmpty()){
-                consultTampon = consulListe2.stream().reduce((c1,c2) -> c1.getDateConsultation().after(c2.getDateConsultation()) ? c1 : c2).get();
-                
+
+            if (!consulListe2.isEmpty()) {
+                consultTampon = consulListe2.stream().reduce((c1, c2) -> c1.getDateConsultation().after(c2.getDateConsultation()) ? c1 : c2).get();
+
                 diagnListe = diagnostiqueServices.getBy("consultation", consultTampon).stream()
-                                            .map(d1 -> d1.getLabel())
-                                            .collect(Collectors.toList());
+                        .map(d1 -> d1.getLabel())
+                        .collect(Collectors.toList());
                 traitMedc = traitementMedicamenteuxServices.getBy("consultation", consultTampon).stream()
-                                        .map(t1 -> t1.getClasse().getLabel())
-                                        .collect(Collectors.toList());
+                        .map(t1 -> t1.getClasse().getLabel())
+                        .collect(Collectors.toList());
+                traitNonMedc = traitementNonMedic_ConsultationServices.getBy("consultation", consultTampon).stream()
+                        .map(t2 -> t2.getTraitementNonMedicamenteux().getLabel())
+                        .collect(Collectors.toList());
             }
-            
-            
+
         }
     }
 
@@ -826,6 +931,24 @@ public class ConsultationBean implements Serializable {
         }
 
         classeTherapeutique = new ClasseTherapeutique();
+
+    }
+
+    public void ajouterTraitementNonMedicamenteux() {
+
+        if (traitementNonMedicamenteux == null) {
+            Mtm.mikiMessageWarnSelectionner("le traitement non medicamenteux");
+        } else {
+            TraitNonMed_Consultation trait2 = new TraitNonMed_Consultation();
+
+            trait2.setTraitementNonMedicamenteux(traitementNonMedicamenteux);
+
+            if (!traitNonMedConsultationListe.contains(trait2)) {
+                traitNonMedConsultationListe.add(trait2);
+            }
+        }
+
+        traitementNonMedicamenteux = new TraitementNonMedicamenteux();
 
     }
 
@@ -896,11 +1019,25 @@ public class ConsultationBean implements Serializable {
         }
     }
 
+    public void supprimerTraitementNonMedicamenteux(TraitNonMed_Consultation traitMed2) {
+        try {
+            if (traitMed2.getId() == null) {
+                traitNonMedConsultationListe.remove(traitMed2);
+            } else {
+                traitementNonMedic_ConsultationServices.supprimerTraitementNonMedicamenteux(traitMed2.getId());
+                traitNonMedConsultationListeTemporaire.remove(traitMed2);
+
+            }
+        } catch (Exception e) {
+            Mtm.mikiMessageError();
+        }
+    }
+
     public void ajouterAntecedentFamilial() {
         try {
-            if (pathologie != null && !listePathologieTampon.contains(pathologie)) {
-                listePathologieTampon.add(pathologie);
-                pathologie = new Pathologie();
+            if (cim1 != null && !listePathologieTampon.contains(cim1)) {
+                listePathologieTampon.add(cim1);
+                cim1 = new Cim10();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -909,13 +1046,18 @@ public class ConsultationBean implements Serializable {
 
     }
 
-    public void supprimerAntecedentFamilial(Pathologie pathlg) {
+    public void supprimerAntecedentFamilial(Cim10 pathlg) {
         listePathologieTampon.remove(pathlg);
     }
 
     public void ajouterOrdonnance() {
-        ordonnanceListe.add(ordonnance);
-        ordonnance = new Ordonnance();
+        if (ordonnance.getMedicament().trim().isEmpty()) {
+            Mtm.mikiMessageWarnSelectionner("le medicament");
+        } else {
+            ordonnanceListe.add(ordonnance);
+            ordonnance = new Ordonnance();
+        }
+
     }
 
     public void supprimerOrdonnance(Ordonnance ordo) {
@@ -1168,11 +1310,11 @@ public class ConsultationBean implements Serializable {
         this.traitementListe = traitementListe;
     }
 
-    public List<Pathologie> getListePathologieTampon() {
+    public List<Cim10> getListePathologieTampon() {
         return listePathologieTampon;
     }
 
-    public void setListePathologieTampon(List<Pathologie> listePathologieTampon) {
+    public void setListePathologieTampon(List<Cim10> listePathologieTampon) {
         this.listePathologieTampon = listePathologieTampon;
     }
 
@@ -1543,7 +1685,85 @@ public class ConsultationBean implements Serializable {
     public void setCimServices(Cim10SessionBeanLocal cimServices) {
         this.cimServices = cimServices;
     }
-    
-    
+
+    public Cim10 getCim1() {
+        return cim1;
+    }
+
+    public void setCim1(Cim10 cim1) {
+        this.cim1 = cim1;
+    }
+
+    public List<TraitementNonMedicamenteux> getTraitementNonMedicamenteuxListe() {
+        return traitementNonMedicamenteuxListe;
+    }
+
+    public void setTraitementNonMedicamenteuxListe(List<TraitementNonMedicamenteux> traitementNonMedicamenteuxListe) {
+        this.traitementNonMedicamenteuxListe = traitementNonMedicamenteuxListe;
+    }
+
+    public List<Medicament> getMedicamentListe() {
+        return medicamentServices.getAll("label", true);
+    }
+
+    public void setMedicamentListe(List<Medicament> medicamentListe) {
+        this.medicamentListe = medicamentListe;
+    }
+
+    public TraitementNonMedicamenteux getTraitementNonMedicamenteux() {
+        return traitementNonMedicamenteux;
+    }
+
+    public void setTraitementNonMedicamenteux(TraitementNonMedicamenteux traitementNonMedicamenteux) {
+        this.traitementNonMedicamenteux = traitementNonMedicamenteux;
+    }
+
+    public MedicamentSessionBeanLocal getMedicamentServices() {
+        return medicamentServices;
+    }
+
+    public void setMedicamentServices(MedicamentSessionBeanLocal medicamentServices) {
+        this.medicamentServices = medicamentServices;
+    }
+
+    public TraitementNonMedicamenteuxSessionBeanLocal getTraitementNonMedicamenteuxServices() {
+        return traitementNonMedicamenteuxServices;
+    }
+
+    public void setTraitementNonMedicamenteuxServices(TraitementNonMedicamenteuxSessionBeanLocal traitementNonMedicamenteuxServices) {
+        this.traitementNonMedicamenteuxServices = traitementNonMedicamenteuxServices;
+    }
+
+    public List<TraitNonMed_Consultation> getTraitNonMedConsultationListe() {
+        return traitNonMedConsultationListe;
+    }
+
+    public void setTraitNonMedConsultationListe(List<TraitNonMed_Consultation> traitNonMedConsultationListe) {
+        this.traitNonMedConsultationListe = traitNonMedConsultationListe;
+    }
+
+    public List<TraitNonMed_Consultation> getTraitNonMedConsultationListeTemporaire() {
+        return traitNonMedConsultationListeTemporaire;
+    }
+
+    public void setTraitNonMedConsultationListeTemporaire(List<TraitNonMed_Consultation> traitNonMedConsultationListeTemporaire) {
+        this.traitNonMedConsultationListeTemporaire = traitNonMedConsultationListeTemporaire;
+    }
+
+    public TraitNonMed_ConsultationSessionBeanLocal getTraitementNonMedic_ConsultationServices() {
+        return traitementNonMedic_ConsultationServices;
+    }
+
+    public void setTraitementNonMedic_ConsultationServices(TraitNonMed_ConsultationSessionBeanLocal traitementNonMedic_ConsultationServices) {
+        this.traitementNonMedic_ConsultationServices = traitementNonMedic_ConsultationServices;
+    }
+
+    public List<String> getTraitNonMedc() {
+        return traitNonMedc;
+    }
+
+    public void setTraitNonMedc(List<String> traitNonMedc) {
+        this.traitNonMedc = traitNonMedc;
+    }
 
 }

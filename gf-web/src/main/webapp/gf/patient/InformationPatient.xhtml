@@ -349,7 +349,7 @@
 
                             <div class="card">
                                 <h1 class="centerText">Tension</h1>
-                                <p:chart id="bar" type="bar" model="#{patientViewManagedBean.barModel}" style="width: 600px;" responsive="true"/>
+                                
                             </div>
 
                         </div>
@@ -372,11 +372,17 @@
                                             <p:outputLabel  value="Taille"/>
                                             <h:outputText value="#{o.taille} m"/>
 
-                                            <p:outputLabel  value="Tension bras gauche"/>
-                                            <h:outputText value="#{o.tensiongauche}"/>
+                                            <p:outputLabel  value="Diastolique bras gauche"/>
+                                            <h:outputText value="#{o.diastoliqueBG}"/>
+
+                                            <p:outputLabel  value="Systolique bras gauche"/>
+                                            <h:outputText value="#{o.systoliqueBG}"/>
+                                            
+                                            <p:outputLabel  value="Systolique bras droit"/>
+                                            <h:outputText value="#{o.diastoliqueBD}"/>
 
                                             <p:outputLabel  value="Tension bras droit"/>
-                                            <h:outputText value="#{o.tensiondroit}"/>
+                                            <h:outputText value="#{o.systoliqueBD}"/>
                                             
                                             <p:outputLabel  value="Masse corporelle"/>
                                             <h:outputText value="#{o.calculMasse()}"/>
@@ -399,11 +405,17 @@
                                             <p:outputLabel  value="Taille"/>
                                             <h:outputText value="#{o.taille} m"/>
 
-                                            <p:outputLabel  value="Tension bras gauche"/>
-                                            <h:outputText value="#{o.tensiongauche}"/>
+                                           <p:outputLabel  value="Diastolique bras gauche"/>
+                                            <h:outputText value="#{o.diastoliqueBG}"/>
+
+                                            <p:outputLabel  value="Systolique bras gauche"/>
+                                            <h:outputText value="#{o.systoliqueBG}"/>
+                                            
+                                            <p:outputLabel  value="Systolique bras droit"/>
+                                            <h:outputText value="#{o.diastoliqueBD}"/>
 
                                             <p:outputLabel  value="Tension bras droit"/>
-                                            <h:outputText value="#{o.tensiondroit}"/>
+                                            <h:outputText value="#{o.systoliqueBD}"/>
                                             
                                             <p:outputLabel  value="Masse corporelle"/>
                                             <h:outputText value="#{o.calculMasse()}"/>

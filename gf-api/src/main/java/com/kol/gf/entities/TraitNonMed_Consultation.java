@@ -16,37 +16,38 @@ import javax.persistence.Table;
 
 /**
  *
- * @author koliviers
+ * @author anonymousghost
  */
 @Entity
-@Table(name = "TraitementMedicamenteux")
-public class TraitementMedicamenteux implements Serializable{
+@Table(name = "TraitNonMed_Consultation")
+public class TraitNonMed_Consultation implements Serializable{
+    
     
     @EmbeddedId
-    private TraitementMedicamenteuxId id;
+    private TraitNonMed_ConsultationId id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_consultation", nullable = false, insertable = false, updatable = false)
     private Consultation consultation;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_classeThe", nullable = false, insertable = false, updatable = false)
-    private ClasseTherapeutique classe;
+    @JoinColumn(name = "id_traitNonMedc", nullable = false, insertable = false, updatable = false)
+    private TraitementNonMedicamenteux traitementNonMedicamenteux;
 
-    public TraitementMedicamenteux() {
+    public TraitNonMed_Consultation() {
     }
 
-    public TraitementMedicamenteux(TraitementMedicamenteuxId id, Consultation consultation, ClasseTherapeutique classe) {
+    public TraitNonMed_Consultation(TraitNonMed_ConsultationId id, Consultation consultation, TraitementNonMedicamenteux traitementNonMedicamenteux) {
         this.id = id;
         this.consultation = consultation;
-        this.classe = classe;
+        this.traitementNonMedicamenteux = traitementNonMedicamenteux;
     }
 
-    public TraitementMedicamenteuxId getId() {
+    public TraitNonMed_ConsultationId getId() {
         return id;
     }
 
-    public void setId(TraitementMedicamenteuxId id) {
+    public void setId(TraitNonMed_ConsultationId id) {
         this.id = id;
     }
 
@@ -58,19 +59,18 @@ public class TraitementMedicamenteux implements Serializable{
         this.consultation = consultation;
     }
 
-    public ClasseTherapeutique getClasse() {
-        return classe;
+    public TraitementNonMedicamenteux getTraitementNonMedicamenteux() {
+        return traitementNonMedicamenteux;
     }
 
-    public void setClasse(ClasseTherapeutique classe) {
-        this.classe = classe;
+    public void setTraitementNonMedicamenteux(TraitementNonMedicamenteux traitementNonMedicamenteux) {
+        this.traitementNonMedicamenteux = traitementNonMedicamenteux;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        hash = 53 * hash + Objects.hashCode(this.classe);
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -85,11 +85,8 @@ public class TraitementMedicamenteux implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TraitementMedicamenteux other = (TraitementMedicamenteux) obj;
+        final TraitNonMed_Consultation other = (TraitNonMed_Consultation) obj;
         if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.classe, other.classe)) {
             return false;
         }
         return true;
@@ -97,10 +94,8 @@ public class TraitementMedicamenteux implements Serializable{
 
     @Override
     public String toString() {
-        return "TraitementMedicamenteux{" + "id=" + id + ", consultation=" + consultation + ", classe=" + classe + '}';
+        return "TraitNonMed_Consultation{" + "id=" + id + ", consultation=" + consultation + ", traitementNonMedicamenteux=" + traitementNonMedicamenteux + '}';
     }
-
-    
     
     
 }

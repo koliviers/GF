@@ -48,23 +48,6 @@
                                     <p:outputLabel value="Civilite"/>
                                     <h:outputText value="#{consultationViewManagedBean.patient.civilite}"/>
 
-                                    <p:outputLabel value="Perimetre abdominal"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tourtaille}"/>
-
-                                    <p:outputLabel  value="Poids"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.poids}"/>
-
-                                    <p:outputLabel  value="Taille"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.taille}"/>
-
-                                    <p:outputLabel  value="Tension bras gauche"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tension}"/>
-
-                                    <p:outputLabel  value="Tension bras droit"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.tensiondroit}"/>
-
-                                    <p:outputLabel  value="Masse corporelle"/>
-                                    <h:outputText value="#{consultationViewManagedBean.patient.calculMasseCorporelle()}" />
                                 </p:panelGrid>
 
                                 <br/>
@@ -135,8 +118,6 @@
                                 <center> <h1>Traitement</h1> </center>
 
                                 <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >                                    
-                                    <p:outputLabel value="Traitement non medicamenteux"/>
-                                    <h:outputText value="#{consultationViewManagedBean.consultation.traitementNomMedicamenteux}"/>
 
                                     <p:outputLabel value="Intervenant"/>
                                     <h:outputText value="#{consultationViewManagedBean.consultation.intervenant.nomIntervenant} #{consultationViewManagedBean.consultation.intervenant.prenomIntervenant}" style="font-weight: bold;"/>
@@ -149,12 +130,27 @@
 
                         <div class="ui-g-12">
                             <div class="card card-w-title">
-                                <center> <h1>Traitement Medicamenteux</h1> </center>
+                                <center> <h1>Traitement medicamenteux</h1> </center>
 
                                 <p:dataTable value="#{consultationViewManagedBean.traitementMedicamenteuxClasseListe}" var="pa3" emptyMessage="Liste vide" >
 
-                                    <p:column headerText="Traitement" >
+                                    <p:column headerText="Traitement medicamenteux" >
                                         <center><h:outputText value="#{pa3.classe.label}"/></center>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12">
+                            <div class="card card-w-title">
+                                <center> <h1>Traitement non medicamenteux</h1> </center>
+
+                                <p:dataTable value="#{consultationViewManagedBean.traitNonMedConsultationListe}" var="pa33" emptyMessage="Liste vide" >
+
+                                    <p:column headerText="Traitement non medicamenteux" >
+                                        <center><h:outputText value="#{pa33.traitementNonMedicamenteux.label}"/></center>
                                     </p:column>
 
                                 </p:dataTable>
@@ -199,7 +195,7 @@
                                 <p:dataTable value="#{consultationViewManagedBean.listePathologieTampon}" var="pa" emptyMessage="Liste vide" >
 
                                     <p:column headerText="Antecedant familial" >
-                                        <center><h:outputText value="#{pa.nomPathologie}"/></center>
+                                        <center><h:outputText value="#{pa.label}"/></center>
                                     </p:column>
 
                                 </p:dataTable>
@@ -264,7 +260,7 @@
                                     <p:outputLabel value="Etat de conscience"/>
                                     <h:outputText value="#{consultationViewManagedBean.examentClinique.etat_consce}"/>
 
-                                    <p:outputLabel value="Palure"/>
+                                    <p:outputLabel value="Etat des conjonctives"/>
                                     <h:outputText value="#{consultationViewManagedBean.examentClinique.palure}"/>
 
                                     <p:outputLabel value="Etat d'hydratation"/>

@@ -33,18 +33,20 @@ public class Antecedent_familial implements Serializable{
     private Consultation consultation;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pathologie", nullable = false, insertable = false, updatable = false)
-    private Pathologie pathologie;
+    @JoinColumn(name = "id_cm10", nullable = false, insertable = false, updatable = false)
+    private Cim10 cim10;
 
     public Antecedent_familial() {
     }
 
-    public Antecedent_familial(Antecedent_familial_Id id, Patient patient, Consultation consultation, Pathologie pathologie) {
+    public Antecedent_familial(Antecedent_familial_Id id, Patient patient, Consultation consultation, Cim10 cim10) {
         this.id = id;
         this.patient = patient;
         this.consultation = consultation;
-        this.pathologie = pathologie;
+        this.cim10 = cim10;
     }
+
+    
 
     
     
@@ -65,13 +67,15 @@ public class Antecedent_familial implements Serializable{
         this.patient = patient;
     }
 
-    public Pathologie getPathologie() {
-        return pathologie;
+    public Cim10 getCim10() {
+        return cim10;
     }
 
-    public void setPathologie(Pathologie pathologie) {
-        this.pathologie = pathologie;
+    public void setCim10(Cim10 cim10) {
+        this.cim10 = cim10;
     }
+
+    
 
     public Consultation getConsultation() {
         return consultation;
@@ -80,13 +84,12 @@ public class Antecedent_familial implements Serializable{
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
     }
-    
-    
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.cim10);
         return hash;
     }
 
@@ -105,14 +108,21 @@ public class Antecedent_familial implements Serializable{
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
+        if (!Objects.equals(this.cim10, other.cim10)) {
+            return false;
+        }
         return true;
     }
+    
+    
+
+    
 
     @Override
     public String toString() {
-        return "Antecedent_familial{" + "id=" + id + ", patient=" + patient + ", consultation=" + consultation + ", pathologie=" + pathologie + '}';
+        return "Antecedent_familial{" + "id=" + id + ", patient=" + patient + ", consultation=" + consultation + ", cim10=" + cim10 + '}';
     }
 
-    
+   
     
 }

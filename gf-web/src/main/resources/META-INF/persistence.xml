@@ -15,6 +15,7 @@
     <class>com.kol.gf.entities.ExamenParaclinique</class>
     <class>com.kol.gf.entities.Habitude_alimentaire</class>
     <class>com.kol.gf.entities.Intervenant</class>
+    <class>com.kol.gf.entities.Medicament</class>
     <class>com.kol.gf.entities.Ordonnance</class>
     <class>com.kol.gf.entities.ParacliniqueConsultation</class>
     <class>com.kol.gf.entities.Pathologie</class>
@@ -22,7 +23,9 @@
     <class>com.kol.gf.entities.RendezVous</class>
     <class>com.kol.gf.entities.Services</class>
     <class>com.kol.gf.entities.Suivie</class>
+    <class>com.kol.gf.entities.TraitNonMed_Consultation</class>
     <class>com.kol.gf.entities.TraitementMedicamenteux</class>
+    <class>com.kol.gf.entities.TraitementNonMedicamenteux</class>
     <class>com.kol.gf.entities.TypeConsommation</class>
     <class>com.kol.gf.entities.TypeHabitude</class>
     <class>com.kol.gf.entities.TypeIntervenant</class>

@@ -11,6 +11,7 @@ import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
 import com.kol.gf.dao.bean.TraitementDaoBeanLocal;
 import com.kol.gf.dao.bean.TypeConsommationDaoBeanLocal;
 import com.kol.gf.entities.Antecedent_familial;
+import com.kol.gf.entities.Cim10;
 import com.kol.gf.entities.Comorbidite;
 import com.kol.gf.entities.Consultation;
 import com.kol.gf.entities.Diagnostique;
@@ -20,8 +21,8 @@ import com.kol.gf.entities.Habitude_alimentaire;
 import com.kol.gf.entities.Intervenant;
 import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.ParacliniqueConsultation;
-import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
+import com.kol.gf.entities.TraitNonMed_Consultation;
 import com.kol.gf.entities.TraitementMedicamenteux;
 import com.kol.gf.service.Antecedent_FamilialSessionBeanLocal;
 import com.kol.gf.service.ClasseTheurapetiqueServiceBeanLocal;
@@ -36,6 +37,7 @@ import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
+import com.kol.gf.service.TraitNonMed_ConsultationSessionBeanLocal;
 import com.kol.gf.service.TraitementMedicamenteuxSessionBeanLocal;
 import com.kol.gf.service.TypeHabitudeServiceBeanLocal;
 import com.miki.webapp.core.Utils.ManipulationDate;
@@ -56,7 +58,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import net.sf.jasperreports.engine.JRException;
 
@@ -76,12 +77,13 @@ public class ConsultationViewManagedBean implements Serializable {
     private String etat;
 
     private List<Habitude_alimentaire> tamponHabitudeAlimentaire;
-    private List<Pathologie> listePathologieTampon;
+    private List<Cim10> listePathologieTampon;
     private List<Antecedent_familial> antecedentFamilialListe;
     private List<Ordonnance> ordonnanceListe;
     private List<Diagnostique> diagnostiqueListe;
     private List<ParacliniqueConsultation> paracliniqueConsultationTamponListe;
     private List<ExamenParaclinique> examenParacliniqueListe;
+    private List<TraitNonMed_Consultation> traitNonMedConsultationListe;
 
     private List<Comorbidite> comorbiditeListe;
 
@@ -152,6 +154,9 @@ public class ConsultationViewManagedBean implements Serializable {
 
     @EJB
     private DecesServiceBeanLocal decesServices;
+    
+    @EJB
+    private TraitNonMed_ConsultationSessionBeanLocal traitementNonMedic_ConsultationServices;
 
     public ConsultationViewManagedBean() {
 
@@ -171,6 +176,7 @@ public class ConsultationViewManagedBean implements Serializable {
         comorbiditeListe = new ArrayList<>();
 
         traitementMedicamenteuxClasseListe = new ArrayList<>();
+        traitNonMedConsultationListe = new ArrayList<>();
 
         consultation = new Consultation();
 
@@ -215,13 +221,18 @@ public class ConsultationViewManagedBean implements Serializable {
                 List<TraitementMedicamenteux> traitMedListe = traitementMedicamenteuxServices.getBy("consultation", consul);
 
                 traitementMedicamenteuxClasseListe = traitMedListe;
+                
+                //Recuperation TraitementNonMedicamenteux
+                List<TraitNonMed_Consultation> traitNonMedListe = traitementNonMedic_ConsultationServices.getBy("consultation", consul);
+                
+                traitNonMedConsultationListe = traitNonMedListe;
 
                 //Recuperation Antecedent familial
                 antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
-                List<Pathologie> pathologieRecup = new ArrayList<>();
+                List<Cim10> pathologieRecup = new ArrayList<>();
 
                 for (Antecedent_familial antC : antecedentFamilialListe) {
-                    pathologieRecup.add(antC.getPathologie());
+                    pathologieRecup.add(antC.getCim10());
                 }
 
                 listePathologieTampon = pathologieRecup;
@@ -305,13 +316,18 @@ public class ConsultationViewManagedBean implements Serializable {
                 List<TraitementMedicamenteux> traitMedListe = traitementMedicamenteuxServices.getBy("consultation", consul);
 
                 traitementMedicamenteuxClasseListe = traitMedListe;
+                
+                //Recuperation TraitementNonMedicamenteux
+                List<TraitNonMed_Consultation> traitNonMedListe = traitementNonMedic_ConsultationServices.getBy("consultation", consul);
+                
+                traitNonMedConsultationListe = traitNonMedListe;
 
                 //Recuperation Antecedent familial
                 antecedentFamilialListe = antecedentFamilialServices.getBy("consultation", consul);
-                List<Pathologie> pathologieRecup = new ArrayList<>();
+                List<Cim10> pathologieRecup = new ArrayList<>();
 
                 for (Antecedent_familial antC : antecedentFamilialListe) {
-                    pathologieRecup.add(antC.getPathologie());
+                    pathologieRecup.add(antC.getCim10());
                 }
 
                 listePathologieTampon = pathologieRecup;
@@ -389,6 +405,8 @@ public class ConsultationViewManagedBean implements Serializable {
         consultation.setIntervenant(intervenantTampon2);
 
         examentClinique = new ExamenClinique();
+        
+        traitNonMedConsultationListe = new ArrayList<>();
 
         diagnostiqueListe = new ArrayList<>();
         examenParacliniqueListe = new ArrayList<>();
@@ -508,13 +526,15 @@ public class ConsultationViewManagedBean implements Serializable {
         this.tamponHabitudeAlimentaire = tamponHabitudeAlimentaire;
     }
 
-    public List<Pathologie> getListePathologieTampon() {
+    public List<Cim10> getListePathologieTampon() {
         return listePathologieTampon;
     }
 
-    public void setListePathologieTampon(List<Pathologie> listePathologieTampon) {
+    public void setListePathologieTampon(List<Cim10> listePathologieTampon) {
         this.listePathologieTampon = listePathologieTampon;
     }
+
+    
 
     public List<Antecedent_familial> getAntecedentFamilialListe() {
         return antecedentFamilialListe;
@@ -754,6 +774,22 @@ public class ConsultationViewManagedBean implements Serializable {
 
     public void setEtat(String etat) {
         this.etat = etat;
+    }
+
+    public List<TraitNonMed_Consultation> getTraitNonMedConsultationListe() {
+        return traitNonMedConsultationListe;
+    }
+
+    public void setTraitNonMedConsultationListe(List<TraitNonMed_Consultation> traitNonMedConsultationListe) {
+        this.traitNonMedConsultationListe = traitNonMedConsultationListe;
+    }
+
+    public TraitNonMed_ConsultationSessionBeanLocal getTraitementNonMedic_ConsultationServices() {
+        return traitementNonMedic_ConsultationServices;
+    }
+
+    public void setTraitementNonMedic_ConsultationServices(TraitNonMed_ConsultationSessionBeanLocal traitementNonMedic_ConsultationServices) {
+        this.traitementNonMedic_ConsultationServices = traitementNonMedic_ConsultationServices;
     }
     
     

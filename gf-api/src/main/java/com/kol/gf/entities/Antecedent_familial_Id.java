@@ -17,17 +17,19 @@ import javax.persistence.Embeddable;
 public class Antecedent_familial_Id implements Serializable{
     
     private Long id_patient;
-    private Long id_pathologie;
+    private Long id_cm10;
     private Long id_consultation;
 
     public Antecedent_familial_Id() {
     }
 
-    public Antecedent_familial_Id(Long id_patient, Long id_pathologie, Long id_consultation) {
+    public Antecedent_familial_Id(Long id_patient, Long id_cm10, Long id_consultation) {
         this.id_patient = id_patient;
-        this.id_pathologie = id_pathologie;
+        this.id_cm10 = id_cm10;
         this.id_consultation = id_consultation;
     }
+
+    
 
     
 
@@ -39,13 +41,15 @@ public class Antecedent_familial_Id implements Serializable{
         this.id_patient = id_patient;
     }
 
-    public Long getId_pathologie() {
-        return id_pathologie;
+    public Long getId_cm10() {
+        return id_cm10;
     }
 
-    public void setId_pathologie(Long id_pathologie) {
-        this.id_pathologie = id_pathologie;
+    public void setId_cm10(Long id_cm10) {
+        this.id_cm10 = id_cm10;
     }
+
+    
 
     public Long getId_consultation() {
         return id_consultation;
@@ -57,10 +61,10 @@ public class Antecedent_familial_Id implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.id_patient);
-        hash = 89 * hash + Objects.hashCode(this.id_pathologie);
-        hash = 89 * hash + Objects.hashCode(this.id_consultation);
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id_patient);
+        hash = 47 * hash + Objects.hashCode(this.id_cm10);
+        hash = 47 * hash + Objects.hashCode(this.id_consultation);
         return hash;
     }
 
@@ -79,7 +83,7 @@ public class Antecedent_familial_Id implements Serializable{
         if (!Objects.equals(this.id_patient, other.id_patient)) {
             return false;
         }
-        if (!Objects.equals(this.id_pathologie, other.id_pathologie)) {
+        if (!Objects.equals(this.id_cm10, other.id_cm10)) {
             return false;
         }
         if (!Objects.equals(this.id_consultation, other.id_consultation)) {
@@ -87,13 +91,14 @@ public class Antecedent_familial_Id implements Serializable{
         }
         return true;
     }
-
+    
+    
+    
     @Override
     public String toString() {
-        return "Antecedent_familial_Id{" + "id_patient=" + id_patient + ", id_pathologie=" + id_pathologie + ", id_consultation=" + id_consultation + '}';
+        return "Antecedent_familial_Id{" + "id_patient=" + id_patient + ", id_cm10=" + id_cm10 + ", id_consultation=" + id_consultation + '}';
     }
 
-   
     
     
 }

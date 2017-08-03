@@ -8,7 +8,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="head">
-        <title>Cim 10</title>
+        <title>Medicament</title>
     </ui:define>
 
     <ui:define name="content">
@@ -26,22 +26,23 @@
                     <div class="card card-w-title">
 
 
+
+
                         <p:tabView>
 
-                            <p:tab title="Patient">
-
+                            <p:tab title="Medicament">
                                 <p:accordionPanel widgetVar="accordPanel">
-                                    <p:tab title="CIM 10" >
+                                    <p:tab title="Medicament" >
                                         <h:form id="classform" >
 
-                                            <h:inputHidden value="#{cim10ManagedBean.cim10.id}" />
+                                            <h:inputHidden value="#{medicamentManagedBean.medicament.id}" />
 
                                             <br/>
 
                                             <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
-                                                <p:outputLabel for="nomint" value="Libelle *"/>
-                                                <p:inputText id="nomint"  value="#{cim10ManagedBean.cim10.label}">
+                                                <p:outputLabel for="nomint" value="Nom du medicament *"/>
+                                                <p:inputText id="nomint"  value="#{medicamentManagedBean.medicament.label}">
                                                     <f:validateLength minimum="2"/>
                                                 </p:inputText>
 
@@ -51,40 +52,44 @@
                                             <br/>
 
                                             <div class="ui-g-12 ui-md-6">
-                                                <center><p:commandButton value="Annuler" action="#{cim10ManagedBean.annulerCim()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                                <center><p:commandButton value="Annuler" action="#{medicamentManagedBean.annulerMedicament()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
                                             </div>
 
                                             <div class="ui-g-12 ui-md-6">
-                                                <center><p:commandButton value="Valider" action="#{cim10ManagedBean.gesitonCim10()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                                <center><p:commandButton value="Valider" action="#{medicamentManagedBean.gestionMedicament()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
                                             </div>
 
                                         </h:form>
                                     </p:tab>
                                 </p:accordionPanel>
-
                             </p:tab>
-
 
                             <p:tab title="Chargement">
 
                                 <p:accordionPanel widgetVar="accordPanel">
                                     <p:tab title="Chargement" >
                                         <h:form id="chargementId">
-                                            <br/>
 
-                                            <p:fileUpload id="fileRap" fileLimitMessage="Vous ne pouvez que choisir qu'un seul fichier svp !"
-                                                          invalidFileMessage="Fichier invalide, choisissez un fichier au format xlsx svp !" 
-                                                          mode="advanced" uploadLabel="Charger" cancelLabel="Annuler" label="Choisir fichier"
-                                                          dragDropSupport="false" fileLimit="1" allowTypes="/(\.|\/)(xlsx)$/"  update=":form:growl"
-                                                          fileUploadListener="#{cim10ManagedBean.handleFileUpload}"/>
+                                            <p:panelGrid id="gridass" columns="1" columnClasses="ui-grid-col-12" layout="grid" style="border:0px none; background-color:transparent;" >
+
+                                                <p:fileUpload id="fileRap" fileLimitMessage="Vous ne pouvez que choisir qu'un seul fichier svp !"
+                                                              invalidFileMessage="Fichier invalide, choisissez un fichier au format xlsx svp !" 
+                                                              mode="advanced" uploadLabel="Charger" cancelLabel="Annuler" label="Choisir fichier"
+                                                              dragDropSupport="false" fileLimit="1" allowTypes="/(\.|\/)(xlsx)$/"  update=":form:growl"
+                                                              fileUploadListener="#{medicamentManagedBean.handleFileUpload}"/>
+
+                                            </p:panelGrid>
+
+
+
                                             <br/>
 
                                             <div class="ui-g-12 ui-md-6">
-                                                <center><p:commandButton value="Annuler" action="#{cim10ManagedBean.annulerImporter()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                                <center><p:commandButton value="Annuler" action="#{medicamentManagedBean.annulerImporter()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
                                             </div>
 
                                             <div class="ui-g-12 ui-md-6">
-                                                <center><p:commandButton value="Valider" action="#{cim10ManagedBean.importer()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                                <center><p:commandButton value="Valider" action="#{medicamentManagedBean.importer()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
                                             </div>
                                         </h:form>
                                     </p:tab>
@@ -102,8 +107,8 @@
 
                     <div class="card card-w-title">
                         <h:form id="intformDataTable">
-                            <center>   <h1>Liste</h1> </center>
-                            <p:dataTable id="intervenantDT" var="int" value="#{cim10ManagedBean.cim10Liste}" 
+                            <center>   <h1>Liste des medicaments</h1> </center>
+                            <p:dataTable id="intervenantDT" var="int" value="#{medicamentManagedBean.medicamentListe}" 
                                          widgetVar="intervenantWV"                                 
                                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          rowsPerPageTemplate="5,10,15"
@@ -115,13 +120,13 @@
                                     </p:outputPanel>
                                 </f:facet>
 
-                                <p:column headerText="Libelle" sortBy="#{int.label}"
+                                <p:column headerText="Nom du medicament" sortBy="#{int.label}"
                                           filterMatchMode="contains" filterBy="#{int.label}">
                                     <center><h:outputText value="#{int.label}" /></center>
                                 </p:column>
 
                                 <p:column  headerText="Action">                           
-                                    <center><p:commandButton value="Modifier" action="#{cim10ManagedBean.renvoieCim(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                    <center><p:commandButton value="Modifier" action="#{medicamentManagedBean.renvoieMedicament(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
                                 </p:column>
 
                             </p:dataTable>

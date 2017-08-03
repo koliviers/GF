@@ -15,13 +15,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author kol
  */
 @Entity
-@Table(name = "Pathologie")
+@Table(name = "Pathologie", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"nomPathologie"})
+})
 public class Pathologie implements Serializable {
 
     @Id

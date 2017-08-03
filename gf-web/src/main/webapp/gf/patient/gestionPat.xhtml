@@ -211,19 +211,17 @@
                                                 <p:outputLabel  value="Taille"/>
                                                 <p:inputNumber  value="#{suivieBean.suivie.taille}" decimalSeparator="," symbol=" m" symbolPosition=" 5"/>
 
-                                                <p:outputLabel  value="Tension bras gauche"/>
-                                                <p:selectOneRadio  layout="responsive" columns="3" value="#{suivieBean.suivie.tensiongauche}" styleClass="form-group">
-                                                    <f:selectItem itemLabel="Diastolique" itemValue="Diastolique" />
-                                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
-                                                    <f:selectItem itemLabel="Systolique" itemValue="Systolique" />
-                                                </p:selectOneRadio>
+                                                <p:outputLabel  value="Diastolique bras gauche"/>
+                                                <p:inputNumber  value="#{suivieBean.suivie.diastoliqueBG}" decimalSeparator="," symbolPosition=" 5"/>
 
-                                                <p:outputLabel value="Tension bras droit"/>
-                                                <p:selectOneRadio  layout="responsive" columns="3" value="#{suivieBean.suivie.tensiondroit}" styleClass="form-group">
-                                                    <f:selectItem itemLabel="Diastolique" itemValue="Diastolique" />
-                                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
-                                                    <f:selectItem itemLabel="Systolique" itemValue="Systolique" />
-                                                </p:selectOneRadio>
+                                                <p:outputLabel value="Systolique bras gauche"/>
+                                                <p:inputNumber  value="#{suivieBean.suivie.systoliqueBG}" decimalSeparator="," symbolPosition=" 5"/>
+                                                
+                                                <p:outputLabel  value="Diastolique bras droit"/>
+                                                <p:inputNumber  value="#{suivieBean.suivie.diastoliqueBD}" decimalSeparator="," symbolPosition=" 5"/>
+
+                                                <p:outputLabel value="Systolique bras droit"/>
+                                                <p:inputNumber  value="#{suivieBean.suivie.systoliqueBD}" decimalSeparator="," symbolPosition=" 5"/>
 
                                             </p:panelGrid>
 
@@ -288,14 +286,24 @@
                                            <center> <h:outputText value="#{int2.taille}" /></center>
                                         </p:column>
 
-                                        <p:column headerText="Tension B.G" sortBy="#{int2.tensiongauche}"
-                                                  filterMatchMode="contains" filterBy="#{int2.tensiongauche}">
-                                            <center><h:outputText value="#{int2.tensiongauche}" /></center>
+                                        <p:column headerText="Diastolique B.G" sortBy="#{int2.diastoliqueBG}"
+                                                  filterMatchMode="contains" filterBy="#{int2.diastoliqueBG}">
+                                            <center><h:outputText value="#{int2.diastoliqueBG}" /></center>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Systolique B.G" sortBy="#{int2.systoliqueBG}"
+                                                  filterMatchMode="contains" filterBy="#{int2.systoliqueBG}">
+                                            <center><h:outputText value="#{int2.systoliqueBG}" /></center>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Diastolique B.D" sortBy="#{int2.diastoliqueBD}"
+                                                  filterMatchMode="contains" filterBy="#{int2.diastoliqueBD}">
+                                            <center><h:outputText value="#{int2.diastoliqueBD}" /></center>
                                         </p:column>
 
-                                        <p:column headerText="Tension B.D" sortBy="#{int2.tensiondroit}"
-                                                  filterMatchMode="contains" filterBy="#{int2.tensiondroit}">
-                                           <center> <h:outputText value="#{int2.tensiondroit}" /></center>
+                                        <p:column headerText="Systolique B.D" sortBy="#{int2.systoliqueBD}"
+                                                  filterMatchMode="contains" filterBy="#{int2.systoliqueBD}">
+                                           <center> <h:outputText value="#{int2.systoliqueBD}" /></center>
                                         </p:column>
 
                                         <p:column headerText="Date" sortBy="#{suivieBean.dateFormatRdv(int2.date_suivie)}"
