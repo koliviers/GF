@@ -11,6 +11,7 @@ import com.kol.gf.entities.TraitNonMed_ConsultationId;
 import com.kol.gf.service.TraitNonMed_ConsultationSessionBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
@@ -20,6 +21,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class TraitNonMed_ConsultationSessionBean extends BaseServiceBeanImpl<TraitNonMed_Consultation, TraitNonMed_ConsultationId> implements TraitNonMed_ConsultationSessionBeanLocal {
 
+    @EJB
     private ITraitNonMed_ConsultationDAO dao;
 
     @Override

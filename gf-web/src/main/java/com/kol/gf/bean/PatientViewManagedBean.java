@@ -37,6 +37,8 @@ public class PatientViewManagedBean implements Serializable {
     private Patient patient;
 
     private List<Suivie> suivieListePatient;
+    
+    private List<Suivie> tensionListePatient;
 
     private LineChartModel lineModel1;
 
@@ -48,6 +50,7 @@ public class PatientViewManagedBean implements Serializable {
         patient = new Patient();
 
         suivieListePatient = new ArrayList<>();
+        tensionListePatient = new ArrayList<>();
     }
 
     @PostConstruct
@@ -66,6 +69,11 @@ public class PatientViewManagedBean implements Serializable {
                     .sorted(Comparator.comparing(Suivie::getDate_suivie).reversed())
                     .limit(3)
                     .collect(Collectors.toList());
+            
+            tensionListePatient = suivieServices.getBy("patient", pat).stream()
+                    .sorted(Comparator.comparing(Suivie::getDate_suivie).reversed())
+                    .limit(10)
+                    .collect(Collectors.toList());
 
             page = "/gf/patient/InformationPatient.xhtml";
         }
@@ -76,6 +84,14 @@ public class PatientViewManagedBean implements Serializable {
         patient = new Patient();
 
         suivieListePatient = new ArrayList<>();
+    }
+    
+    public String tensionStyleClass(Suivie sv){
+        if((sv.getDiastoliqueBG() <= 10 && sv.getSystoliqueBG() >= 16) || (sv.getDiastoliqueBD()<= 10 && sv.getSystoliqueBD() >= 16)){
+            return "old";
+        }else{
+            return null;
+        }
     }
 
    
@@ -190,5 +206,14 @@ public class PatientViewManagedBean implements Serializable {
         this.suivieServices = suivieServices;
     }
 
+    public List<Suivie> getTensionListePatient() {
+        return tensionListePatient;
+    }
+
+    public void setTensionListePatient(List<Suivie> tensionListePatient) {
+        this.tensionListePatient = tensionListePatient;
+    }
+
+    
 
 }

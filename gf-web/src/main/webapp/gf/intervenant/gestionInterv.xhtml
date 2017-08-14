@@ -54,7 +54,7 @@
 
 
                                         <h:outputText  value="Service *" />
-                                        <p:selectOneMenu id="intser"  style="margin-bottom:10px;" value="#{interbean.intervenant.services}"   converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu id="intser"  style="margin-bottom:10px;" value="#{interbean.intervenant.services}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem  itemLabel="Selectionner un service" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{interbean.listeservice}" var="intser" itemLabel="#{intser.nomService}" itemValue="#{intser}"/>
                                         </p:selectOneMenu>
@@ -62,7 +62,7 @@
                                         
                                         <h:outputText  value="Type Intervenant *" />
                                         <h:panelGroup>
-                                            <p:selectOneMenu id="intype" widgetVar="selectTpInt" value="#{interbean.intervenant.type_intervenant}"   converter="omnifaces.SelectItemsConverter">
+                                            <p:selectOneMenu id="intype" widgetVar="selectTpInt" value="#{interbean.intervenant.type_intervenant}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                                 <f:selectItem  itemLabel="Selectionner un type intervenant" itemValue="#{null}" noSelectionOption="true"/>
                                                 <f:selectItems value="#{interbean.listetypeIntervenant}" var="intyp" itemLabel="#{intyp.libelletype}" itemValue="#{intyp}"/>
                                             </p:selectOneMenu>

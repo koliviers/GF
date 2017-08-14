@@ -12,7 +12,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>PrimeFaces Ultima</title>
+        <title>Bienvenue - LIGALD</title>
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
         <h:outputScript name="js/layout.js" library="ultima-layout" />
     </h:head>
@@ -28,18 +28,19 @@
                     </div>
                     <div class="ui-g-12">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText value="#{connexionManagedBean.userConnexion.login}"/>
+                            <p:inputText id="username" value="#{connexionManagedBean.userConnexion.login}"/>
                             <label>Utilisateur</label>
                         </h:panelGroup>
                     </div>
                     <div class="ui-g-12">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:password value="#{connexionManagedBean.userConnexion.motDePasse}"/>
+                            <p:password id="password" value="#{connexionManagedBean.userConnexion.motDePasse}"/>
                             <label>Mot de passe</label>
                         </h:panelGroup>
                     </div>
+                    
                     <div class="ui-g-12">
-                        <center><p:commandButton value="Connexion" icon="ui-icon-person" action="#{connexionManagedBean.connexionUser()}" update=":form:growl"/></center>    
+                        <center><p:commandButton value="Connexion" icon="ui-icon-person" action="#{connexionManagedBean.connexionUser()}" update="@form,:form:growl"/></center>    
                     </div>
                 </div>
             </div>
@@ -73,7 +74,7 @@
         </p:dialog>
 
 
-        <div class="login-footer">PrimeFaces Ultima</div>
+        <div class="login-footer">  <span>All Rights Reserved</span> - LIGALD </div>
 
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
         <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />

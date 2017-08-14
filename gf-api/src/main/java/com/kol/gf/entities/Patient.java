@@ -102,6 +102,10 @@ public class Patient implements Serializable {
     public void setPrenomPatient(String prenomPatient) {
         this.prenomPatient = prenomPatient;
     }
+    
+    public String getNomComplet(){
+        return this.nomPatient+" "+this.prenomPatient;
+    }
 
 
     public String getSexe() {

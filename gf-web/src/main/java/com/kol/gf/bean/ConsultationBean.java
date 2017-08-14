@@ -27,6 +27,7 @@ import com.kol.gf.entities.Medicament;
 import com.kol.gf.entities.Ordonnance;
 import com.kol.gf.entities.ParacliniqueConsultation;
 import com.kol.gf.entities.ParacliniqueConsultationId;
+import com.kol.gf.entities.Parametre;
 import com.kol.gf.entities.Pathologie;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
@@ -49,6 +50,7 @@ import com.kol.gf.service.Habitude_alimentaireServiceBeanLocal;
 import com.kol.gf.service.MedicamentSessionBeanLocal;
 import com.kol.gf.service.OrdonnanceSessionBeanLocal;
 import com.kol.gf.service.ParacliniqueConsultationSessionBeanLocal;
+import com.kol.gf.service.ParametreSessionBeanLocal;
 import com.kol.gf.service.PathologieServiceBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
@@ -80,6 +82,8 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import net.moozisms.api.client.Moozisms;
 import net.moozisms.api.client.MoozismsApiClient;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
 
 /**
  *
@@ -92,6 +96,8 @@ public class ConsultationBean implements Serializable {
     private Pathologie pathologie;
 
     private Patient patient;
+
+    private String javascriptAttention;
 
     private Suivie suivie;
 
@@ -133,6 +139,8 @@ public class ConsultationBean implements Serializable {
 
     private String tempsHabitude;
 
+    private Parametre parametreSauvegarde;
+
     private TraitementNonMedicamenteux traitementNonMedicamenteux;
 
     private List<Patient> listePatient;
@@ -160,6 +168,8 @@ public class ConsultationBean implements Serializable {
     private List<Diagnostique> diagnostiqueListe;
 
     private List<ExamenParaclinique> examenParacliniqueListe;
+
+    private List<ExamenParaclinique> examenParacliniqueListe3;
 
     private List<ExamenParaclinique> examenParacliniqueListe2;
 
@@ -193,6 +203,8 @@ public class ConsultationBean implements Serializable {
     private Cim10 cim1;
 
     private List<TypeConsommation> liteType;
+
+    private DualListModel<ExamenParaclinique> examensConsultation;
 
     @ManagedProperty(value = "#{connexionManagedBean}")
     private ConnexionManagedBean connexionMngdB;
@@ -272,6 +284,9 @@ public class ConsultationBean implements Serializable {
     @EJB
     private TraitNonMed_ConsultationSessionBeanLocal traitementNonMedic_ConsultationServices;
 
+    @EJB
+    private ParametreSessionBeanLocal parametreServices;
+
     public ConsultationBean() {
 
         pathologie = new Pathologie();
@@ -281,6 +296,7 @@ public class ConsultationBean implements Serializable {
         patient = new Patient();
         classeTherapeutique = new ClasseTherapeutique();
         suivie = new Suivie();
+        parametreSauvegarde = new Parametre();
 
         cim1 = new Cim10();
 
@@ -302,6 +318,7 @@ public class ConsultationBean implements Serializable {
         diagnostiqueListe = new ArrayList<>();
         comorbiditeListe = new ArrayList<>();
         examenParacliniqueListe = new ArrayList<>();
+        examenParacliniqueListe3 = new ArrayList<>();
         examenParacliniqueListe2 = new ArrayList<>();
         paracliniqueConsultationTamponListe = new ArrayList<>();
         classeTherapeutiqueListe = new ArrayList<>();
@@ -340,327 +357,357 @@ public class ConsultationBean implements Serializable {
         utilisateurTampon2 = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
         intervenantTampon2 = intervenantServices.getOneBy("utilisateur", utilisateurTampon2);
 
-        if (intervenantTampon2 == null) {
-            Mtm.mikiMessageWarn("Vous ne pouvez pas effectuer d'enregistrement ni de modification !");
+        if (intervenantTampon2 == null || intervenantTampon2.isActive() == false) {
+            RequestContext.getCurrentInstance().execute("$('#attentionId').html('<div class=\"ui-g card \" style=\"background: #D84315 !important;\"><div class=\"ui-g-4\"><i class=\"material-icons\">&#xE160;</i></div><div class=\"ui-g-8\"><span class=\"colorbox-name\">Attention ! </span><span class=\"colorbox-count\"> Vous ne pouvez pas effectuer d\\'enregistrement ni de modification !</span></div></div>');");
         } else {
+            RequestContext.getCurrentInstance().execute("$('#attentionId').html('')");
+
             consultation.setIntervenant(intervenantTampon2);
         }
+
+        examensConsultation = new DualListModel<ExamenParaclinique>(examentParacliniqueServices.getAll("label", true), examenParacliniqueListe3);
+
+        List<Parametre> parametreListeSauvegarde = parametreServices.getAll();
+
+        if (!parametreListeSauvegarde.isEmpty()) {
+            parametreSauvegarde = parametreListeSauvegarde.get(0);
+        }
+
     }
 
     public void gestionConsultation() {
         if ((EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE) || EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE)) && intervenantTampon2 != null) {
             UserTransaction tx = TransactionManager.getUserTransaction();
             try {
-                if (consultation.getPatient() == null) {
-                    Mtm.mikiMessageWarnSelectionner("le patient");
-                } else if (consultation.getIntervenant() == null) {
-                    Mtm.mikiMessageWarnSelectionner("l'intervenant du patient");
+                if (intervenantTampon2 == null || intervenantTampon2.isActive() == false) {
+
+                    Mtm.mikiMessageWarn("Vous ne pouvez pas effectuer d'enregistrement ni de modification !");
+
                 } else {
-                    if (consultation.getId() == null) {
-                        if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {
+
+                    if (consultation.getPatient() == null) {
+                        Mtm.mikiMessageWarnSelectionner("le patient");
+                    } else if (consultation.getIntervenant() == null) {
+                        Mtm.mikiMessageWarnSelectionner("l'intervenant du patient");
+                    } else {
+                        if (consultation.getId() == null) {
+                            if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {
+
+                                tx.begin();
+                                examenCliniqueServices.saveOne(examentClinique);
+                                tx.commit();
+
+                                tx.begin();
+                                consultation.setDateConsultation(new Date());
+                                consultation.setExamen_Clinique(examentClinique);
+                                consultationServices.saveOne(consultation);
+                                tx.commit();
+
+                                if (!diagnostiqueListe.isEmpty()) {
+                                    for (Diagnostique diag : diagnostiqueListe) {
+                                        tx.begin();
+                                        diag.setConsultation(consultation);
+                                        diagnostiqueServices.saveOne(diag);
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (!comorbiditeListe.isEmpty()) {
+                                    for (Comorbidite cm : comorbiditeListe) {
+                                        tx.begin();
+                                        cm.setConsultation(consultation);
+                                        comorbiditeServices.saveOne(cm);
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (!examensConsultation.getTarget().isEmpty()) {
+                                    for (ExamenParaclinique examP : examensConsultation.getTarget()) {
+                                        tx.begin();
+                                        ParacliniqueConsultationId idParaCl = new ParacliniqueConsultationId();
+                                        ParacliniqueConsultation paraCl = new ParacliniqueConsultation();
+
+                                        idParaCl.setId_consultation(consultation.getId());
+                                        idParaCl.setId_examenParaclinique(examP.getId());
+
+                                        paraCl.setId(idParaCl);
+                                        paraCl.setConsultation(consultation);
+                                        paraCl.setExamen(examP);
+
+                                        paracliniqueConsultationServices.saveOne(paraCl);
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (rdv.getDateRdv() != null) {
+                                    tx.begin();
+                                    rdv.setIntervenant(consultation.getIntervenant());
+                                    rdv.setDateRdvFiltre(rdv.getDateRdv());
+                                    rdv.setPatient(consultation.getPatient());
+                                    rdvServices.saveOne(rdv);
+                                    tx.commit();
+
+                                    if (!rdv.getPatient().getContact().trim().isEmpty()) {
+
+                                        try {
+
+                                            MoozismsApiClient apisms = new Moozisms();
+                                            boolean test = false;
+
+                                            if (!parametreSauvegarde.getMoozisms_ApiSecret().isEmpty() || !parametreSauvegarde.getMoozisms_Apikey().isEmpty() || !parametreSauvegarde.getEntete_message().isEmpty()) {
+
+                                                test = apisms.sendSimple(parametreSauvegarde.getMoozisms_Apikey(), parametreSauvegarde.getMoozisms_ApiSecret(), "228" + rdv.getPatient().getContact(), parametreSauvegarde.getEntete_message(), "Rendez-vous pris pour"
+                                                        + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+                                                if (test) {
+                                                    Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient pour la prise de rendez-vous !");
+                                                }
+
+                                            }
+
+                                        } catch (Exception e) {
+                                            Mtm.mikiMessageErrorPerso("Message non envoyé !");
+                                        }
+
+                                    }
+
+                                }
+
+                                for (Cim10 pth : listePathologieTampon) {
+                                    tx.begin();
+
+                                    Antecedent_familial_Id idAF = new Antecedent_familial_Id();
+                                    Antecedent_familial Af = new Antecedent_familial();
+
+                                    idAF.setId_cm10(pth.getId());
+                                    idAF.setId_patient(consultation.getPatient().getId());
+                                    idAF.setId_consultation(consultation.getId());
+
+                                    Af.setId(idAF);
+                                    Af.setCim10(pth);
+                                    Af.setConsultation(consultation);
+                                    Af.setPatient(consultation.getPatient());
+
+                                    antecedentFamilialServices.saveOne(Af);
+
+                                    tx.commit();
+                                }
+
+                                for (Ordonnance ord : ordonnanceListe) {
+                                    if (ord.getId() == null) {
+                                        tx.begin();
+
+                                        ord.setConsultation(consultation);
+                                        ordonnanceServices.saveOne(ord);
+
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (!traitementMedicamenteuxClasseListe.isEmpty()) {
+                                    for (TraitementMedicamenteux tmt : traitementMedicamenteuxClasseListe) {
+
+                                        tx.begin();
+                                        TraitementMedicamenteuxId idTmt = new TraitementMedicamenteuxId();
+
+                                        idTmt.setId_classeThe(tmt.getClasse().getId());
+                                        idTmt.setId_consultation(consultation.getId());
+
+                                        tmt.setId(idTmt);
+                                        tmt.setConsultation(consultation);
+
+                                        traitementMedicamenteuxServices.saveOne(tmt);
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (!traitNonMedConsultationListe.isEmpty()) {
+                                    for (TraitNonMed_Consultation tnmCons : traitNonMedConsultationListe) {
+
+                                        tx.begin();
+                                        TraitNonMed_ConsultationId idTntC = new TraitNonMed_ConsultationId();
+
+                                        idTntC.setId_traitNonMedc(tnmCons.getTraitementNonMedicamenteux().getId());
+                                        idTntC.setId_consultation(consultation.getId());
+
+                                        tnmCons.setId(idTntC);
+                                        tnmCons.setConsultation(consultation);
+
+                                        traitementNonMedic_ConsultationServices.saveOne(tnmCons);
+                                        tx.commit();
+                                    }
+                                }
+
+                                if (!tamponHabitudeAlimentaire.isEmpty()) {
+                                    for (Habitude_alimentaire bt : tamponHabitudeAlimentaire) {
+
+                                        tx.begin();
+                                        Habitude_alimentaireId idHb = new Habitude_alimentaireId();
+
+                                        idHb.setId_Consommation(bt.getConsommation().getId());
+                                        idHb.setId_type_habitude(bt.getType_habitude().getId());
+                                        idHb.setId_consultation(consultation.getId());
+
+                                        bt.setId(idHb);
+                                        bt.setConsultation(consultation);
+
+                                        habitudeAlimentaireServices.saveOne(bt);
+                                        tx.commit();
+
+                                    }
+                                }
+
+                                new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement d'une consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
+
+                            } else {
+                                Mtm.mikiLog4jMessageError();
+                            }
+                        } else {
 
                             tx.begin();
-                            examenCliniqueServices.saveOne(examentClinique);
+                            examenCliniqueServices.updateOne(examentClinique);
                             tx.commit();
 
                             tx.begin();
-                            consultation.setDateConsultation(new Date());
                             consultation.setExamen_Clinique(examentClinique);
-                            consultationServices.saveOne(consultation);
+                            consultationServices.updateOne(consultation);
                             tx.commit();
 
                             if (!diagnostiqueListe.isEmpty()) {
-                                for (Diagnostique diag : diagnostiqueListe) {
-                                    tx.begin();
-                                    diag.setConsultation(consultation);
-                                    diagnostiqueServices.saveOne(diag);
-                                    tx.commit();
+                                for (Diagnostique diag2 : diagnostiqueListe) {
+
+                                    if (diag2.getId() == null) {
+                                        tx.begin();
+                                        diag2.setConsultation(consultation);
+                                        diagnostiqueServices.saveOne(diag2);
+                                        tx.commit();
+                                    }
+
                                 }
                             }
 
                             if (!comorbiditeListe.isEmpty()) {
-                                for (Comorbidite cm : comorbiditeListe) {
-                                    tx.begin();
-                                    cm.setConsultation(consultation);
-                                    comorbiditeServices.saveOne(cm);
-                                    tx.commit();
-                                }
-                            }
+                                for (Comorbidite cm2 : comorbiditeListe) {
 
-                            if (!examenParacliniqueListe.isEmpty()) {
-                                for (ExamenParaclinique examP : examenParacliniqueListe) {
-                                    tx.begin();
-                                    ParacliniqueConsultationId idParaCl = new ParacliniqueConsultationId();
-                                    ParacliniqueConsultation paraCl = new ParacliniqueConsultation();
-
-                                    idParaCl.setId_consultation(consultation.getId());
-                                    idParaCl.setId_examenParaclinique(examP.getId());
-
-                                    paraCl.setId(idParaCl);
-                                    paraCl.setConsultation(consultation);
-                                    paraCl.setExamen(examP);
-
-                                    paracliniqueConsultationServices.saveOne(paraCl);
-                                    tx.commit();
-                                }
-                            }
-
-                            if (rdv.getDateRdv() != null) {
-                                tx.begin();
-                                rdv.setIntervenant(consultation.getIntervenant());
-                                rdv.setDateRdvFiltre(rdv.getDateRdv());
-                                rdv.setPatient(consultation.getPatient());
-                                rdvServices.saveOne(rdv);
-                                tx.commit();
-
-                                if (!rdv.getPatient().getContact().trim().isEmpty()) {
-                                    MoozismsApiClient apisms = new Moozisms();
-                                    boolean test = false;
-                                    test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous pris pour"
-                                            + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
-                                    if (test) {
-                                        Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                                    if (cm2.getId() == null) {
+                                        tx.begin();
+                                        cm2.setConsultation(consultation);
+                                        comorbiditeServices.saveOne(cm2);
+                                        tx.commit();
                                     }
+
                                 }
+                            }
+
+                            if (!paracliniqueConsultationTamponListe.isEmpty()) {
+                                for (ParacliniqueConsultation paraCl2 : paracliniqueConsultationTamponListe) {
+                                    tx.begin();
+                                    paracliniqueConsultationServices.deleteOne(paraCl2.getId());
+                                    tx.commit();
+                                }
+                            }
+
+                            if (!examensConsultation.getTarget().isEmpty()) {
+                                for (ExamenParaclinique examP3 : examensConsultation.getTarget()) {
+                                    tx.begin();
+                                    ParacliniqueConsultationId idParaCl3 = new ParacliniqueConsultationId();
+                                    ParacliniqueConsultation paraCl3 = new ParacliniqueConsultation();
+
+                                    idParaCl3.setId_consultation(consultation.getId());
+                                    idParaCl3.setId_examenParaclinique(examP3.getId());
+
+                                    paraCl3.setId(idParaCl3);
+                                    paraCl3.setConsultation(consultation);
+                                    paraCl3.setExamen(examP3);
+
+                                    paracliniqueConsultationServices.saveOne(paraCl3);
+                                    tx.commit();
+                                }
+                            }
+
+                            for (Antecedent_familial antC3 : antecedentFamilialListe) {
+
+                                tx.begin();
+
+                                antecedentFamilialServices.deleteOne(antC3.getId());
+
+                                tx.commit();
 
                             }
 
-                            for (Cim10 pth : listePathologieTampon) {
+                            for (Cim10 pth3 : listePathologieTampon) {
                                 tx.begin();
 
-                                Antecedent_familial_Id idAF = new Antecedent_familial_Id();
-                                Antecedent_familial Af = new Antecedent_familial();
+                                Antecedent_familial_Id idAF3 = new Antecedent_familial_Id();
+                                Antecedent_familial Af3 = new Antecedent_familial();
 
-                                idAF.setId_cm10(pth.getId());
-                                idAF.setId_patient(consultation.getPatient().getId());
-                                idAF.setId_consultation(consultation.getId());
+                                idAF3.setId_cm10(pth3.getId());
+                                idAF3.setId_consultation(consultation.getId());
+                                idAF3.setId_patient(consultation.getPatient().getId());
 
-                                Af.setId(idAF);
-                                Af.setCim10(pth);
-                                Af.setConsultation(consultation);
-                                Af.setPatient(consultation.getPatient());
+                                Af3.setId(idAF3);
+                                Af3.setCim10(pth3);
+                                Af3.setConsultation(consultation);
+                                Af3.setPatient(consultation.getPatient());
 
-                                antecedentFamilialServices.saveOne(Af);
+                                antecedentFamilialServices.saveOne(Af3);
 
                                 tx.commit();
                             }
 
-                            for (Ordonnance ord : ordonnanceListe) {
-                                if (ord.getId() == null) {
+                            for (Ordonnance ord2 : ordonnanceListe) {
+                                if (ord2.getId() == null) {
                                     tx.begin();
 
-                                    ord.setConsultation(consultation);
-                                    ordonnanceServices.saveOne(ord);
+                                    ord2.setConsultation(consultation);
+                                    ordonnanceServices.saveOne(ord2);
 
                                     tx.commit();
+                                }
+
+                            }
+
+                            if (!traitementMedicamenteuxClasseListeTemporaire.isEmpty()) {
+                                for (TraitementMedicamenteux tmt2 : traitementMedicamenteuxClasseListeTemporaire) {
+
+                                    if (tmt2.getId() != null) {
+                                        tx.begin();
+                                        traitementMedicamenteuxServices.supprimerTraitementMedicamenteux(tmt2.getId());
+                                        tx.commit();
+                                    }
+
                                 }
                             }
 
                             if (!traitementMedicamenteuxClasseListe.isEmpty()) {
-                                for (TraitementMedicamenteux tmt : traitementMedicamenteuxClasseListe) {
+                                for (TraitementMedicamenteux tmt22 : traitementMedicamenteuxClasseListe) {
 
                                     tx.begin();
-                                    TraitementMedicamenteuxId idTmt = new TraitementMedicamenteuxId();
+                                    TraitementMedicamenteuxId idTmt2 = new TraitementMedicamenteuxId();
 
-                                    idTmt.setId_classeThe(tmt.getClasse().getId());
-                                    idTmt.setId_consultation(consultation.getId());
+                                    idTmt2.setId_classeThe(tmt22.getClasse().getId());
+                                    idTmt2.setId_consultation(consultation.getId());
 
-                                    tmt.setId(idTmt);
-                                    tmt.setConsultation(consultation);
+                                    tmt22.setId(idTmt2);
+                                    tmt22.setConsultation(consultation);
 
-                                    traitementMedicamenteuxServices.saveOne(tmt);
+                                    traitementMedicamenteuxServices.saveOne(tmt22);
                                     tx.commit();
                                 }
                             }
-                            
+
+                            if (!traitNonMedConsultationListeTemporaire.isEmpty()) {
+                                for (TraitNonMed_Consultation tnmCo : traitNonMedConsultationListeTemporaire) {
+
+                                    if (tnmCo.getId() != null) {
+                                        tx.begin();
+                                        traitementNonMedic_ConsultationServices.supprimerTraitementNonMedicamenteux(tnmCo.getId());
+                                        tx.commit();
+                                    }
+
+                                }
+                            }
+
                             if (!traitNonMedConsultationListe.isEmpty()) {
-                                for (TraitNonMed_Consultation tnmCons : traitNonMedConsultationListe) {
-
-                                    tx.begin();
-                                    TraitNonMed_ConsultationId idTntC = new TraitNonMed_ConsultationId();
-
-                                    idTntC.setId_traitNonMedc(tnmCons.getTraitementNonMedicamenteux().getId());
-                                    idTntC.setId_consultation(consultation.getId());
-
-                                    tnmCons.setId(idTntC);
-                                    tnmCons.setConsultation(consultation);
-
-                                    traitementNonMedic_ConsultationServices.saveOne(tnmCons);
-                                    tx.commit();
-                                }
-                            }
-
-                            if (!tamponHabitudeAlimentaire.isEmpty()) {
-                                for (Habitude_alimentaire bt : tamponHabitudeAlimentaire) {
-
-                                    tx.begin();
-                                    Habitude_alimentaireId idHb = new Habitude_alimentaireId();
-
-                                    idHb.setId_Consommation(bt.getConsommation().getId());
-                                    idHb.setId_type_habitude(bt.getType_habitude().getId());
-                                    idHb.setId_consultation(consultation.getId());
-
-                                    bt.setId(idHb);
-                                    bt.setConsultation(consultation);
-
-                                    habitudeAlimentaireServices.saveOne(bt);
-                                    tx.commit();
-
-                                }
-                            }
-
-                            new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement d'une consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
-
-                        } else {
-                            Mtm.mikiLog4jMessageError();
-                        }
-                    } else {
-
-                        tx.begin();
-                        examenCliniqueServices.updateOne(examentClinique);
-                        tx.commit();
-
-                        tx.begin();
-                        consultation.setExamen_Clinique(examentClinique);
-                        consultationServices.updateOne(consultation);
-                        tx.commit();
-
-                        if (!diagnostiqueListe.isEmpty()) {
-                            for (Diagnostique diag2 : diagnostiqueListe) {
-
-                                if (diag2.getId() == null) {
-                                    tx.begin();
-                                    diag2.setConsultation(consultation);
-                                    diagnostiqueServices.saveOne(diag2);
-                                    tx.commit();
-                                }
-
-                            }
-                        }
-
-                        if (!comorbiditeListe.isEmpty()) {
-                            for (Comorbidite cm2 : comorbiditeListe) {
-
-                                if (cm2.getId() == null) {
-                                    tx.begin();
-                                    cm2.setConsultation(consultation);
-                                    comorbiditeServices.saveOne(cm2);
-                                    tx.commit();
-                                }
-
-                            }
-                        }
-
-                        if (!paracliniqueConsultationTamponListe.isEmpty()) {
-                            for (ParacliniqueConsultation paraCl2 : paracliniqueConsultationTamponListe) {
-                                tx.begin();
-                                paracliniqueConsultationServices.deleteOne(paraCl2.getId());
-                                tx.commit();
-                            }
-                        }
-
-                        if (!examenParacliniqueListe.isEmpty()) {
-                            for (ExamenParaclinique examP3 : examenParacliniqueListe) {
-                                tx.begin();
-                                ParacliniqueConsultationId idParaCl3 = new ParacliniqueConsultationId();
-                                ParacliniqueConsultation paraCl3 = new ParacliniqueConsultation();
-
-                                idParaCl3.setId_consultation(consultation.getId());
-                                idParaCl3.setId_examenParaclinique(examP3.getId());
-
-                                paraCl3.setId(idParaCl3);
-                                paraCl3.setConsultation(consultation);
-                                paraCl3.setExamen(examP3);
-
-                                paracliniqueConsultationServices.saveOne(paraCl3);
-                                tx.commit();
-                            }
-                        }
-
-                        for (Antecedent_familial antC3 : antecedentFamilialListe) {
-
-                            tx.begin();
-
-                            antecedentFamilialServices.deleteOne(antC3.getId());
-
-                            tx.commit();
-
-                        }
-
-                        for (Cim10 pth3 : listePathologieTampon) {
-                            tx.begin();
-
-                            Antecedent_familial_Id idAF3 = new Antecedent_familial_Id();
-                            Antecedent_familial Af3 = new Antecedent_familial();
-
-                            idAF3.setId_cm10(pth3.getId());
-                            idAF3.setId_consultation(consultation.getId());
-                            idAF3.setId_patient(consultation.getPatient().getId());
-
-                            Af3.setId(idAF3);
-                            Af3.setCim10(pth3);
-                            Af3.setConsultation(consultation);
-                            Af3.setPatient(consultation.getPatient());
-
-                            antecedentFamilialServices.saveOne(Af3);
-
-                            tx.commit();
-                        }
-
-                        for (Ordonnance ord2 : ordonnanceListe) {
-                            if (ord2.getId() == null) {
-                                tx.begin();
-
-                                ord2.setConsultation(consultation);
-                                ordonnanceServices.saveOne(ord2);
-
-                                tx.commit();
-                            }
-
-                        }
-
-                        if (!traitementMedicamenteuxClasseListeTemporaire.isEmpty()) {
-                            for (TraitementMedicamenteux tmt2 : traitementMedicamenteuxClasseListeTemporaire) {
-
-                                if (tmt2.getId() != null) {
-                                    tx.begin();
-                                    traitementMedicamenteuxServices.supprimerTraitementMedicamenteux(tmt2.getId());
-                                    tx.commit();
-                                }
-
-                            }
-                        }
-
-                        if (!traitementMedicamenteuxClasseListe.isEmpty()) {
-                            for (TraitementMedicamenteux tmt22 : traitementMedicamenteuxClasseListe) {
-
-                                tx.begin();
-                                TraitementMedicamenteuxId idTmt2 = new TraitementMedicamenteuxId();
-
-                                idTmt2.setId_classeThe(tmt22.getClasse().getId());
-                                idTmt2.setId_consultation(consultation.getId());
-
-                                tmt22.setId(idTmt2);
-                                tmt22.setConsultation(consultation);
-
-                                traitementMedicamenteuxServices.saveOne(tmt22);
-                                tx.commit();
-                            }
-                        }
-                        
-                        if (!traitNonMedConsultationListeTemporaire.isEmpty()) {
-                            for (TraitNonMed_Consultation tnmCo : traitNonMedConsultationListeTemporaire) {
-
-                                if (tnmCo.getId() != null) {
-                                    tx.begin();
-                                    traitementNonMedic_ConsultationServices.supprimerTraitementNonMedicamenteux(tnmCo.getId());
-                                    tx.commit();
-                                }
-
-                            }
-                        }
-                        
-                        if (!traitNonMedConsultationListe.isEmpty()) {
                                 for (TraitNonMed_Consultation tnmCons2 : traitNonMedConsultationListe) {
 
                                     tx.begin();
@@ -676,44 +723,44 @@ public class ConsultationBean implements Serializable {
                                     tx.commit();
                                 }
                             }
-                        
 
-                        if (!tamponHabitudeAlimentaireTemporaire.isEmpty()) {
-                            for (Habitude_alimentaire bt22 : tamponHabitudeAlimentaireTemporaire) {
+                            if (!tamponHabitudeAlimentaireTemporaire.isEmpty()) {
+                                for (Habitude_alimentaire bt22 : tamponHabitudeAlimentaireTemporaire) {
 
-                                if (bt22.getId() != null) {
+                                    if (bt22.getId() != null) {
+                                        tx.begin();
+                                        habitudeAlimentaireServices.supprimerHabitudeAlimentaire(bt22.getId());
+                                        tx.commit();
+                                    }
+
+                                }
+                            }
+
+                            if (!tamponHabitudeAlimentaire.isEmpty()) {
+                                for (Habitude_alimentaire bt3 : tamponHabitudeAlimentaire) {
+
                                     tx.begin();
-                                    habitudeAlimentaireServices.supprimerHabitudeAlimentaire(bt22.getId());
+                                    Habitude_alimentaireId idHb33 = new Habitude_alimentaireId();
+
+                                    idHb33.setId_Consommation(bt3.getConsommation().getId());
+                                    idHb33.setId_type_habitude(bt3.getType_habitude().getId());
+                                    idHb33.setId_consultation(consultation.getId());
+
+                                    bt3.setId(idHb33);
+                                    bt3.setConsultation(consultation);
+
+                                    habitudeAlimentaireServices.saveOne(bt3);
                                     tx.commit();
                                 }
-
                             }
+
                         }
 
-                        if (!tamponHabitudeAlimentaire.isEmpty()) {
-                            for (Habitude_alimentaire bt3 : tamponHabitudeAlimentaire) {
+                        Mtm.mikiMessageInfo();
+                        new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur la consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
 
-                                tx.begin();
-                                Habitude_alimentaireId idHb33 = new Habitude_alimentaireId();
-
-                                idHb33.setId_Consommation(bt3.getConsommation().getId());
-                                idHb33.setId_type_habitude(bt3.getType_habitude().getId());
-                                idHb33.setId_consultation(consultation.getId());
-
-                                bt3.setId(idHb33);
-                                bt3.setConsultation(consultation);
-
-                                habitudeAlimentaireServices.saveOne(bt3);
-                                tx.commit();
-                            }
-                        }
-
+                        this.annulerConsultation();
                     }
-
-                    Mtm.mikiMessageInfo();
-                    new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur la consultation du patient :" + consultation.getPatient().getNomPatient() + " " + consultation.getPatient().getPrenomPatient());
-
-                    this.annulerConsultation();
                 }
             } catch (Exception ex) {
                 try {
@@ -749,10 +796,10 @@ public class ConsultationBean implements Serializable {
 
                 traitementMedicamenteuxClasseListe = traitMedListe;
                 traitementMedicamenteuxClasseListeTemporaire = traitMedListe;
-                
+
                 //Recuperation TraitementNonMedicamenteux
                 List<TraitNonMed_Consultation> traitNonMedListe = traitementNonMedic_ConsultationServices.getBy("consultation", consul);
-                
+
                 traitNonMedConsultationListe = traitNonMedListe;
                 traitNonMedConsultationListeTemporaire = traitNonMedListe;
 
@@ -784,6 +831,17 @@ public class ConsultationBean implements Serializable {
                 for (ParacliniqueConsultation pr : paracliniqueConsultationTamponListe) {
                     examenParacliniqueListe.add(pr.getExamen());
                 }
+
+                List<ExamenParaclinique> examenTampon = examentParacliniqueServices.getAll("label", true);
+
+                if (!examenParacliniqueListe.isEmpty()) {
+                    for (ExamenParaclinique ext : examenParacliniqueListe) {
+                        examenTampon.remove(ext);
+                    }
+                }
+
+                examensConsultation.setSource(examenTampon);
+                examensConsultation.setTarget(examenParacliniqueListe);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -845,6 +903,17 @@ public class ConsultationBean implements Serializable {
         traitNonMedc = new ArrayList<>();
 
         disable = false;
+
+        List<ExamenParaclinique> examenTampon2 = examentParacliniqueServices.getAll("label", true);
+
+        if (!examenParacliniqueListe.isEmpty()) {
+            for (ExamenParaclinique ext : examenParacliniqueListe) {
+                examenTampon2.remove(ext);
+            }
+        }
+
+        examensConsultation.setSource(examenTampon2);
+        examensConsultation.setTarget(examenParacliniqueListe);
     }
 
     public void listenerPatient() {
@@ -1119,7 +1188,7 @@ public class ConsultationBean implements Serializable {
      * @return the listePatient
      */
     public List<Patient> getListePatient() {
-        return patientServices.getAll("nomPatient", true);
+        return patientServices.patientNonDecedes();
     }
 
     /**
@@ -1335,7 +1404,8 @@ public class ConsultationBean implements Serializable {
     }
 
     public List<Intervenant> getIntervenantListe() {
-        return intervenantServices.getAll("nomIntervenant", true);
+        return intervenantServices.getAll("nomIntervenant", true).stream()
+                .filter(it -> it.isActive() == true).collect(Collectors.toList());
     }
 
     public void setIntervenantListe(List<Intervenant> intervenantListe) {
@@ -1695,7 +1765,7 @@ public class ConsultationBean implements Serializable {
     }
 
     public List<TraitementNonMedicamenteux> getTraitementNonMedicamenteuxListe() {
-        return traitementNonMedicamenteuxListe;
+        return traitementNonMedicamenteuxServices.getAll("label", true);
     }
 
     public void setTraitementNonMedicamenteuxListe(List<TraitementNonMedicamenteux> traitementNonMedicamenteuxListe) {
@@ -1765,5 +1835,47 @@ public class ConsultationBean implements Serializable {
     public void setTraitNonMedc(List<String> traitNonMedc) {
         this.traitNonMedc = traitNonMedc;
     }
+
+    public DualListModel<ExamenParaclinique> getExamensConsultation() {
+        return examensConsultation;
+    }
+
+    public void setExamensConsultation(DualListModel<ExamenParaclinique> examensConsultation) {
+        this.examensConsultation = examensConsultation;
+    }
+
+    public String getJavascriptAttention() {
+        return javascriptAttention;
+    }
+
+    public void setJavascriptAttention(String javascriptAttention) {
+        this.javascriptAttention = javascriptAttention;
+    }
+
+    public List<ExamenParaclinique> getExamenParacliniqueListe3() {
+        return examenParacliniqueListe3;
+    }
+
+    public void setExamenParacliniqueListe3(List<ExamenParaclinique> examenParacliniqueListe3) {
+        this.examenParacliniqueListe3 = examenParacliniqueListe3;
+    }
+
+    public Parametre getParametreSauvegarde() {
+        return parametreSauvegarde;
+    }
+
+    public void setParametreSauvegarde(Parametre parametreSauvegarde) {
+        this.parametreSauvegarde = parametreSauvegarde;
+    }
+
+    public ParametreSessionBeanLocal getParametreServices() {
+        return parametreServices;
+    }
+
+    public void setParametreServices(ParametreSessionBeanLocal parametreServices) {
+        this.parametreServices = parametreServices;
+    }
+    
+    
 
 }

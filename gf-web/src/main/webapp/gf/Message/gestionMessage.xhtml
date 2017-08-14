@@ -29,7 +29,7 @@
                             <center>   <h1>Selectionnez le patient et envoyez vos messages</h1> </center>
                             <p:dataTable id="intervenantDT" var="int" value="#{messageManagedBean.patientListe}" 
                                          widgetVar="intervenantWV"  
-                                         selectionMode="single" selection="#{messageManagedBean.patient}" rowKey="#{int.id}"
+                                         selection="#{messageManagedBean.patient}" rowKey="#{int.id}"
                                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          rowsPerPageTemplate="5,10,15"
                                          emptyMessage="La liste de patient est vide" reflow="true" rows="10" paginator="true">
@@ -39,6 +39,8 @@
                                         <p:inputText id="globalFilter" onkeyup="PF('intervenantWV').filter()" style="width:150px" placeholder=""/>
                                     </p:outputPanel>
                                 </f:facet>
+                                
+                                <p:column selectionMode="single" style="width:16px;text-align:center"/>
 
                                 <p:column headerText="Code " sortBy="#{int.codePatient}"
                                           filterMatchMode="contains" filterBy="#{int.codePatient}">

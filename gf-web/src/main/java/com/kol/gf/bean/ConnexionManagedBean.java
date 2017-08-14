@@ -5,6 +5,8 @@
  */
 package com.kol.gf.bean;
 
+import com.kol.gf.entities.Parametre;
+import com.kol.gf.service.ParametreSessionBeanLocal;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.miki.securite.Service.DroitSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.PossederSessionBeanLocal;
@@ -65,6 +67,7 @@ public class ConnexionManagedBean implements Serializable {
     private Droit droitTous;
     private String newMdp;
     private String comfMdp;
+    private Parametre parametre;
 
     @EJB
     private DroitSessionBeanLocal droitUtilisateurServices;
@@ -76,10 +79,11 @@ public class ConnexionManagedBean implements Serializable {
     private PossederSessionBeanLocal possederServices;
     @EJB
     private ProfilSessionBeanLocal profilUtilisateurServices;
-    
+    @EJB
+    private ParametreSessionBeanLocal parametreServices;
+
 //    @EJB
 //    private JournalSessionBeanLocal journalServices;
-
     public ConnexionManagedBean() {
         userConnexion = new Utilisateur();
         userConnexionTest = new Utilisateur();
@@ -90,119 +94,141 @@ public class ConnexionManagedBean implements Serializable {
         profilUtilisateur = new Profil();
         profil2 = new Profil();
         droitTous = new Droit();
+        parametre = new Parametre();
         droitUtilisateurs2 = new ArrayList<>();
-       tofProfil = "images/tofProfilDefaut.png";
+        tofProfil = "images/tofProfilDefaut.png";
         profilList = new ArrayList<>();
         users = new ArrayList<>();
     }
 
     @PostConstruct
     public void init() {
-        List<Droit> droitUsers = droitUtilisateurServices.getAll();
 
-        if (droitUsers.isEmpty()) {
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_ALL, constante.ROLE_ALL_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_CONSULTATION, constante.ROLE_CONSULTER_CONSULTATION_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_INTERVENANT, constante.ROLE_CONSULTER_INTERVENANT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_PATIENT, constante.ROLE_CONSULTER_PATIENT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_RDV, constante.ROLE_CONSULTER_RDV_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_CONSULTATION, constante.ROLE_CREER_CONSULTATION_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_INTERVENANT, constante.ROLE_CREER_INTERVENANT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_PATIENT, constante.ROLE_CREER_PATIENT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_RDV, constante.ROLE_CREER_RDV_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_GESTION_SECURITE, constante.ROLE_GESTION_SECURITE_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_CONSULTATION, constante.ROLE_IMPRIMER_CONSULTATION_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_INTERVENANT, constante.ROLE_IMPRIMER_INTERVENANT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_PATIENT, constante.ROLE_IMPRIMER_PATIENT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_RDV, constante.ROLE_IMPRIMER_RDV_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_CONSULTATION, constante.ROLE_MODIFIER_CONSULTATION_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_INTERVENANT, constante.ROLE_MODIFIER_INTERVENANT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_PATIENT, constante.ROLE_MODIFIER_PATIENT_CLE));
-            droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_RDV, constante.ROLE_MODIFIER_RDV_CLE));
+        try {
 
-        }
+            List<Droit> droitUsers = droitUtilisateurServices.getAll();
 
+            if (droitUsers.isEmpty()) {
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_ALL, constante.ROLE_ALL_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_CONSULTATION, constante.ROLE_CONSULTER_CONSULTATION_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_INTERVENANT, constante.ROLE_CONSULTER_INTERVENANT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_PATIENT, constante.ROLE_CONSULTER_PATIENT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CONSULTER_RDV, constante.ROLE_CONSULTER_RDV_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_CONSULTATION, constante.ROLE_CREER_CONSULTATION_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_INTERVENANT, constante.ROLE_CREER_INTERVENANT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_PATIENT, constante.ROLE_CREER_PATIENT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_CREER_RDV, constante.ROLE_CREER_RDV_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_GESTION_SECURITE, constante.ROLE_GESTION_SECURITE_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_CONSULTATION, constante.ROLE_IMPRIMER_CONSULTATION_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_INTERVENANT, constante.ROLE_IMPRIMER_INTERVENANT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_PATIENT, constante.ROLE_IMPRIMER_PATIENT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_IMPRIMER_RDV, constante.ROLE_IMPRIMER_RDV_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_CONSULTATION, constante.ROLE_MODIFIER_CONSULTATION_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_INTERVENANT, constante.ROLE_MODIFIER_INTERVENANT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_PATIENT, constante.ROLE_MODIFIER_PATIENT_CLE));
+                droitUtilisateurServices.saveOne(new Droit(constante.ROLE_MODIFIER_RDV, constante.ROLE_MODIFIER_RDV_CLE));
 
-        profilList = profilUtilisateurServices.getAll();
-        if (profilList.isEmpty()) {
-            profilUtilisateur.setNomProf("Admin");
-            profilUtilisateur.setDateCreaProf(new Date());
-            profilUtilisateurServices.saveOne(profilUtilisateur);
+            }
 
-            droitUtilisateurs2 = droitUtilisateurServices.getNonBy("libDroit", "Tous");
+            profilList = profilUtilisateurServices.getAll();
+            if (profilList.isEmpty()) {
+                profilUtilisateur.setNomProf("Admin");
+                profilUtilisateur.setDateCreaProf(new Date());
+                profilUtilisateurServices.saveOne(profilUtilisateur);
 
-            for (Droit drt : droitUtilisateurs2) {
-                possederId.setProfilID(profilUtilisateur.getIdProf());
-                possederId.setDroitUtilID(drt.getCodeDroit());
+                droitUtilisateurs2 = droitUtilisateurServices.getNonBy("libDroit", "Tous");
+
+                for (Droit drt : droitUtilisateurs2) {
+                    possederId.setProfilID(profilUtilisateur.getIdProf());
+                    possederId.setDroitUtilID(drt.getCodeDroit());
+                    posseder.setId(possederId);
+                    posseder.setProfil(profilUtilisateur);
+                    posseder.setDroitUtilisateur(drt);
+
+                    this.possederServices.saveOne(posseder);
+
+                    posseder = new Posseder();
+                    possederId = new PossederId();
+                }
+
+                profilUtilisateurServices.saveOne(new Profil("Invite", "Pour les utilisateurs qui n'ont pas de droit", new Date()));
+
+                List<Posseder> poss = possederServices.getBy("profil", profilUtilisateur);
+                for (Posseder po : poss) {
+                    profilUtilisateur.ajouterPosseder(po);
+                    profilUtilisateurServices.updateOne(profilUtilisateur);
+                }
+
+                profil2.setNomProf("All_privilege");
+                profil2.setDateCreaProf(new Date());
+                profilUtilisateurServices.saveOne(profil2);
+
+                droitTous = droitUtilisateurServices.getOneBy("libDroit", "Tous");
+
+                possederId.setProfilID(profil2.getIdProf());
+                possederId.setDroitUtilID(droitTous.getCodeDroit());
                 posseder.setId(possederId);
-                posseder.setProfil(profilUtilisateur);
-                posseder.setDroitUtilisateur(drt);
+                posseder.setProfil(profil2);
+                posseder.setDroitUtilisateur(droitTous);
 
                 this.possederServices.saveOne(posseder);
 
                 posseder = new Posseder();
                 possederId = new PossederId();
+
+                List<Posseder> poss2 = possederServices.getBy("profil", profil2);
+                for (Posseder po2 : poss2) {
+                    profil2.ajouterPosseder(po2);
+                    profilUtilisateurServices.updateOne(profil2);
+                }
             }
 
-            profilUtilisateurServices.saveOne(new Profil("Invite", "Pour les utilisateurs qui n'ont pas de droit", new Date()));
+            users = userServices.getAll();
+            if (users.isEmpty()) {
+                user.setNom("Admin");
+                user.setPrenom("Admin");
+                user.setSexe("-");
+                user.setLogin("Administrateur");
+                user.setMotDePasse(new Sha256Hash(constante.MOT_DE_PASSE_DEFAUT).toHex());
+                user.setDateCreation(new Date());
+                user.setReinitialiserPswd(true);
+                user.setActif(true);
+                user.setProfil(profil2);
 
-            List<Posseder> poss = possederServices.getBy("profil", profilUtilisateur);
-            for (Posseder po : poss) {
-                profilUtilisateur.ajouterPosseder(po);
-                profilUtilisateurServices.updateOne(profilUtilisateur);
+                this.userServices.saveOne(user);
+
             }
 
-            profil2.setNomProf("All_privilege");
-            profil2.setDateCreaProf(new Date());
-            profilUtilisateurServices.saveOne(profil2);
+            //Configuration des parametres
+            List<Parametre> parametreListe = parametreServices.getAll();
 
-            droitTous = droitUtilisateurServices.getOneBy("libDroit", "Tous");
+            if (parametreListe.isEmpty()) {
+                parametre.setHostname(constante.HOSTNAME);
+                parametre.setUtilisateurBD(constante.UTILISATEUR_BD);
+                parametre.setMotDePasse(constante.MOT_DE_PASSE_BD);
+                parametre.setMoozisms_Apikey(constante.MOOZISMS_API_KEY);
+                parametre.setMoozisms_ApiSecret(constante.MOOZISMS_API_SECRET);
+                parametre.setEntete_message(constante.ENTETE_MESSAGE);
 
-            possederId.setProfilID(profil2.getIdProf());
-            possederId.setDroitUtilID(droitTous.getCodeDroit());
-            posseder.setId(possederId);
-            posseder.setProfil(profil2);
-            posseder.setDroitUtilisateur(droitTous);
-
-            this.possederServices.saveOne(posseder);
-
-            posseder = new Posseder();
-            possederId = new PossederId();
-
-            List<Posseder> poss2 = possederServices.getBy("profil", profil2);
-            for (Posseder po2 : poss2) {
-                profil2.ajouterPosseder(po2);
-                profilUtilisateurServices.updateOne(profil2);
+                parametreServices.saveOne(parametre);
             }
+
+            user = new Utilisateur();
+            profilUtilisateur = new Profil();
+            profil2 = new Profil();
+            droitTous = new Droit();
+            droitUtilisateurs2 = new ArrayList<>();
+            parametre = new Parametre();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        users = userServices.getAll();
-        if (users.isEmpty()) {
-            user.setNom("Admin");
-            user.setPrenom("Admin");
-            user.setSexe("-");
-            user.setLogin("Administrateur");
-            user.setMotDePasse(new Sha256Hash(constante.MOT_DE_PASSE_DEFAUT).toHex());
-            user.setDateCreation(new Date());
-            user.setReinitialiserPswd(true);
-            user.setActif(true);
-            user.setProfil(profil2);
-
-            this.userServices.saveOne(user);
-
-        }
-
-        user = new Utilisateur();
-        profilUtilisateur = new Profil();
-        profil2 = new Profil();
-        droitTous = new Droit();
-        droitUtilisateurs2 = new ArrayList<>();
 
     }
 
     public void connexionUser() throws IOException {
         UsernamePasswordToken token = new UsernamePasswordToken(userConnexion.getLogin().trim(), userConnexion.getMotDePasse().trim());
-        token.setRememberMe(true);
+        token.setRememberMe(false);
 
         try {
             SecurityUtils.getSubject().login(token);
@@ -224,15 +250,17 @@ public class ConnexionManagedBean implements Serializable {
         } catch (UnknownAccountException uae) {
             //L'utilisateur n'est pas dans le système
             Mtm.mikiMessageErrorPerso(uae.getMessage());
+            userConnexion = new Utilisateur();
         } catch (IncorrectCredentialsException ice) {
             Mtm.mikiMessageErrorPerso("Mot de passe incorrect, veuillez réessayer Svp !");
+            userConnexion = new Utilisateur();
         } catch (LockedAccountException lae) {
             //Compte inactif
             Mtm.mikiMessageWarn(lae.getMessage());
             userConnexion = new Utilisateur();
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            Mtm.mikiMessageError();
+            Mtm.mikiMessageErrorPerso("Nom d'utilisateur ou mot de passe incorrect, veuillez réessayer Svp !");
             userConnexion = new Utilisateur();
         }
 
@@ -328,8 +356,6 @@ public class ConnexionManagedBean implements Serializable {
         this.droitUtilisateurs2 = droitUtilisateurs2;
     }
 
-    
-
     public List<Profil> getProfilList() {
         return profilList;
     }
@@ -345,8 +371,6 @@ public class ConnexionManagedBean implements Serializable {
     public void setUsers(List<Utilisateur> users) {
         this.users = users;
     }
-
-    
 
     public String getTofProfil() {
         return tofProfil;
@@ -436,8 +460,6 @@ public class ConnexionManagedBean implements Serializable {
         this.profilUtilisateurServices = profilUtilisateurServices;
     }
 
-   
-
 //    public JournalSessionBeanLocal getJournalServices() {
 //        return journalServices;
 //    }
@@ -459,6 +481,22 @@ public class ConnexionManagedBean implements Serializable {
 
     public void setComfMdp(String comfMdp) {
         this.comfMdp = comfMdp;
+    }
+
+    public Parametre getParametre() {
+        return parametre;
+    }
+
+    public void setParametre(Parametre parametre) {
+        this.parametre = parametre;
+    }
+
+    public ParametreSessionBeanLocal getParametreServices() {
+        return parametreServices;
+    }
+
+    public void setParametreServices(ParametreSessionBeanLocal parametreServices) {
+        this.parametreServices = parametreServices;
     }
 
 }

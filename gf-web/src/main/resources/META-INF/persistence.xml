@@ -18,6 +18,7 @@
     <class>com.kol.gf.entities.Medicament</class>
     <class>com.kol.gf.entities.Ordonnance</class>
     <class>com.kol.gf.entities.ParacliniqueConsultation</class>
+    <class>com.kol.gf.entities.Parametre</class>
     <class>com.kol.gf.entities.Pathologie</class>
     <class>com.kol.gf.entities.Patient</class>
     <class>com.kol.gf.entities.RendezVous</class>

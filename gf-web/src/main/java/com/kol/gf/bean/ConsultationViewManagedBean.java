@@ -253,6 +253,7 @@ public class ConsultationViewManagedBean implements Serializable {
                     examenParacliniqueListe.add(pr.getExamen());
                 }
                 
+                
                 //Recuperation de l'etat du patient;
                 if (decesServices.getOneBy("patient", patient) == null) {
 

@@ -7,6 +7,7 @@ package com.kol.gf.service;
 
 import com.kol.gf.entities.Patient;
 import com.miki.webapp.core.Service.BaseServiceBean;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +16,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface PatientServiceBeanLocal extends BaseServiceBean<Patient, Long>{
-    
+    public List<Patient> patientNonDecedes();
 }

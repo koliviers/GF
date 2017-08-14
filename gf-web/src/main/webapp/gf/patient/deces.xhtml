@@ -9,28 +9,27 @@
 
 
     <ui:define name="content">
-        
+
         <h:form id="form">
             <!--<pri:messages autoUpdate="true" showDetail="true" closable="true" />-->
             <p:growl id="growl" showDetail="true" sticky="true" />
         </h:form>
 
-        <h:form id="decform">
-
+        <div class="ui-fluid">
             <div class="ui-g">
-
                 <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:accordionPanel widgetVar="accordPanel">
+                            <p:tab title="Patient décédé" >
+                                <h:form id="decform" >
+                                    <h:inputHidden value="#{decesbean.deces.id}" />
 
-                    <div class="ui-g-12 ui-lg-6">
-
-                        <div class="card card-w-title">
-                            <h1>Deces </h1>
-                            <p:accordionPanel widgetVar="accordPanel">
-                                <p:tab title="Nouveau Deces">
-                                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                                    <br/>
+                                    
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                         <h:outputText  value="Patient: *" />
-                                        <p:selectOneMenu id="intdc" style="margin-bottom:10px;" value="#{decesbean.deces.patient}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" required="true" requiredMessage="Service obligatoire" >
+                                        <p:selectOneMenu id="intdc" style="margin-bottom:10px;" value="#{decesbean.deces.patient}"   converter="omnifaces.SelectItemsConverter"  styleClass="form-control" filterMatchMode="startsWith" filter="true" >
                                             <f:selectItem itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{decesbean.listpatient}" var="intser" itemLabel="#{intser.nomPatient} #{intser.prenomPatient} " itemValue="#{intser}"/>
                                         </p:selectOneMenu>
@@ -51,19 +50,18 @@
                                     <div class="ui-g-12 ui-md-6">
                                         <center><p:commandButton value="Valider" action="#{decesbean.addDeces()}" update="@form,:form:growl,@widgetVar(intervenantWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
                                     </div>
-
-                                </p:tab>
-
-                            </p:accordionPanel>
-                        </div>
-
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
                     </div>
+                </div>
+                
+                
+                 <div class="ui-g-12">
 
-                    <div class="ui-g-12 ui-lg-6">
-                        <div class="card card-w-title">
-                            <h1>Liste des Deces</h1>
-
-
+                    <div class="card card-w-title">
+                        <h:form id="intformDataTable">
+                            <center> <h1>Liste des Décès</h1> </center>
                             <p:dataTable id="intervenantDT" var="int" value="#{decesbean.listDeces}" 
                                          widgetVar="intervenantWV"                                 
                                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -98,18 +96,24 @@
                                 </p:column>
                                
 
-                                <p:column>                           
+                                <p:column headerText="Actions">                           
                                     <center><p:commandButton value="Modifier" action="#{decesbean.renvoieDeces(int)}" styleClass="purple-btn flat" style="width: auto;" update="@widgetVar(accordPanel)"/></center>
+                                </p:column>
+                                <p:column >                           
+                                    <center><p:commandButton value="Supprimer" action="#{decesbean.supprimerDeces(int)}" styleClass="red-btn" style="width: auto;" update="@form,:form:growl"/></center>
                                 </p:column>
 
                             </p:dataTable>
+                        </h:form>
 
-                        </div>
-                    </div>
+                    </div> 
+
                 </div>
-
+                
             </div>
-        </h:form>
+        </div>
+
+       
 
 
     </ui:define>

@@ -7,6 +7,7 @@ package com.kol.gf.dao.bean;
 
 import com.kol.gf.entities.Patient;
 import com.miki.webapp.core.Dao.BaseDaoBean;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,4 +17,5 @@ import javax.ejb.Local;
 @Local
 public interface PatientDaoBeanLocal extends BaseDaoBean<Patient, Long>{
     
+    public List<Patient> patientNonDecedes();
 }

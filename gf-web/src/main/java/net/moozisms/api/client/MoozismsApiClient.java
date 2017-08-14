@@ -7,6 +7,13 @@ package net.moozisms.api.client;
 
 import java.util.List;
 import java.util.Map;
+import net.moozisms.api.Exception.InsufficientSmsException;
+import net.moozisms.api.Exception.InternalErrorException;
+import net.moozisms.api.Exception.InvalidAccessKeyException;
+import net.moozisms.api.Exception.InvalidPhoneNumberException;
+import net.moozisms.api.Exception.InvalidSenderIdException;
+import net.moozisms.api.Exception.MessageNotSentException;
+import net.moozisms.api.Exception.NetworkNotSupportedException;
 
 
 /**
@@ -27,8 +34,15 @@ public interface MoozismsApiClient {
       * @param from Sender ID less than 11 characters, example : Administration
       * @param text Your messages without the special characters
       * @return true if message is sent and false if message is not sent
+      * @throws net.moozisms.api.Exception.InternalErrorException
+     * @throws net.moozisms.api.Exception.MessageNotSentException
+     * @throws net.moozisms.api.Exception.NetworkNotSupportedException
+     * @throws net.moozisms.api.Exception.InsufficientSmsException
+     * @throws net.moozisms.api.Exception.InvalidAccessKeyException
+     * @throws net.moozisms.api.Exception.InvalidPhoneNumberException
+     * @throws net.moozisms.api.Exception.InvalidSenderIdException 
       */
-     public boolean sendSimple(String api_key,String api_secret,String to,String from,String text);
+     public boolean sendSimple(String api_key,String api_secret,String to,String from,String text) throws InternalErrorException, MessageNotSentException, NetworkNotSupportedException, InsufficientSmsException, InvalidAccessKeyException, InvalidPhoneNumberException, InvalidSenderIdException ;
      
      
      /**
@@ -39,6 +53,13 @@ public interface MoozismsApiClient {
       * @param from Sender ID less than 11 characters, example : Administration
       * @param text Your messages without the special characters
       * @return a Map wich contains phonenumber with acknowledgement of recipient or null if messages are not sent
+      * @throws net.moozisms.api.Exception.InternalErrorException
+     * @throws net.moozisms.api.Exception.MessageNotSentException
+     * @throws net.moozisms.api.Exception.NetworkNotSupportedException
+     * @throws net.moozisms.api.Exception.InsufficientSmsException
+     * @throws net.moozisms.api.Exception.InvalidAccessKeyException
+     * @throws net.moozisms.api.Exception.InvalidPhoneNumberException
+     * @throws net.moozisms.api.Exception.InvalidSenderIdException
       */
-     public Map<String,Boolean> sendGroup(String api_key, String api_secret, List<String> toList, String from, String text);
+     public Map<String,Boolean> sendGroup(String api_key, String api_secret, List<String> toList, String from, String text) throws InternalErrorException, MessageNotSentException, NetworkNotSupportedException, InsufficientSmsException, InvalidAccessKeyException, InvalidPhoneNumberException, InvalidSenderIdException ;
 }

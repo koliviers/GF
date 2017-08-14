@@ -46,7 +46,7 @@
 
                                                 <p:outputLabel  value="Categorie" />
                                                 <h:panelGroup>
-                                                    <p:selectOneMenu id="categId" widgetVar="categWV"  value="#{examenParaCliniqueManagedBean.examenParaclinique.categorie}" converter="omnifaces.SelectItemsIndexConverter">
+                                                    <p:selectOneMenu id="categId" widgetVar="categWV"  value="#{examenParaCliniqueManagedBean.examenParaclinique.categorie}" converter="omnifaces.SelectItemsIndexConverter" filterMatchMode="startsWith" filter="true">
                                                         <f:selectItem itemLabel="Selectionner une categorie" itemValue="#{null}" noSelectionOption="true"/>
                                                         <f:selectItems var="tr2" value="#{examenParaCliniqueManagedBean.categorieListe}" itemValue="#{tr2}" itemLabel="#{tr2.label}"/>                              
                                                     </p:selectOneMenu>
@@ -56,7 +56,7 @@
 
 
                                                 <p:outputLabel  value="Service" />
-                                                <p:selectOneMenu   value="#{examenParaCliniqueManagedBean.examenParaclinique.service}" converter="omnifaces.SelectItemsIndexConverter">
+                                                <p:selectOneMenu   value="#{examenParaCliniqueManagedBean.examenParaclinique.service}" converter="omnifaces.SelectItemsIndexConverter" filterMatchMode="startsWith" filter="true">
                                                     <f:selectItem itemLabel="Selectionner un service" itemValue="#{null}" noSelectionOption="true"/>
                                                     <f:selectItems var="tr22" value="#{examenParaCliniqueManagedBean.serviceListe}" itemValue="#{tr22}" itemLabel="#{tr22.nomService}"/>                              
                                                 </p:selectOneMenu>

@@ -32,13 +32,13 @@
                                     <p:panelGrid  columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                         <h:outputText  value="Patient *" />
-                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.patient}"   converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.patient}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem  itemLabel="Selectionner un patient" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{rdvbean.listePatient}" var="intser" itemLabel="#{intser.nomPatient} #{intser.prenomPatient}" itemValue="#{intser}"/>
                                         </p:selectOneMenu>
 
                                         <h:outputText  value="Intervenant *" />
-                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.intervenant}"   converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{rdvbean.rdv.intervenant}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem  itemLabel="Selectionner un intervenant" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{rdvbean.intervenantListe}" var="intser2" itemLabel="#{intser2.nomIntervenant} #{intser2.prenomIntervenant}" itemValue="#{intser2}"/>
                                         </p:selectOneMenu>

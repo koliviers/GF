@@ -40,7 +40,7 @@
                                         </p:inputText>
 
                                         <h:outputText  value="Type consommation *" />
-                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{consommationBean.consommation.type_consommation}"   converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{consommationBean.consommation.type_consommation}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem  itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{consommationBean.typeConsommationListe}" var="intser" itemLabel="#{intser.label}" itemValue="#{intser}"/>
                                         </p:selectOneMenu>

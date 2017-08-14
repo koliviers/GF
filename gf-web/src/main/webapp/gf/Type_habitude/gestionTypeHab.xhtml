@@ -35,12 +35,11 @@
                                     <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                         <p:outputLabel for="nomint" value="Libelle *"/>
-                                        <p:inputText id="nomint"  value="#{typeHabitudeManagedBean.typeHabitude.label}">
-                                            <f:validateLength minimum="2"/>
-                                        </p:inputText>
+                                        <p:inputText id="nomint"  value="#{typeHabitudeManagedBean.typeHabitude.label}"/>
+                                            
 
                                         <h:outputText  value="Type consommation *" />
-                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{typeHabitudeManagedBean.typeHabitude.type_consommation}"   converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu  style="margin-bottom:10px;" value="#{typeHabitudeManagedBean.typeHabitude.type_consommation}"   converter="omnifaces.SelectItemsConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem  itemLabel="Selectionner un type consommation" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems value="#{typeHabitudeManagedBean.typeConsommationListe}" var="intser" itemLabel="#{intser.label}" itemValue="#{intser}"/>
                                         </p:selectOneMenu>

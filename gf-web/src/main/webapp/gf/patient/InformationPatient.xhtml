@@ -281,6 +281,10 @@
             .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
                 color: #757575; 
             }
+            
+            .old {
+                background: #e62a10 !important;
+            }
 
             table.jqplot-table-legend {
                 background-color: #ffffff;
@@ -320,7 +324,7 @@
 
                                     <p:outputLabel value="Accessibilite geographique"/>
                                     <h:outputText value="#{patientViewManagedBean.patient.accessibilite}"/>
-                                    
+
                                     <p:outputLabel value="Contact"/>
                                     <h:outputText value="#{patientViewManagedBean.patient.contact}"/>
 
@@ -348,8 +352,54 @@
                             <br/>
 
                             <div class="card">
-                                <h1 class="centerText">Tension</h1>
                                 
+                                <p:dataTable value="#{patientViewManagedBean.tensionListePatient}" var="tens" rowStyleClass="#{patientViewManagedBean.tensionStyleClass(tens)}" emptyMessage="Liste vide">
+
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column rowspan="3" headerText="Date"/>
+                                            <p:column colspan="4" headerText="Tension du patient"/>
+                                        </p:row>
+
+                                        <p:row>
+                                            <p:column colspan="2" headerText="Bras gauche"/>
+                                            <p:column colspan="2" headerText="Bras droit"/>
+                                        </p:row>
+
+                                        <p:row>
+                                            <p:column headerText="Diastolique"/>
+                                            <p:column headerText="Systolique"/>
+                                            <p:column headerText="Diastolique"/>
+                                            <p:column headerText="Systolique"/>
+                                        </p:row>
+
+                                    </p:columnGroup>
+
+
+                                    <p:column >
+                                        <center><h:outputText value="#{tens.date_suivie}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </center>
+                                    </p:column>
+                                    
+                                    <p:column >
+                                        <center><h:outputText value="#{tens.diastoliqueBG}"/></center>
+                                    </p:column>
+
+                                    <p:column >
+                                        <center><h:outputText value="#{tens.systoliqueBG}"/></center>
+                                    </p:column>
+
+                                    <p:column >
+                                        <center><h:outputText value="#{tens.diastoliqueBD}"/></center>
+                                    </p:column>
+
+                                    <p:column >
+                                        <center><h:outputText value="#{tens.systoliqueBD}"/></center>
+                                    </p:column>
+
+                                </p:dataTable>
                             </div>
 
                         </div>
@@ -363,6 +413,11 @@
                                         <center> <h1>Constantes</h1> </center>
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                            <p:outputLabel value="Date"/>
+                                            <h:outputText value="#{o.date_suivie}">
+                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                            </h:outputText>
+                                            
                                             <p:outputLabel value="Perimetre abdominal"/>
                                             <h:outputText value="#{o.tourtaille} cm"/>
 
@@ -377,13 +432,13 @@
 
                                             <p:outputLabel  value="Systolique bras gauche"/>
                                             <h:outputText value="#{o.systoliqueBG}"/>
-                                            
+
                                             <p:outputLabel  value="Systolique bras droit"/>
                                             <h:outputText value="#{o.diastoliqueBD}"/>
 
                                             <p:outputLabel  value="Tension bras droit"/>
                                             <h:outputText value="#{o.systoliqueBD}"/>
-                                            
+
                                             <p:outputLabel  value="Masse corporelle"/>
                                             <h:outputText value="#{o.calculMasse()}"/>
 
@@ -396,6 +451,11 @@
                                         <center> <h1>Constantes</h1> </center>
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" style="border:0px none; background-color:transparent;" >
+                                           <p:outputLabel value="Date"/>
+                                            <h:outputText value="#{o.date_suivie}">
+                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                            </h:outputText>
+                                           
                                             <p:outputLabel value="Perimetre abdominal"/>
                                             <h:outputText value="#{o.tourtaille} cm"/>
 
@@ -405,18 +465,18 @@
                                             <p:outputLabel  value="Taille"/>
                                             <h:outputText value="#{o.taille} m"/>
 
-                                           <p:outputLabel  value="Diastolique bras gauche"/>
+                                            <p:outputLabel  value="Diastolique bras gauche"/>
                                             <h:outputText value="#{o.diastoliqueBG}"/>
 
                                             <p:outputLabel  value="Systolique bras gauche"/>
                                             <h:outputText value="#{o.systoliqueBG}"/>
-                                            
+
                                             <p:outputLabel  value="Systolique bras droit"/>
                                             <h:outputText value="#{o.diastoliqueBD}"/>
 
                                             <p:outputLabel  value="Tension bras droit"/>
                                             <h:outputText value="#{o.systoliqueBD}"/>
-                                            
+
                                             <p:outputLabel  value="Masse corporelle"/>
                                             <h:outputText value="#{o.calculMasse()}"/>
                                         </p:panelGrid>

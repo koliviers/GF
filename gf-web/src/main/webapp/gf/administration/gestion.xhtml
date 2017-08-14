@@ -79,9 +79,9 @@
                                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                                  rowsPerPageTemplate="5,10,15"
                                                  emptyMessage="La liste d'utilisateur est vide" reflow="true" rows="10" paginator="true" >                                
-                                                                   
+
                                         <p:column filterBy="#{cp.nom} #{cp.prenom}" headerText="Nom et prénom" filterMatchMode="contains">                       
-                                            <h:outputText value="#{cp.nom} #{cp.prenom}" />
+                                            <center> <h:outputText value="#{cp.nom} #{cp.prenom}" /></center>
                                         </p:column>                          
                                         <p:column filterBy="#{cp.sexe}"  headerText="Sexe" filterMatchMode="contains">                           
                                             <center><h:outputText value="#{cp.sexe}" /></center>                                          
@@ -106,7 +106,7 @@
                                     </p:dataTable>
                                 </h:form>
                             </p:tab>
-                            
+
 
                             <p:tab title="Profil">
                                 <h:form id="droitForm">
@@ -150,20 +150,20 @@
                                                  rowsPerPageTemplate="5,10,15"
                                                  emptyMessage="La liste de profil est vide" reflow="true" rows="10" paginator="true" >                                
                                         <p:column filterBy="#{pr.nomProf}" headerText="Profil" filterMatchMode="contains">        
-                                            <h:outputText value="#{pr.nomProf}" />
+                                            <center><h:outputText value="#{pr.nomProf}" /></center>
                                         </p:column>                                                                                 
                                         <p:column filterBy="#{pr.description}" headerText="Description" filterMatchMode="contains">        
-                                            <h:outputText value="#{pr.description}" />
+                                            <center><h:outputText value="#{pr.description}" /></center>
                                         </p:column>                                                                                 
                                         <p:column>        
-                                            <h:outputText value="#{pr.dateCreaProf}" >
+                                            <center><h:outputText value="#{pr.dateCreaProf}" >
                                                 <f:convertDateTime dateStyle="full" locale="fr_FR"/>
-                                            </h:outputText>
+                                            </h:outputText></center>
                                         </p:column>                                                                                 
                                         <p:column  headerText="Droit(s)">                           
                                             <p:dataList value="#{administrationManagedBean.droitsUtilList(pr)}" var="infodroit" emptyMessage="Aucun droit enregistré">
                                                 #{infodroit.libDroit}
-                                            </p:dataList>                                          
+                                            </p:dataList>                                        
                                         </p:column>  
                                         <p:column  headerText="Action">                           
                                             <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieProfil(pr)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
@@ -182,13 +182,13 @@
                                     <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" style="border:0px none; background-color:transparent;">
 
                                         <p:outputLabel for="ch_user" value="Choisir l'utilisateur"/>
-                                        <p:selectOneMenu id="ch_user" widgetVar="userProfilWV" value="#{administrationManagedBean.utilisateurProfil}" converter="omnifaces.SelectItemsIndexConverter">
+                                        <p:selectOneMenu id="ch_user" widgetVar="userProfilWV" value="#{administrationManagedBean.utilisateurProfil}" converter="omnifaces.SelectItemsIndexConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem itemLabel="Selectionner un utilisateur" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems var="user" value="#{administrationManagedBean.utilisateurListeSansAdmin}" itemValue="#{user}" itemLabel="#{user.login}"/>
                                         </p:selectOneMenu>
 
                                         <p:outputLabel for="profUserCombId" value="Choisir le profil"/>
-                                        <p:selectOneMenu id="profUserCombId" widgetVar="profUserCombWV" value="#{administrationManagedBean.utilisateurProfil.profil}" converter="omnifaces.SelectItemsIndexConverter">
+                                        <p:selectOneMenu id="profUserCombId" widgetVar="profUserCombWV" value="#{administrationManagedBean.utilisateurProfil.profil}" converter="omnifaces.SelectItemsIndexConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem itemLabel="Selectionner un profil" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems var="prof" value="#{administrationManagedBean.profilListe}" itemValue="#{prof}" itemLabel="#{prof.nomProf}"/>
                                         </p:selectOneMenu>
@@ -202,7 +202,7 @@
                                     </div>
 
                                     <div class="ui-g-12 ui-md-6">
-                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.affectationUtilisateurDroit()}" style="width:auto;margin-bottom:10px;" styleClass="green-btn" update="@form,:form:growl,@widgetVar(journalWV),@widgetVar(utilisateurWV)" process="@form"/></center>
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.affectationUtilisateurDroit()}" style="width:auto;margin-bottom:10px;" update="@form,:form:growl,@widgetVar(journalWV),@widgetVar(utilisateurWV)" process="@form"/></center>
                                     </div>
 
                                     <br/>
@@ -222,15 +222,159 @@
                                                     <f:selectItems var="prof2" value="#{administrationManagedBean.profilListe}" itemValue="#{prof2.nomProf}" itemLabel="#{prof2.nomProf}"/>
                                                 </p:selectOneMenu>
                                             </f:facet>
-                                            <h:outputText value="#{aff.profil.nomProf}" />
+                                            <center><h:outputText value="#{aff.profil.nomProf}" /></center>
                                         </p:column>                                                                          
                                         <p:column filterBy="#{aff.login}" headerText="Nom d'utilisateur" filterMatchMode="contains">                                       
-                                            <h:outputText value="#{aff.login}" />
+                                           <center> <h:outputText value="#{aff.login}" /></center>
                                         </p:column>                                                             
                                         <p:column  headerText="Action">                           
                                             <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieUtilisateurDroit(aff)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
                                         </p:column>
                                     </p:dataTable>
+
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="Messagerie">
+                                <h:form id="messageForm">
+                                    <h:inputHidden value="#{administrationManagedBean.parametre.id}"/>
+
+                                    <br/>
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                        <p:outputLabel  value="Entête "/>
+                                        <p:inputText value="#{administrationManagedBean.parametre.entete_message}"/>
+
+                                        <p:outputLabel  value="Api key "/>
+                                        <p:inputText value="#{administrationManagedBean.parametre.moozisms_Apikey}"/>
+
+                                        <p:outputLabel value="Api Secret"/>
+                                        <p:inputText  value="#{administrationManagedBean.parametre.moozisms_ApiSecret}"/>
+
+                                    </p:panelGrid>
+
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{administrationManagedBean.annulerMessagerie()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.gestionMessagerie()}" update="@form,:form:growl,@widgetVar(sauvegardeWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p:dataTable id="messagerieDT" var="mes" value="#{administrationManagedBean.parametreListe}"
+                                                 widgetVar="messagerieWV"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true" >        
+
+
+                                        <p:column headerText="Entête">         
+                                            <center><h:outputText value="#{mes.entete_message}" /></center>
+                                        </p:column>  
+
+                                        <p:column headerText="Api key">        
+                                            <center><h:outputText value="#{mes.moozisms_Apikey}" /></center>
+                                        </p:column> 
+
+                                        <p:column headerText="Api secret">        
+                                            <center><h:outputText value="#{mes.moozisms_ApiSecret}" /></center>
+                                        </p:column>
+
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieMessagerie(mes)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
+                                        </p:column>
+                                    </p:dataTable>
+
+
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="Sauvegarde BD">
+                                <h:form id="sauvegardeForm">
+                                    <h:inputHidden value="#{administrationManagedBean.parametre1.id}"/>
+
+                                    <br/>
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;">
+
+                                        <p:outputLabel  value="Hostname"/>
+                                        <p:inputText value="#{administrationManagedBean.parametre1.hostname}"/>
+
+                                        <p:outputLabel value="Utilisateur"/>
+                                        <p:inputText  value="#{administrationManagedBean.parametre1.utilisateurBD}"/>
+
+                                        <p:outputLabel  value="Mot de passe"/>
+                                        <p:inputText value="#{administrationManagedBean.parametre1.motDePasse}"/>
+
+
+                                        <p:outputLabel value="Base de donnée"/>
+                                        <p:inputText  value="#{administrationManagedBean.parametre1.baseDeDonnee}"/>
+
+                                        <p:outputLabel  value="Lien du dossier de sauvegarde"/>
+                                        <p:inputText value="#{administrationManagedBean.parametre1.lien_sauvegarde}"/>
+
+                                        <p:outputLabel value="Lien du dossier mysqlDump"/>
+                                        <p:inputText  value="#{administrationManagedBean.parametre1.lienRepertoireMysqlDump}"/>
+
+                                    </p:panelGrid>
+
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Annuler" action="#{administrationManagedBean.annulerSauvegardeBD()}" style="width:auto;margin-bottom:10px;" styleClass="teal-btn" update="@form"/></center>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6">
+                                        <center><p:commandButton value="Valider" action="#{administrationManagedBean.gestionSauvegardeBD()}" update="@form,:form:growl,@widgetVar(messagerieWV)" style="width:auto;margin-bottom:10px;" process="@form"/></center>
+                                    </div>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p:dataTable id="sauvegardeDT" var="sauv" value="#{administrationManagedBean.parametreListe}"
+                                                 widgetVar="sauvegardeWV"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15"
+                                                 emptyMessage="La liste est vide" reflow="true" rows="10" paginator="true">        
+
+                                        <p:column headerText="Hostname">        
+                                            <center><h:outputText value="#{sauv.hostname}" /></center>
+                                        </p:column> 
+
+                                        <p:column headerText="Utilisateur">        
+                                            <center><h:outputText value="#{sauv.utilisateurBD}" /></center>
+                                        </p:column>  
+
+                                        <p:column headerText="Mot de passe">        
+                                            <center><h:outputText value="#{sauv.motDePasse}" /></center>
+                                        </p:column>         
+
+                                        <p:column headerText="Base de donnée">        
+                                            <center><h:outputText value="#{sauv.baseDeDonnee}" /></center>
+                                        </p:column>       
+
+                                        <p:column headerText="Lien dossier Sauvg">        
+                                            <center><h:outputText value="#{sauv.lien_sauvegarde}" /></center>
+                                        </p:column>    
+
+                                        <p:column headerText="Lien mysqlDump">        
+                                            <center><h:outputText value="#{sauv.lienRepertoireMysqlDump}" /></center>
+                                        </p:column>                                                                                 
+
+                                        <p:column  headerText="Action">                           
+                                            <center><p:commandButton value="Modifier" action="#{administrationManagedBean.renvoieSauvegardeBD(sauv)}" styleClass="cyan-btn"  style="width:auto;" update="@form"/></center>
+                                        </p:column>
+                                        <p:column  >                           
+                                            <center><p:commandButton value="Sauvegarde" action="#{administrationManagedBean.sauvegardeBD()}" styleClass="red-btn"  style="width:auto;" update=":form:growl,@widgetVar(journalWV)"/></center>
+                                        </p:column>
+                                    </p:dataTable>
+
 
                                 </h:form>
                             </p:tab>
@@ -280,30 +424,30 @@
                             <h:form id="jnlModal">
                                 <div class="ui-fluid">
                                     <div class="ui-g">
-                                    <div class="ui-g-12">
-                                        <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid" style="border:0px none; background-color:transparent;">
-                                            <p:outputLabel value="Utilisateur" style="font-weight: bold;"/>
-                                            <h:outputText  value="#{journalManagedBean.journal.utilisateur}" style="font-weight: bold;"/>
+                                        <div class="ui-g-12">
+                                            <p:panelGrid columns="2" styleClass="form-group ui-panelgrid-blank" layout="grid" style="border:0px none; background-color:transparent;">
+                                                <p:outputLabel value="Utilisateur" style="font-weight: bold;"/>
+                                                <h:outputText  value="#{journalManagedBean.journal.utilisateur}" style="font-weight: bold;"/>
 
-                                            <p:outputLabel value="Date" style="font-weight: bold;"/>
-                                            <h:outputText  value="#{journalManagedBean.journal.dateJourn}" style="font-weight: bold;">
-                                                <f:convertDateTime dateStyle="full" locale="fr_FR"/>
-                                            </h:outputText>
+                                                <p:outputLabel value="Date" style="font-weight: bold;"/>
+                                                <h:outputText  value="#{journalManagedBean.journal.dateJourn}" style="font-weight: bold;">
+                                                    <f:convertDateTime dateStyle="full" locale="fr_FR"/>
+                                                </h:outputText>
 
-                                            <p:outputLabel value="Heure" style="font-weight: bold;"/>
-                                            <h:outputText  value="#{journalManagedBean.journal.heureJourn}" style="font-weight: bold;"/>
+                                                <p:outputLabel value="Heure" style="font-weight: bold;"/>
+                                                <h:outputText  value="#{journalManagedBean.journal.heureJourn}" style="font-weight: bold;"/>
 
-                                            <p:outputLabel value="Logger" style="font-weight: bold;"/>
-                                            <h:outputText  value="#{journalManagedBean.journal.logger}" style="font-weight: bold;"/>
+                                                <p:outputLabel value="Logger" style="font-weight: bold;"/>
+                                                <h:outputText  value="#{journalManagedBean.journal.logger}" style="font-weight: bold;"/>
 
-                                            <p:outputLabel value="Level" style="font-weight: bold;"/>
-                                            <h:outputText  value="#{journalManagedBean.journal.levelJourn}" style="font-weight: bold;"/>
+                                                <p:outputLabel value="Level" style="font-weight: bold;"/>
+                                                <h:outputText  value="#{journalManagedBean.journal.levelJourn}" style="font-weight: bold;"/>
 
-                                            <p:outputLabel value="Message" style="font-weight: bold;"/>
-                                            <h:outputText id="area" value="#{journalManagedBean.journal.messageJourn}" style="font-weight: bold;"/>
-                                        </p:panelGrid>
+                                                <p:outputLabel value="Message" style="font-weight: bold;"/>
+                                                <h:outputText id="area" value="#{journalManagedBean.journal.messageJourn}" style="font-weight: bold;"/>
+                                            </p:panelGrid>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </h:form>
                         </p:dialog> 

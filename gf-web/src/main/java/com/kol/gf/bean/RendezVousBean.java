@@ -7,8 +7,10 @@ package com.kol.gf.bean;
 
 import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
 import com.kol.gf.entities.Intervenant;
+import com.kol.gf.entities.Parametre;
 import com.kol.gf.entities.Patient;
 import com.kol.gf.entities.RendezVous;
+import com.kol.gf.service.ParametreSessionBeanLocal;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.kol.gf.service.RendezVousServiceBeanLocal;
 import com.miki.webapp.core.Transaction.TransactionManager;
@@ -57,6 +59,7 @@ public class RendezVousBean implements Serializable {
     private List<Intervenant> intervenantListe;
     private List<RendezVous> listeRdv;
     private ScheduleModel eventModel;
+    private Parametre parametreSauvegarde;
     private Long idRDV;
     private Long idInterv;
     private Long idPat;
@@ -76,10 +79,14 @@ public class RendezVousBean implements Serializable {
     @EJB
     private IntervenantDaoBeanLocal intervenantServices;
 
+    @EJB
+    private ParametreSessionBeanLocal parametreServices;
+
     public RendezVousBean() {
 
         rdv = new RendezVous();
         rdvTampon = new RendezVous();
+        parametreSauvegarde = new Parametre();
         listePatient = new ArrayList<Patient>();
         listeRdv = new ArrayList<RendezVous>();
         dateRdv = null;
@@ -99,6 +106,12 @@ public class RendezVousBean implements Serializable {
             for (Map.Entry<Date, Integer> mp : rdvSchedule.entrySet()) {
                 eventModel.addEvent(new DefaultScheduleEvent("Rendez-vous : " + mp.getValue(), mp.getKey(), mp.getKey()));
             }
+        }
+
+        List<Parametre> parametreListeSauvegarde = parametreServices.getAll();
+
+        if (!parametreListeSauvegarde.isEmpty()) {
+            parametreSauvegarde = parametreListeSauvegarde.get(0);
         }
 
     }
@@ -126,14 +139,26 @@ public class RendezVousBean implements Serializable {
 
                         Mtm.mikiMessageInfo();
                         if (!rdv.getPatient().getContact().trim().isEmpty()) {
-                            MoozismsApiClient apisms = new Moozisms();
-                            boolean test = false;
-                            test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous pris pour"
-                                    + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
 
-                            if (test) {
-                                Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                            try {
+
+                                MoozismsApiClient apisms = new Moozisms();
+                                boolean test = false;
+
+                                if (!parametreSauvegarde.getMoozisms_ApiSecret().isEmpty() || !parametreSauvegarde.getMoozisms_Apikey().isEmpty() || !parametreSauvegarde.getEntete_message().isEmpty()) {
+
+                                    test = apisms.sendSimple(parametreSauvegarde.getMoozisms_Apikey(), parametreSauvegarde.getMoozisms_ApiSecret(), "228" + rdv.getPatient().getContact(), parametreSauvegarde.getEntete_message(), "Rendez-vous pris pour"
+                                            + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+                                    if (test) {
+                                        Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient pour la prise de rendez-vous !");
+                                    }
+
+                                }
+
+                            } catch (Exception e) {
+                                Mtm.mikiMessageErrorPerso("Message non envoyé !");
                             }
+
                         }
                         rdv = new RendezVous();
                     }
@@ -151,14 +176,26 @@ public class RendezVousBean implements Serializable {
                             Mtm.mikiMessageInfo();
 
                             if (!rdv.getPatient().getContact().trim().isEmpty()) {
-                                MoozismsApiClient apisms = new Moozisms();
-                                boolean test = false;
-                                test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
-                                        + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
 
-                                if (test) {
-                                    Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                                try {
+
+                                    MoozismsApiClient apisms = new Moozisms();
+                                    boolean test = false;
+
+                                    if (!parametreSauvegarde.getMoozisms_ApiSecret().isEmpty() || !parametreSauvegarde.getMoozisms_Apikey().isEmpty() || !parametreSauvegarde.getEntete_message().isEmpty()) {
+
+                                        test = apisms.sendSimple(parametreSauvegarde.getMoozisms_Apikey(), parametreSauvegarde.getMoozisms_ApiSecret(), "228" + rdv.getPatient().getContact(), parametreSauvegarde.getEntete_message(), "Rendez-vous reporte sur"
+                                                + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+                                        if (test) {
+                                            Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient pour la prise de rendez-vous !");
+                                        }
+
+                                    }
+
+                                } catch (Exception e) {
+                                    Mtm.mikiMessageErrorPerso("Message non envoyé !");
                                 }
+
                             }
                             rdv = new RendezVous();
                         }
@@ -171,14 +208,26 @@ public class RendezVousBean implements Serializable {
                         Mtm.mikiMessageInfo();
 
                         if (!rdv.getPatient().getContact().trim().isEmpty()) {
-                            MoozismsApiClient apisms = new Moozisms();
-                            boolean test = false;
-                            test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdv.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
-                                    + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
 
-                            if (test) {
-                                Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                            try {
+
+                                MoozismsApiClient apisms = new Moozisms();
+                                boolean test = false;
+
+                                if (!parametreSauvegarde.getMoozisms_ApiSecret().isEmpty() || !parametreSauvegarde.getMoozisms_Apikey().isEmpty() || !parametreSauvegarde.getEntete_message().isEmpty()) {
+
+                                    test = apisms.sendSimple(parametreSauvegarde.getMoozisms_Apikey(), parametreSauvegarde.getMoozisms_ApiSecret(), "228" + rdv.getPatient().getContact(), parametreSauvegarde.getEntete_message(), "Rendez-vous reporte sur"
+                                            + " le " + ManipulationDate.mediumDateFormatFR(rdv.getDateRdv()) + "\n\n" + rdv.getIntervenant().getNomIntervenant() + " " + rdv.getIntervenant().getPrenomIntervenant());
+                                    if (test) {
+                                        Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient pour la prise de rendez-vous !");
+                                    }
+
+                                }
+
+                            } catch (Exception e) {
+                                Mtm.mikiMessageErrorPerso("Message non envoyé !");
                             }
+
                         }
                         rdv = new RendezVous();
                     }
@@ -250,14 +299,26 @@ public class RendezVousBean implements Serializable {
                 context.execute("PF('reportWV').hide();");
 
                 if (!rdvTampon.getPatient().getContact().trim().isEmpty()) {
-                    MoozismsApiClient apisms = new Moozisms();
-                    boolean test = false;
-                    test = apisms.sendSimple("vLaR6iXDoLrvSPog", "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa", "228" + rdvTampon.getPatient().getContact(), "HPTL NOTSE", "Rendez-vous reporte sur"
-                            + " le " + ManipulationDate.mediumDateFormatFR(rdvTampon.getDateRdv()) + "\n" + rdvTampon.getIntervenant().getNomIntervenant() + " " + rdvTampon.getIntervenant().getPrenomIntervenant());
 
-                    if (test) {
-                        Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient !");
+                    try {
+
+                        MoozismsApiClient apisms = new Moozisms();
+                        boolean test = false;
+
+                        if (!parametreSauvegarde.getMoozisms_ApiSecret().isEmpty() || !parametreSauvegarde.getMoozisms_Apikey().isEmpty() || !parametreSauvegarde.getEntete_message().isEmpty()) {
+
+                            test = apisms.sendSimple(parametreSauvegarde.getMoozisms_Apikey(), parametreSauvegarde.getMoozisms_ApiSecret(), "228" + rdv.getPatient().getContact(), parametreSauvegarde.getEntete_message(), "Rendez-vous reporte sur"
+                                    + " le " + ManipulationDate.mediumDateFormatFR(rdvTampon.getDateRdv()) + "\n\n" + rdvTampon.getIntervenant().getNomIntervenant() + " " + rdvTampon.getIntervenant().getPrenomIntervenant());
+                            if (test) {
+                                Mtm.mikiMessageInfoPerso("Message envoyé sur le mobile du patient pour la prise de rendez-vous !");
+                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        Mtm.mikiMessageErrorPerso("Message non envoyé !");
                     }
+
                 }
 
                 rdvTampon = new RendezVous();
@@ -307,7 +368,6 @@ public class RendezVousBean implements Serializable {
         Utilisateur utilisateurTampon = utilisateurServices.getOneBy("login", connexionMngdB.getUserLogin());
         Intervenant intervenantTampon = intervenantServices.getOneBy("utilisateur", utilisateurTampon);
         String dateDuJour = Convertiseur.getDate(new Date());
-        
 
         if (intervenantTampon == null) {
             listeRdv = daoRdv.getAll("dateRdv", false).stream()
@@ -445,6 +505,22 @@ public class RendezVousBean implements Serializable {
 
     public void setIdPat(Long idPat) {
         this.idPat = idPat;
+    }
+
+    public Parametre getParametreSauvegarde() {
+        return parametreSauvegarde;
+    }
+
+    public void setParametreSauvegarde(Parametre parametreSauvegarde) {
+        this.parametreSauvegarde = parametreSauvegarde;
+    }
+
+    public ParametreSessionBeanLocal getParametreServices() {
+        return parametreServices;
+    }
+
+    public void setParametreServices(ParametreSessionBeanLocal parametreServices) {
+        this.parametreServices = parametreServices;
     }
     
     

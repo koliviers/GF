@@ -33,7 +33,7 @@
                                     <p:panelGrid id="gridass" columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" style="border:0px none; background-color:transparent;" >
 
                                         <p:outputLabel  value="Patient"/>
-                                        <p:selectOneMenu   value="#{suiviManagedBean.patient}" converter="omnifaces.SelectItemsIndexConverter">
+                                        <p:selectOneMenu   value="#{suiviManagedBean.patient}" converter="omnifaces.SelectItemsIndexConverter" filterMatchMode="startsWith" filter="true">
                                             <f:selectItem itemLabel="Selectionner le patient" itemValue="#{null}" noSelectionOption="true"/>
                                             <f:selectItems var="pat" value="#{suiviManagedBean.patientListe}" itemValue="#{pat}" itemLabel="#{pat.nomPatient} #{pat.prenomPatient}"/>
                                             <p:ajax update=":intformDataTable, @form:etatId"  listener="#{suiviManagedBean.listenerPatient}"/>
@@ -112,7 +112,7 @@
                                 </p:column>
 
                                 <p:column  headerText="Action">                           
-                                    <center><p:commandButton value="Voir" action="#{consultationViewManagedBean.informationConsultation2(int)}" styleClass="cyan-btn" style="width: auto;"/></center>
+                                    <center><p:commandButton value="Voir" action="#{consultationViewManagedBean.informationConsultation2(int)}" styleClass="cyan-btn" update=":form:growl" style="width: auto;"/></center>
                                 </p:column>
 
                             </p:dataTable>

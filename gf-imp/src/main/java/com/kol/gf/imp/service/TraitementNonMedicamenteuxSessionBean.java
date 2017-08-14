@@ -10,6 +10,7 @@ import com.kol.gf.entities.TraitementNonMedicamenteux;
 import com.kol.gf.service.TraitementNonMedicamenteuxSessionBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
@@ -19,6 +20,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class TraitementNonMedicamenteuxSessionBean extends BaseServiceBeanImpl<TraitementNonMedicamenteux, Long> implements TraitementNonMedicamenteuxSessionBeanLocal {
 
+    @EJB
     private ITraitementNonMedicamenteuxDAO dao;
 
     @Override

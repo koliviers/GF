@@ -63,6 +63,18 @@ public abstract class constante implements Serializable{
     
    
     public static final String MOT_DE_PASSE_DEFAUT = "gfweb2017";
+    
+    public static final String UTILISATEUR_BD = "gf";
+    
+    public static final String MOT_DE_PASSE_BD = "gf";
+    
+    public static final String HOSTNAME = "localhost";
+    
+    public static final String MOOZISMS_API_KEY = "vLaR6iXDoLrvSPog";
+    
+    public static final String MOOZISMS_API_SECRET = "fbb2c6a0-5533-11e7-806e-cfdc8033ccaa";
+    
+    public static final String ENTETE_MESSAGE = "HPTL NOTSE";
 
     public constante() {
     }

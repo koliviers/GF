@@ -7,8 +7,11 @@ package com.kol.gf.bean;
 
 import com.kol.gf.dao.bean.IntervenantDaoBeanLocal;
 import com.kol.gf.entities.Intervenant;
+import com.kol.gf.entities.Parametre;
+import com.kol.gf.service.ParametreSessionBeanLocal;
 import com.miki.webapp.core.Utils.Mtm;
 import com.miki.webapp.core.Transaction.TransactionManager;
+import com.miki.webapp.databasetools.MysqlUtils;
 import com.miki.webapp.miki.securite.Service.DroitSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.PossederSessionBeanLocal;
 import com.miki.webapp.miki.securite.Service.ProfilSessionBeanLocal;
@@ -20,31 +23,24 @@ import com.miki.webapp.miki.securite.entities.Profil;
 import com.miki.webapp.miki.securite.entities.Utilisateur;
 import com.miki.webapp.shiro.EntityRealm;
 import com.miki.webapp.shiro.utils.constante;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.ServletContext;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import org.apache.log4j.Priority;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 /**
@@ -65,6 +61,8 @@ public class AdministrationManagedBean implements Serializable {
     private Posseder posseder;
     private PossederId possederId;
     private Intervenant intervenant;
+    private Parametre parametre;
+    private Parametre parametre1;
     private boolean disAdmin;
 
     private List<Utilisateur> utilisateurListe;
@@ -74,6 +72,7 @@ public class AdministrationManagedBean implements Serializable {
     private List<Droit> droitListeSupp;
     private List<Profil> profilListe;
     private List<Posseder> possederSupp;
+    private List<Parametre> parametreListe;
 
     public String tofProfil;
 
@@ -86,7 +85,8 @@ public class AdministrationManagedBean implements Serializable {
     @EJB
     private PossederSessionBeanLocal possederServices;
 
-   
+    @EJB
+    private ParametreSessionBeanLocal parametreServices;
 
     @EJB
     private DroitSessionBeanLocal droitServices;
@@ -108,6 +108,8 @@ public class AdministrationManagedBean implements Serializable {
         posseder = new Posseder();
         possederId = new PossederId();
         intervenant = new Intervenant();
+        parametre = new Parametre();
+        parametre1 = new Parametre();
 
         utilisateurListe = new ArrayList<>();
         utilisateurListeSansAdmin = new ArrayList<>();
@@ -116,12 +118,11 @@ public class AdministrationManagedBean implements Serializable {
         droitListeSource = new ArrayList<>();
         profilListe = new ArrayList<>();
         possederSupp = new ArrayList<>();
+        parametreListe = new ArrayList<>();
 
         tofProfil = "images/tofProfilDefaut.png";
         disAdmin = false;
     }
-
-    
 
     public void affectationUtilisateurDroit() {
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
@@ -180,7 +181,7 @@ public class AdministrationManagedBean implements Serializable {
             UserTransaction tx = TransactionManager.getUserTransaction();
             try {
                 tx.begin();
-                 if (utilisateur.getNom().isEmpty()) {
+                if (utilisateur.getNom().isEmpty()) {
                     Mtm.mikiMessageWarnSaisir("le nom");
                 } else if (utilisateur.getPrenom().isEmpty()) {
                     Mtm.mikiMessageWarnSaisir("le prénom");
@@ -484,7 +485,204 @@ public class AdministrationManagedBean implements Serializable {
         }
 
     }
-    
+
+    public void gestionMessagerie() {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+
+            UserTransaction tx = TransactionManager.getUserTransaction();
+
+            try {
+
+                if (parametre.getId() != null) {
+
+                    if (parametre.getEntete_message().trim().isEmpty()) {
+                        Mtm.mikiMessageWarnSaisir("l'entête du message");
+                    } else if (parametre.getEntete_message().length() > 11) {
+                        Mtm.mikiMessageWarnSaisir("la taille de l'entête ne pas dépasser 11 caractères");
+                    } else if (parametre.getMoozisms_Apikey().trim().isEmpty()) {
+                        Mtm.mikiMessageWarnSaisir("l'api key");
+                    } else if (parametre.getMoozisms_ApiSecret().trim().isEmpty()) {
+                        Mtm.mikiMessageWarnSaisir("l'api secret");
+                    } else {
+                        tx.begin();
+                        parametreServices.updateOne(parametre);
+                        tx.commit();
+                        Mtm.mikiMessageInfo();
+                        parametre = new Parametre();
+                    }
+
+                } else {
+                    Mtm.mikiMessageError();
+                    parametre = new Parametre();
+                }
+
+            } catch (Exception ex) {
+                try {
+                    tx.rollback();
+                } catch (IllegalStateException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SecurityException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SystemException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                Mtm.mikiMessageError();
+                parametre = new Parametre();
+            }
+
+        } else {
+            Mtm.mikiLog4jMessageError();
+        }
+
+    }
+
+    public void gestionSauvegardeBD() {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+
+            UserTransaction tx = TransactionManager.getUserTransaction();
+
+            try {
+
+                if (parametre1.getId() != null) {
+                    tx.begin();
+                    parametreServices.updateOne(parametre1);
+                    tx.commit();
+                }
+
+                Mtm.mikiMessageInfo();
+                parametre1 = new Parametre();
+
+            } catch (Exception ex) {
+                try {
+                    tx.rollback();
+                } catch (IllegalStateException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SecurityException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SystemException ex1) {
+                    Logger.getLogger(AdministrationManagedBean.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                Mtm.mikiMessageError();
+                parametre1 = new Parametre();
+            }
+
+        } else {
+
+            Mtm.mikiLog4jMessageError();
+
+        }
+
+    }
+
+    public void renvoieMessagerie(Parametre para1) {
+
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+
+            parametre = para1;
+
+        } else {
+            Mtm.mikiLog4jMessageError();
+        }
+
+    }
+
+    public void renvoieSauvegardeBD(Parametre para2) {
+
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+
+            parametre1 = para2;
+
+        } else {
+            Mtm.mikiLog4jMessageError();
+        }
+
+    }
+
+    public void annulerMessagerie() {
+
+        parametre = new Parametre();
+
+    }
+
+    public void annulerSauvegardeBD() {
+
+        parametre1 = new Parametre();
+
+    }
+
+    public void sauvegardeBD() {
+        if (EntityRealm.getSubject().isPermitted(constante.ROLE_GESTION_SECURITE_CLE)) {
+
+            boolean resultatSauvegarde = false;
+
+            try {
+
+                List<Parametre> parametreListeSauvegarde = parametreServices.getAll();
+                
+                
+                if (parametreListeSauvegarde.isEmpty()) {
+                    Mtm.mikiMessageErrorPerso("Veuillez configurer les paramètres de sauvegarde de la base de donnée svp !");
+                } else {
+                    Parametre parametreSauvegarde = parametreListeSauvegarde.get(0);
+
+                    if (System.getProperty("os.name").equals("Linux")) {
+
+                        if (parametreSauvegarde.getLien_sauvegarde() == null || parametreSauvegarde.getHostname() == null || parametreSauvegarde.getBaseDeDonnee() == null
+                                || parametreSauvegarde.getUtilisateurBD() == null || parametreSauvegarde.getMotDePasse() == null) {
+                            Mtm.mikiMessageErrorPerso("Veuillez configurer les paramètres de sauvegarde de la base de donnée svp !");
+                        } else {
+                            resultatSauvegarde = MysqlUtils.backupBaseDeDonneeMysql(parametreSauvegarde.getLien_sauvegarde(),
+                                    parametreSauvegarde.getHostname(),
+                                    parametreSauvegarde.getBaseDeDonnee(),
+                                    parametreSauvegarde.getUtilisateurBD(),
+                                    parametreSauvegarde.getMotDePasse(),
+                                    "");
+                        }
+
+                    } else {
+
+                        if (parametreSauvegarde.getLien_sauvegarde() == null || parametreSauvegarde.getHostname() == null || parametreSauvegarde.getBaseDeDonnee() == null
+                                || parametreSauvegarde.getUtilisateurBD() == null || parametreSauvegarde.getMotDePasse() == null || parametreSauvegarde.getLienRepertoireMysqlDump() == null) {
+                            Mtm.mikiMessageErrorPerso("Veuillez configurer les paramètres de sauvegarde de la base de donnée svp !");
+                        } else {
+                            resultatSauvegarde = MysqlUtils.backupBaseDeDonneeMysql(parametreSauvegarde.getLien_sauvegarde(),
+                                    parametreSauvegarde.getHostname(),
+                                    parametreSauvegarde.getBaseDeDonnee(),
+                                    parametreSauvegarde.getUtilisateurBD(),
+                                    parametreSauvegarde.getMotDePasse(),
+                                    parametreSauvegarde.getLienRepertoireMysqlDump());
+                        }
+
+                    }
+
+                }
+
+                if (resultatSauvegarde) {
+
+                    Mtm.mikiMessageInfoPerso("Sauvegarde de la base de donnée effectuée avec succès !");
+
+                    new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.INFO, "Sauvegarde de la base de donnée effectuée avec succès !");
+
+                } else {
+
+                    Mtm.mikiMessageErrorPerso("Erreur survenue lors de la sauvegarde de la base de donnée !");
+
+                    new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors de la sauvegarde de la base de donnée ! ");
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Mtm.mikiMessageError();
+                new Mtm().logMikiLog4j(AdministrationManagedBean.class.getName(), org.apache.log4j.Level.ERROR, "Erreur survenue lors de la sauvegarde de la base de donnée ! ");
+            }
+
+        } else {
+            Mtm.mikiLog4jMessageError();
+        }
+
+    }
+
 //     public void handleFileUpload(FileUploadEvent event) {
 //        try {
 //            String image = String.valueOf((int) (Math.random() * 10000000));
@@ -506,9 +704,6 @@ public class AdministrationManagedBean implements Serializable {
 //            e.printStackTrace();
 //        }
 //    }
-
-    
-
 //    public void onRowSelect(SelectEvent event) {
 //        utilisateurProfil = utilisateur2;
 //        RequestContext.getCurrentInstance().execute("jQuery('#SearchUser').modal('hide');");
@@ -557,8 +752,6 @@ public class AdministrationManagedBean implements Serializable {
         this.possederId = possederId;
     }
 
-    
-
     public List<Utilisateur> getUtilisateurListe() {
         return utilisateurServices.getAll("nom", true);
     }
@@ -568,7 +761,9 @@ public class AdministrationManagedBean implements Serializable {
     }
 
     public List<Droit> getDroitListe() {
-        return droitServices.getNonBy("libDroit", "Tous");
+        return droitServices.getNonBy("libDroit", "Tous").stream()
+                .sorted(Comparator.comparing(Droit::getLibDroit))
+                .collect(Collectors.toList());
     }
 
     public void setDroitListe(List<Droit> droitListe) {
@@ -590,8 +785,6 @@ public class AdministrationManagedBean implements Serializable {
     public void setProfilListe(List<Profil> profilListe) {
         this.profilListe = profilListe;
     }
-
-    
 
     public UtilisateurSessionBeanLocal getUtilisateurServices() {
         return utilisateurServices;
@@ -616,8 +809,6 @@ public class AdministrationManagedBean implements Serializable {
     public void setPossederServices(PossederSessionBeanLocal possederServices) {
         this.possederServices = possederServices;
     }
-
-    
 
     public DroitSessionBeanLocal getDroitServices() {
         return droitServices;
@@ -699,7 +890,6 @@ public class AdministrationManagedBean implements Serializable {
         this.disAdmin = disAdmin;
     }
 
-
     public Intervenant getIntervenant() {
         return intervenant;
     }
@@ -724,5 +914,38 @@ public class AdministrationManagedBean implements Serializable {
         this.intervenantServices = intervenantServices;
     }
 
+    public Parametre getParametre() {
+        return parametre;
+    }
+
+    public void setParametre(Parametre parametre) {
+        this.parametre = parametre;
+    }
+
+    public List<Parametre> getParametreListe() {
+        return parametreServices.getAll().stream()
+                .limit(1)
+                .collect(Collectors.toList());
+    }
+
+    public void setParametreListe(List<Parametre> parametreListe) {
+        this.parametreListe = parametreListe;
+    }
+
+    public Parametre getParametre1() {
+        return parametre1;
+    }
+
+    public void setParametre1(Parametre parametre1) {
+        this.parametre1 = parametre1;
+    }
+
+    public ParametreSessionBeanLocal getParametreServices() {
+        return parametreServices;
+    }
+
+    public void setParametreServices(ParametreSessionBeanLocal parametreServices) {
+        this.parametreServices = parametreServices;
+    }
 
 }

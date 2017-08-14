@@ -11,6 +11,7 @@ import com.kol.gf.entities.Patient;
 import com.kol.gf.service.PatientServiceBeanLocal;
 import com.miki.webapp.core.Dao.BaseDaoBean;
 import com.miki.webapp.core.ServiceImpl.BaseServiceBeanImpl;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -27,6 +28,11 @@ public class PatientServiceBean extends BaseServiceBeanImpl<Patient, Long> imple
     @Override
     protected BaseDaoBean<Patient, Long> getDao() {
         return dao;
+    }
+
+    @Override
+    public List<Patient> patientNonDecedes() {
+       return dao.patientNonDecedes();
     }
 
     

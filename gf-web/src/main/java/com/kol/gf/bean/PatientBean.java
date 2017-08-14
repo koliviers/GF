@@ -30,23 +30,19 @@ import javax.transaction.UserTransaction;
 @ViewScoped
 public class PatientBean implements Serializable {
 
-    private Patient patient;   
+    private Patient patient;
 
     private List<Patient> listePatient;
-
-    
 
     @EJB
     private PatientServiceBeanLocal patientServices;
 
-    
-
     public PatientBean() {
 
         patient = new Patient();
-       
+
         listePatient = new ArrayList<>();
-        
+
     }
 
     public void gestionPatient() {
@@ -65,29 +61,76 @@ public class PatientBean implements Serializable {
                     if (patient.getId() == null) {
                         if (EntityRealm.getSubject().isPermitted(constante.ROLE_CREER_PATIENT_CLE)) {
 
-                            tx.begin();
-                            patientServices.saveOne(patient);
-                            tx.commit();
-                            
-                            new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement du patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
-                            
+                            if (patient.getContact().trim().isEmpty()) {
+
+                                tx.begin();
+                                patientServices.saveOne(patient);
+                                tx.commit();
+
+                                Mtm.mikiMessageInfo();
+                                patient = new Patient();
+
+                                new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement du patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+
+                            } else {
+
+                                if (!patient.getContact().matches("^[9|2|7][\\d]{7}$")) {
+
+                                    Mtm.mikiMessageErrorPerso("Numero de téléphone incorrect !");
+
+                                } else {
+
+                                    tx.begin();
+                                    patientServices.saveOne(patient);
+                                    tx.commit();
+
+                                    Mtm.mikiMessageInfo();
+                                    patient = new Patient();
+
+                                    new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Enregistrement du patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+
+                                }
+
+                            }
 
                         } else {
                             Mtm.mikiLog4jMessageError();
                         }
                     } else {
 
-                        tx.begin();
-                        patientServices.updateOne(patient);
-                        tx.commit();
+                        if (patient.getContact().trim().isEmpty()) {
 
-                        new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur le patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+                            tx.begin();
+                            patientServices.updateOne(patient);
+                            tx.commit();
+
+                            Mtm.mikiMessageInfo();
+                            patient = new Patient();
+
+                            new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur le patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+
+                        } else {
+
+                            if (!patient.getContact().matches("^[9|2|7][\\d]{7}$")) {
+
+                                Mtm.mikiMessageErrorPerso("Numero de téléphone incorrect !");
+
+                            } else {
+
+                                tx.begin();
+                                patientServices.updateOne(patient);
+                                tx.commit();
+
+                                Mtm.mikiMessageInfo();
+                                patient = new Patient();
+
+                                new Mtm().logMikiLog4j(PatientBean.class.getName(), org.apache.log4j.Level.INFO, "Modification effectuée sur le patient :" + patient.getNomPatient() + " " + patient.getPrenomPatient());
+
+                            }
+
+                        }
 
                     }
-
-                    Mtm.mikiMessageInfo();
-                    patient = new Patient();
-                    
 
                 }
             } catch (Exception ex) {
@@ -107,9 +150,9 @@ public class PatientBean implements Serializable {
 
     public void renvoiePatient(Patient pat) {
         if (EntityRealm.getSubject().isPermitted(constante.ROLE_MODIFIER_PATIENT_CLE)) {
-           
+
             patient = pat;
-            
+
         } else {
             Mtm.mikiLog4jMessageError();
         }
@@ -118,10 +161,9 @@ public class PatientBean implements Serializable {
 
     public void annulerPatient() {
         patient = new Patient();
-       
+
     }
 
-    
     /**
      * @return the patient
      */
@@ -139,8 +181,6 @@ public class PatientBean implements Serializable {
     /**
      * @return the pathologie
      */
-    
-
     /**
      * @return the listePatient
      */
@@ -163,5 +203,4 @@ public class PatientBean implements Serializable {
         this.patientServices = patientServices;
     }
 
-    
 }

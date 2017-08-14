@@ -22,7 +22,7 @@ public class FacesAjaxAwareUserFilter extends UserFilter {
     @Override
     protected void redirectToLogin(ServletRequest req, ServletResponse res) throws IOException {
         HttpServletRequest request = (HttpServletRequest) req;
-
+   
         if ("partial/ajax".equals(request.getHeader("Faces-Request"))) {
             res.setContentType("text/xml");
             res.setCharacterEncoding("UTF-8");

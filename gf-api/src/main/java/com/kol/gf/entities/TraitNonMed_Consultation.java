@@ -70,7 +70,8 @@ public class TraitNonMed_Consultation implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.id);
+        hash = 11 * hash + Objects.hashCode(this.id);
+        hash = 11 * hash + Objects.hashCode(this.traitementNonMedicamenteux);
         return hash;
     }
 
@@ -89,8 +90,15 @@ public class TraitNonMed_Consultation implements Serializable{
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
+        if (!Objects.equals(this.traitementNonMedicamenteux, other.traitementNonMedicamenteux)) {
+            return false;
+        }
         return true;
     }
+
+    
+
+    
 
     @Override
     public String toString() {
